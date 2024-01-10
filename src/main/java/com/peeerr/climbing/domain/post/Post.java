@@ -3,7 +3,6 @@ package com.peeerr.climbing.domain.post;
 import com.peeerr.climbing.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
