@@ -1,5 +1,6 @@
 package com.peeerr.climbing.controller;
 
+import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.ApiResponse;
@@ -8,6 +9,10 @@ import com.peeerr.climbing.exception.ex.ValidationException;
 import com.peeerr.climbing.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,6 +28,14 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+
+    @GetMapping
+    public ResponseEntity<?> postList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Post> posts = postService.getPosts(pageable);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.of("success", "게시물 전체 조회 성공", posts));
+    }
 
     @GetMapping("/{postId}")
     public ResponseEntity<?> postDetail(@PathVariable Long postId) {

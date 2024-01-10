@@ -6,6 +6,8 @@ import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,6 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+
+    @Transactional(readOnly = true)
+    public Page<Post> getPosts(Pageable pageable) {
+        return postRepository.findAll(pageable);
+    }
 
     @Transactional(readOnly = true)
     public PostResponse getPost(Long id) {
@@ -26,7 +33,7 @@ public class PostService {
 
     @Transactional
     public void addPost(Post post) {
-        postRepository.save(post).getId();
+        postRepository.save(post);
     }
 
     @Transactional
