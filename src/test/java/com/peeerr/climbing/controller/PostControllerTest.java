@@ -11,9 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -34,6 +37,29 @@ class PostControllerTest {
 
     @MockBean
     private PostService postService;
+
+    @DisplayName("게시물 전체를 페이징해서 조회해 온다.")
+    @Test
+    void postList() throws Exception {
+        //given
+        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
+        given(postService.getPosts(pageable)).willReturn(new PageImpl<>(Collections.emptyList(), pageable, 0));
+
+        //when
+        ResultActions result = mvc.perform(get("/api/posts")
+                .queryParam("page", String.valueOf(0))
+                .queryParam("size", String.valueOf(10))
+                .queryParam("sort", "id,desc"));
+
+        //then
+        result
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("success"))
+                .andExpect(jsonPath("$.message").value("게시물 전체 조회 성공"))
+                .andDo(print());
+
+        then(postService).should().getPosts(pageable);
+    }
 
     @DisplayName("게시물 id가 주어지면 해당 게시물을 조회한다.")
     @Test

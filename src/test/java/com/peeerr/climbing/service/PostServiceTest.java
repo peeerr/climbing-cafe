@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -26,8 +28,24 @@ class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
+    
+    @DisplayName("게시물 전체를 페이징해서 조회해 온다.")
+    @Test
+    void getPosts() throws Exception {
+        //given
+        Pageable pageable = Pageable.ofSize(10);
+        given(postRepository.findAll(pageable)).willReturn(Page.empty());
+        
+        //when
+        Page<Post> posts = postService.getPosts(pageable);
 
-    @DisplayName("게시물 하나를 조회해 온다.")
+        //then
+        assertThat(posts).isEmpty();
+
+        then(postRepository).should().findAll(pageable);
+    }
+
+    @DisplayName("게시물 id가 주어지면 해당 게시물을 조회해 온다.")
     @Test
     void getPost() throws Exception {
         //given
