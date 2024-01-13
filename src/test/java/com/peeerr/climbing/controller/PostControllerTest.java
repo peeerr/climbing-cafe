@@ -1,6 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
@@ -65,7 +66,14 @@ class PostControllerTest {
     @Test
     void postDetail() throws Exception {
         //given
-        Post post = Post.of("제목 테스트", "본문 테스트");
+        Category category = Category.of("자유 게시판");
+
+        Post post = Post.builder()
+                .title("제목 테스트")
+                .content("본문 테스트")
+                .category(category)
+                .build();
+
         PostResponse response = PostResponse.from(post);
 
         given(postService.getPost(anyLong())).willReturn(response);
@@ -89,9 +97,9 @@ class PostControllerTest {
     @Test
     void postAdd() throws Exception {
         //given
-        PostCreateRequest post = PostCreateRequest.of("제목 테스트", "본문 테스트");
+        PostCreateRequest post = PostCreateRequest.of("제목 테스트", "본문 테스트", 1L);
 
-        willDoNothing().given(postService).addPost(any(Post.class));
+        willDoNothing().given(postService).addPost(any(PostCreateRequest.class));
 
         //when
         ResultActions result = mvc.perform(post("/api/posts")
@@ -105,14 +113,14 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("게시물 작성 성공"))
                 .andDo(print());
 
-        then(postService).should().addPost(any(Post.class));
+        then(postService).should().addPost(any(PostCreateRequest.class));
     }
 
     @DisplayName("새로운 게시물을 작성하는데, 제목 또는 본문 비어있으면 예외를 던진다.")
     @Test
     void postAddWithoutTitleOrContent() throws Exception {
         //given
-        PostCreateRequest post = PostCreateRequest.of("", "   ");
+        PostCreateRequest post = PostCreateRequest.of("", "   ", 1L);
 
         //when
         ResultActions result = mvc.perform(post("/api/posts")
@@ -131,7 +139,7 @@ class PostControllerTest {
     @Test
     void editPost() throws Exception {
         //given
-        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트");
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
         willDoNothing().given(postService).editPost(anyLong(), any(PostEditRequest.class));
 
@@ -154,7 +162,7 @@ class PostControllerTest {
     @Test
     void postEditWithoutTitleOrContent() throws Exception {
         //given
-        PostEditRequest post = PostEditRequest.of("", "   ");
+        PostEditRequest post = PostEditRequest.of("", "   ", 1L);
 
         //when
         ResultActions result = mvc.perform(put("/api/posts/{postId}", 1L)
