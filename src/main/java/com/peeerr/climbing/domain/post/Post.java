@@ -1,8 +1,10 @@
 package com.peeerr.climbing.domain.post;
 
 import com.peeerr.climbing.domain.BaseEntity;
+import com.peeerr.climbing.domain.category.Category;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,13 +24,15 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    public static Post of(String title, String content) {
-        return new Post(title, content);
-    }
+    @JoinColumn(name = "category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Category category;
 
-    private Post(String title, String content) {
+    @Builder
+    private Post(String title, String content, Category category) {
         this.title = title;
         this.content = content;
+        this.category = category;
     }
 
     public void changeTitle(String title) {
@@ -37,6 +41,10 @@ public class Post extends BaseEntity {
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public void changeCategory(Category category) {
+        this.category = category;
     }
 
 }
