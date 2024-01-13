@@ -83,7 +83,7 @@ class PostRepositoryTest {
         Long postId = savedPost.getId();
 
         //when
-        Post foundPost = postRepository.findById(postId).get();
+        Post foundPost = postRepository.findById(postId).orElseThrow();
 
         //then
         assertThat(foundPost.getTitle()).isEqualTo(savedPost.getTitle());
