@@ -1,6 +1,6 @@
 package com.peeerr.climbing.exception;
 
-import com.peeerr.climbing.dto.post.response.ApiResponse;
+import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.ValidationException;
 import org.springframework.http.ResponseEntity;
