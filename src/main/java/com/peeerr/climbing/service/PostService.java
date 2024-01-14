@@ -35,8 +35,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostResponse getPost(Long id) {
-        PostResponse postResponse = postRepository.findById(id)
+    public PostResponse getPost(Long postId) {
+        PostResponse postResponse = postRepository.findById(postId)
                 .map(PostResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
 
@@ -55,8 +55,8 @@ public class PostService {
     }
 
     @Transactional
-    public void editPost(Long id, PostEditRequest postEditRequest) {
-        Post post = postRepository.findById(id)
+    public void editPost(Long postId, PostEditRequest postEditRequest) {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
 
         post.changeTitle(postEditRequest.getTitle());
@@ -66,7 +66,10 @@ public class PostService {
 
     @Transactional
     public void removePost(Long postId) {
-        postRepository.deleteById(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+
+        postRepository.delete(post);
     }
 
     private Category getCategory(Long categoryId) {
