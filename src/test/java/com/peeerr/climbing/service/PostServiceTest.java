@@ -21,7 +21,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,11 +51,11 @@ class PostServiceTest {
         then(postRepository).should().findAll(pageable);
     }
 
-    @DisplayName("게시물 id가 주어지면 해당 게시물을 조회해 온다.")
+    @DisplayName("게시물 하나를 조회해 온다.")
     @Test
     void getPost() throws Exception {
         //given
-        long postId = 1L;
+        Long postId = 1L;
         Post post = createPost();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
@@ -71,16 +70,17 @@ class PostServiceTest {
         then(postRepository).should().findById(postId);
     }
 
-    @DisplayName("해당하는 게시물 없으면 예외를 던진다.")
+    @DisplayName("게시물을 조회해 오는데, 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
     void getPostWithNonExistPostId() throws Exception {
         //given
-        long postId = 1L;
+        Long postId = 1L;
 
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class, () -> postService.getPost(postId));
+        assertThrows(EntityNotFoundException.class,
+                () -> postService.getPost(postId));
 
         then(postRepository).should().findById(postId);
     }
@@ -89,7 +89,7 @@ class PostServiceTest {
     @Test
     void addPost() throws Exception {
         // given
-        long categoryId = 1L;
+        Long categoryId = 1L;
         PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", categoryId);
         Category category = Category.of("자유 게시판");
 
@@ -114,8 +114,8 @@ class PostServiceTest {
     @Test
     void editPost() throws Exception {
         //given
-        long postId = 1L;
-        long categoryId = 2L;
+        Long postId = 1L;
+        Long categoryId = 2L;
         Post post = createPost();
 
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
@@ -136,33 +136,53 @@ class PostServiceTest {
         then(categoryRepository).should().findById(categoryId);
     }
 
-    @DisplayName("해당하는 게시물 없으면 예외를 던진다.")
+    @DisplayName("id를 받아 게시물을 수정하는데, 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
     void editPostWithNonExistPostId() throws Exception {
         //given
-        long postId = 1L;
+        Long postId = 1L;
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class, () -> postService.editPost(postId, request));
+        assertThrows(EntityNotFoundException.class,
+                () -> postService.editPost(postId, request));
 
         then(postRepository).should().findById(postId);
     }
 
-    @DisplayName("게시물 id가 주어지면 해당 게시물을 삭제한다.")
+    @DisplayName("게시물 id가 주어지면, 해당 게시물을 삭제한다.")
     @Test
     void removePost() throws Exception {
         //given
-        long postId = 1L;
-        willDoNothing().given(postRepository).deleteById(postId);
+        Long postId = 1L;
+        Post post = createPost();
+
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        willDoNothing().given(postRepository).delete(post);
 
         //when
         postService.removePost(postId);
 
         //then
-        then(postRepository).should().deleteById(postId);
+        then(postRepository).should().findById(postId);
+        then(postRepository).should().delete(post);
+    }
+
+    @DisplayName("id를 받아 게시물을 삭제하는데 해당하는 게시물이 없으면 예외를 던진다.")
+    @Test
+    void removePostWithNonExistPostId() throws Exception {
+        //given
+        Long postId = 1L;
+
+        given(postRepository.findById(postId)).willReturn(Optional.empty());
+
+        //when & then
+        assertThrows(EntityNotFoundException.class,
+                () -> postService.removePost(postId));
+
+        then(postRepository).should().findById(postId);
     }
 
     private Post createPost() {
@@ -172,6 +192,7 @@ class PostServiceTest {
                 .content("본문 테스트")
                 .category(category)
                 .build();
+
         return post;
     }
 
