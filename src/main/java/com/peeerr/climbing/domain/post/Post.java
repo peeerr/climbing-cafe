@@ -1,5 +1,6 @@
 package com.peeerr.climbing.domain.post;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.peeerr.climbing.domain.BaseEntity;
 import com.peeerr.climbing.domain.category.Category;
 import jakarta.persistence.*;
@@ -24,6 +25,7 @@ public class Post extends BaseEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
+    @JsonIgnoreProperties({"id", "posts", "createDate", "modifyDate"})
     @JoinColumn(name = "category_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;

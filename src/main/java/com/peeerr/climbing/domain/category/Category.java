@@ -22,8 +22,12 @@ public class Category extends BaseEntity {
     @Column(length = 20)
     private String categoryName;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Post> posts;
+
+    public void changeCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
     public static Category of(String category) {
         return new Category(category);
