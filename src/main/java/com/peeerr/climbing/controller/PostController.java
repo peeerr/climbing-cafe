@@ -1,9 +1,8 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.domain.post.Post;
+import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
-import com.peeerr.climbing.dto.post.response.ApiResponse;
 import com.peeerr.climbing.dto.post.response.PostResponse;
 import com.peeerr.climbing.exception.ex.ValidationException;
 import com.peeerr.climbing.service.PostService;
@@ -31,7 +30,7 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<?> postList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Post> posts = postService.getPosts(pageable);
+        Page<PostResponse> posts = postService.getPosts(pageable);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.of("success", "게시물 전체 조회 성공", posts));
@@ -58,7 +57,7 @@ public class PostController {
             throw new ValidationException("유효성 검사 오류", errorMap);
         }
 
-        postService.addPost(postCreateRequest.toEntity());
+        postService.addPost(postCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of("success", "게시물 작성 성공", null));

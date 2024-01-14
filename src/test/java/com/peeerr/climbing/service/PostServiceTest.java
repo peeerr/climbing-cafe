@@ -1,7 +1,10 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.domain.category.Category;
+import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
+import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
@@ -28,6 +31,9 @@ class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
+
+    @Mock
+    private CategoryRepository categoryRepository;
     
     @DisplayName("게시물 전체를 페이징해서 조회해 온다.")
     @Test
@@ -37,7 +43,7 @@ class PostServiceTest {
         given(postRepository.findAll(pageable)).willReturn(Page.empty());
         
         //when
-        Page<Post> posts = postService.getPosts(pageable);
+        Page<PostResponse> posts = postService.getPosts(pageable);
 
         //then
         assertThat(posts).isEmpty();
@@ -45,12 +51,12 @@ class PostServiceTest {
         then(postRepository).should().findAll(pageable);
     }
 
-    @DisplayName("게시물 id가 주어지면 해당 게시물을 조회해 온다.")
+    @DisplayName("게시물 하나를 조회해 온다.")
     @Test
     void getPost() throws Exception {
         //given
-        long postId = 1L;
-        Post post = Post.of("제목 테스트", "본문 테스트");
+        Long postId = 1L;
+        Post post = createPost();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
@@ -64,16 +70,17 @@ class PostServiceTest {
         then(postRepository).should().findById(postId);
     }
 
-    @DisplayName("해당하는 게시물 없으면 예외를 던진다.")
+    @DisplayName("게시물을 조회해 오는데, 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
     void getPostWithNonExistPostId() throws Exception {
         //given
-        long postId = 1L;
+        Long postId = 1L;
 
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class, () -> postService.getPost(postId));
+        assertThrows(EntityNotFoundException.class,
+                () -> postService.getPost(postId));
 
         then(postRepository).should().findById(postId);
     }
@@ -82,26 +89,40 @@ class PostServiceTest {
     @Test
     void addPost() throws Exception {
         // given
-        Post post = Post.of("제목 테스트", "본문 테스트");
+        Long categoryId = 1L;
+        PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", categoryId);
+        Category category = Category.of("자유 게시판");
+
+        Post post = Post.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .category(category)
+                .build();
 
         given(postRepository.save(any(Post.class))).willReturn(post);
+        given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
         //when
-        postService.addPost(post);
+        postService.addPost(request);
 
         //then
         then(postRepository).should().save(any(Post.class));
+        then(categoryRepository).should().findById(categoryId);
     }
 
     @DisplayName("기존 게시물 하나를 수정한다.")
     @Test
     void editPost() throws Exception {
         //given
-        Post post = Post.of("제목", "본문");
-        long postId = 1L;
-        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트");
+        Long postId = 1L;
+        Long categoryId = 2L;
+        Post post = createPost();
+
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
+        Category category = Category.of(categoryId, "후기 게시판");
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
         //when
         postService.editPost(postId, request);
@@ -109,37 +130,70 @@ class PostServiceTest {
         //then
         assertThat(post.getTitle()).isEqualTo(request.getTitle());
         assertThat(post.getContent()).isEqualTo(request.getContent());
+        assertThat(post.getCategory().getId()).isEqualTo(request.getCategoryId());
 
         then(postRepository).should().findById(postId);
+        then(categoryRepository).should().findById(categoryId);
     }
 
-    @DisplayName("해당하는 게시물 없으면 예외를 던진다.")
+    @DisplayName("id를 받아 게시물을 수정하는데, 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
     void editPostWithNonExistPostId() throws Exception {
         //given
-        long postId = 1L;
-        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트");
+        Long postId = 1L;
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class, () -> postService.editPost(postId, request));
+        assertThrows(EntityNotFoundException.class,
+                () -> postService.editPost(postId, request));
 
         then(postRepository).should().findById(postId);
     }
 
-    @DisplayName("게시물 id가 주어지면 해당 게시물을 삭제한다.")
+    @DisplayName("게시물 id가 주어지면, 해당 게시물을 삭제한다.")
     @Test
     void removePost() throws Exception {
         //given
-        long postId = 1L;
-        willDoNothing().given(postRepository).deleteById(postId);
+        Long postId = 1L;
+        Post post = createPost();
+
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        willDoNothing().given(postRepository).delete(post);
 
         //when
         postService.removePost(postId);
 
         //then
-        then(postRepository).should().deleteById(postId);
+        then(postRepository).should().findById(postId);
+        then(postRepository).should().delete(post);
+    }
+
+    @DisplayName("id를 받아 게시물을 삭제하는데 해당하는 게시물이 없으면 예외를 던진다.")
+    @Test
+    void removePostWithNonExistPostId() throws Exception {
+        //given
+        Long postId = 1L;
+
+        given(postRepository.findById(postId)).willReturn(Optional.empty());
+
+        //when & then
+        assertThrows(EntityNotFoundException.class,
+                () -> postService.removePost(postId));
+
+        then(postRepository).should().findById(postId);
+    }
+
+    private Post createPost() {
+        Category category = Category.of("자유 게시판");
+        Post post = Post.builder()
+                .title("제목 테스트")
+                .content("본문 테스트")
+                .category(category)
+                .build();
+
+        return post;
     }
 
 }

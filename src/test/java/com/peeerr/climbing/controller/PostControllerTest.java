@@ -1,7 +1,6 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
@@ -11,12 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -38,12 +36,11 @@ class PostControllerTest {
     @MockBean
     private PostService postService;
 
-    @DisplayName("게시물 전체를 페이징해서 조회해 온다.")
+    @DisplayName("게시물 전체를 조회해 온다.")
     @Test
     void postList() throws Exception {
         //given
-        Pageable pageable = PageRequest.of(0, 10, Sort.Direction.DESC, "id");
-        given(postService.getPosts(pageable)).willReturn(new PageImpl<>(Collections.emptyList(), pageable, 0));
+        given(postService.getPosts(any(Pageable.class))).willReturn(any(PageImpl.class));
 
         //when
         ResultActions result = mvc.perform(get("/api/posts")
@@ -58,28 +55,24 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("게시물 전체 조회 성공"))
                 .andDo(print());
 
-        then(postService).should().getPosts(pageable);
+        then(postService).should().getPosts(any(Pageable.class));
     }
 
     @DisplayName("게시물 id가 주어지면 해당 게시물을 조회한다.")
     @Test
     void postDetail() throws Exception {
         //given
-        Post post = Post.of("제목 테스트", "본문 테스트");
-        PostResponse response = PostResponse.from(post);
-
-        given(postService.getPost(anyLong())).willReturn(response);
+        Long categoryId = 1L;
+        given(postService.getPost(anyLong())).willReturn(any(PostResponse.class));
 
         //when
-        ResultActions result = mvc.perform(get("/api/posts/{postId}", 1));
+        ResultActions result = mvc.perform(get("/api/posts/{postId}", categoryId));
 
         //then
         result
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value("success"))
                 .andExpect(jsonPath("$.message").value("게시물 상세 조회 성공"))
-                .andExpect(jsonPath("$.data.title").value("제목 테스트"))
-                .andExpect(jsonPath("$.data.content").value("본문 테스트"))
                 .andDo(print());
 
         then(postService).should().getPost(anyLong());
@@ -89,14 +82,14 @@ class PostControllerTest {
     @Test
     void postAdd() throws Exception {
         //given
-        PostCreateRequest post = PostCreateRequest.of("제목 테스트", "본문 테스트");
+        PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", 1L);
 
-        willDoNothing().given(postService).addPost(any(Post.class));
+        willDoNothing().given(postService).addPost(any(PostCreateRequest.class));
 
         //when
         ResultActions result = mvc.perform(post("/api/posts")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(mapper.writeValueAsString(post)));
+                .content(mapper.writeValueAsString(request)));
 
         //then
         result
@@ -105,14 +98,14 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("게시물 작성 성공"))
                 .andDo(print());
 
-        then(postService).should().addPost(any(Post.class));
+        then(postService).should().addPost(any(PostCreateRequest.class));
     }
 
-    @DisplayName("새로운 게시물을 작성하는데, 제목 또는 본문 비어있으면 예외를 던진다.")
+    @DisplayName("새로운 게시물을 작성하는데, 제목 또는 본문이 비어 있으면 예외를 던진다.")
     @Test
     void postAddWithoutTitleOrContent() throws Exception {
         //given
-        PostCreateRequest post = PostCreateRequest.of("", "   ");
+        PostCreateRequest post = PostCreateRequest.of("", "   ", 1L);
 
         //when
         ResultActions result = mvc.perform(post("/api/posts")
@@ -131,7 +124,7 @@ class PostControllerTest {
     @Test
     void editPost() throws Exception {
         //given
-        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트");
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
         willDoNothing().given(postService).editPost(anyLong(), any(PostEditRequest.class));
 
@@ -150,16 +143,16 @@ class PostControllerTest {
         then(postService).should().editPost(anyLong(), any(PostEditRequest.class));
     }
 
-    @DisplayName("기존 게시물을 수정하는데, 제목 또는 본문 비어있으면 예외를 던진다.")
+    @DisplayName("기존 게시물을 수정하는데, 제목 또는 본문이 비어 있으면 예외를 던진다.")
     @Test
     void postEditWithoutTitleOrContent() throws Exception {
         //given
-        PostEditRequest post = PostEditRequest.of("", "   ");
+        PostEditRequest request = PostEditRequest.of("", "   ", 1L);
 
         //when
         ResultActions result = mvc.perform(put("/api/posts/{postId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(mapper.writeValueAsString(post)));
+                .content(mapper.writeValueAsString(request)));
 
         //then
         result

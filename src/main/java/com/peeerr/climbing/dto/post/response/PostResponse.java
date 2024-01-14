@@ -11,9 +11,10 @@ public class PostResponse {
 
     private String title;
     private String content;
+    private String categoryName;
 
     public static PostResponse from(Post post) {
-        return new PostResponse(post.getTitle(), post.getContent());
+        return new PostResponse(post.getTitle(), post.getContent(), post.getCategory().getCategoryName());
     }
 
 }
