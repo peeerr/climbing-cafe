@@ -9,6 +9,7 @@ import com.peeerr.climbing.dto.file.request.FileUploadRequest;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class FileService {
     private final FileRepository fileRepository;
     private final PostRepository postRepository;
 
-
+    @Transactional
     public void uploadFiles(FileUploadRequest fileUploadRequest) {
         Post post = postRepository.findById(fileUploadRequest.getPostId())
                 .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
@@ -41,6 +42,14 @@ public class FileService {
         }
 
         fileRepository.saveAll(fileEntities);
+    }
+
+    @Transactional
+    public void updateDeleteFlag(Long fileId) {
+        File file = fileRepository.findById(fileId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 파일을 찾을 수 없습니다."));
+
+        file.changeDeleted(true);
     }
 
 }
