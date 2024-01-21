@@ -6,6 +6,7 @@ import com.peeerr.climbing.exception.ex.ValidationException;
 import com.peeerr.climbing.service.FileService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -43,7 +44,7 @@ public class FileController {
 
         fileService.uploadFiles(fileUploadRequest);
 
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.of("success", "파일 업로드 성공", null));
     }
 
