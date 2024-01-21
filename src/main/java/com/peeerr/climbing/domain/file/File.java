@@ -31,23 +31,25 @@ public class File extends BaseEntity {
     @Column(nullable = false)
     private String filePath;
 
-    private Boolean deleted;
+    @Column(nullable = false)
+    private boolean deleted;
 
     @PrePersist
     private void defaultDeleted() {
         this.deleted = false;
     }
 
-    public void changeDeleted(Boolean deleted) {
+    public void changeDeleted(boolean deleted) {
         this.deleted = deleted;
     }
 
     @Builder
-    public File(Post post, String originalFilename, String filename, String filePath) {
+    public File(Post post, String originalFilename, String filename, String filePath, boolean deleted) {
         this.post = post;
         this.originalFilename = originalFilename;
         this.filename = filename;
         this.filePath = filePath;
+        this.deleted = deleted;
     }
 
 }
