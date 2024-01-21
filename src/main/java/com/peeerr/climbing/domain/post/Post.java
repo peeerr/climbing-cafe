@@ -3,11 +3,14 @@ package com.peeerr.climbing.domain.post;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.peeerr.climbing.domain.BaseEntity;
 import com.peeerr.climbing.domain.category.Category;
+import com.peeerr.climbing.domain.file.File;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -29,6 +32,9 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "category_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<File> file;
 
     @Builder
     private Post(String title, String content, Category category) {
