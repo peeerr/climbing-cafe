@@ -19,7 +19,7 @@ public class Category extends BaseEntity {
     @Id
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String categoryName;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
