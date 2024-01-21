@@ -31,6 +31,17 @@ public class File extends BaseEntity {
     @Column(nullable = false)
     private String filePath;
 
+    private Boolean deleted;
+
+    @PrePersist
+    private void defaultDeleted() {
+        this.deleted = false;
+    }
+
+    public void changeDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
     @Builder
     public File(Post post, String originalFilename, String filename, String filePath) {
         this.post = post;

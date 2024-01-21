@@ -27,6 +27,8 @@ public class QFile extends EntityPathBase<File> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
+    public final BooleanPath deleted = createBoolean("deleted");
+
     public final StringPath filename = createString("filename");
 
     public final StringPath filePath = createString("filePath");
