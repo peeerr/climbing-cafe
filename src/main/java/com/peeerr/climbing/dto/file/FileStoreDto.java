@@ -12,7 +12,6 @@ public class FileStoreDto {
     private String filename;
     private String filePath;
 
-
     public static FileStoreDto of(String originalFilename, String filename, String filePath) {
         return new FileStoreDto(originalFilename, filename, filePath);
     }
