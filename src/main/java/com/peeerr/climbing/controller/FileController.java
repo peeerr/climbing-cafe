@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.dto.file.request.FileUploadRequest;
 import com.peeerr.climbing.exception.ex.ValidationException;
 import com.peeerr.climbing.service.FileService;
@@ -24,7 +24,7 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping
-    public ResponseEntity<?> fileUpload(@ModelAttribute @Valid FileUploadRequest fileUploadRequest,
+    public ResponseEntity<Void> fileUpload(@ModelAttribute @Valid FileUploadRequest fileUploadRequest,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -33,27 +33,25 @@ public class FileController {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             }
 
-            throw new ValidationException("유효성 검사 오류", errorMap);
+            throw new ValidationException(MessageConstant.VALIDATION_ERROR, errorMap);
         }
 
         for (MultipartFile file: fileUploadRequest.getFiles()) {
             if (file.isEmpty()) {
-                throw new ValidationException("유효성 검사 오류", Map.of("files", "파일을 첨부해야 합니다."));
+                throw new ValidationException(MessageConstant.VALIDATION_ERROR, Map.of("files", MessageConstant.NO_FILE_SELECTED));
             }
         }
 
         fileService.uploadFiles(fileUploadRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.of("success", "파일 업로드 성공", null));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @DeleteMapping("/{fileId}")
-    public ResponseEntity<?> fileUpdateDeleteFlag(@PathVariable Long fileId) {
+    public ResponseEntity<Void> fileUpdateDeleteFlag(@PathVariable Long fileId) {
         fileService.updateDeleteFlag(fileId);
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "파일 삭제 성공", null));
+        return ResponseEntity.ok().build();
     }
 
 }

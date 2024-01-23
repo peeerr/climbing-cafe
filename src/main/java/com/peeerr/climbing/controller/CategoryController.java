@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.category.response.CategoryResponse;
@@ -26,23 +26,21 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<?> categoryList() {
+    public ResponseEntity<List<CategoryResponse>> categoryList() {
         List<CategoryResponse> categories = categoryService.getCategories();
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "카테고리 전체 조회 성공", categories));
+        return ResponseEntity.ok().body(categories);
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseEntity<?> categoryDetail(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryResponse> categoryDetail(@PathVariable Long categoryId) {
         CategoryResponse category = categoryService.getCategory(categoryId);
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "카테고리 상세 조회 성공", category));
+        return ResponseEntity.ok().body(category);
     }
 
     @PostMapping
-    public ResponseEntity<?> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest,
+    public ResponseEntity<Void> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest,
                                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -51,17 +49,16 @@ public class CategoryController {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             }
 
-            throw new ValidationException("유효성 검사 오류", errorMap);
+            throw new ValidationException(MessageConstant.VALIDATION_ERROR, errorMap);
         }
 
         categoryService.addCategory(categoryCreateRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.of("success", "카테고리 추가 성공", null));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<?> categoryEdit(@PathVariable Long categoryId,
+    public ResponseEntity<Void> categoryEdit(@PathVariable Long categoryId,
                                           @RequestBody @Valid CategoryEditRequest categoryEditRequest,
                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -71,21 +68,19 @@ public class CategoryController {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             }
 
-            throw new ValidationException("유효성 검사 오류", errorMap);
+            throw new ValidationException(MessageConstant.VALIDATION_ERROR, errorMap);
         }
 
         categoryService.editCategory(categoryId, categoryEditRequest);
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "카테고리 수정 성공", null));
+        return ResponseEntity.ok().build();
     }
     
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<?> categoryRemove(@PathVariable Long categoryId) {
+    public ResponseEntity<Void> categoryRemove(@PathVariable Long categoryId) {
         categoryService.removeCategory(categoryId);
         
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "카테고리 삭제 성공", null));
+        return ResponseEntity.ok().build();
     }
 
 }

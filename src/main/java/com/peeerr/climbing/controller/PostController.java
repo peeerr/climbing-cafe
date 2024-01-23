@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
@@ -29,23 +29,21 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<?> postList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<PostResponse>> postList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostResponse> posts = postService.getPosts(pageable);
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "게시물 전체 조회 성공", posts));
+        return ResponseEntity.ok().body(posts);
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<?> postDetail(@PathVariable Long postId) {
+    public ResponseEntity<PostResponse> postDetail(@PathVariable Long postId) {
         PostResponse response = postService.getPost(postId);
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "게시물 상세 조회 성공", response));
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
-    public ResponseEntity<?> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,
+    public ResponseEntity<Void> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,
                                   BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, String> errorMap = new HashMap<>();
@@ -54,17 +52,16 @@ public class PostController {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             }
 
-            throw new ValidationException("유효성 검사 오류", errorMap);
+            throw new ValidationException(MessageConstant.VALIDATION_ERROR, errorMap);
         }
 
         postService.addPost(postCreateRequest);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.of("success", "게시물 작성 성공", null));
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<?> postEdit(@PathVariable Long postId,
+    public ResponseEntity<Void> postEdit(@PathVariable Long postId,
                                       @RequestBody @Valid PostEditRequest postEditRequest,
                                       BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -74,21 +71,19 @@ public class PostController {
                 errorMap.put(error.getField(), error.getDefaultMessage());
             }
 
-            throw new ValidationException("유효성 검사 오류", errorMap);
+            throw new ValidationException(MessageConstant.VALIDATION_ERROR, errorMap);
         }
 
         postService.editPost(postId, postEditRequest);
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "게시물 수정 성공", null));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<?> postRemove(@PathVariable Long postId) {
+    public ResponseEntity<Void> postRemove(@PathVariable Long postId) {
         postService.removePost(postId);
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "게시물 삭제 성공", null));
+        return ResponseEntity.ok().build();
     }
 
 }
