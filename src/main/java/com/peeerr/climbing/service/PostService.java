@@ -1,5 +1,6 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.post.Post;
@@ -38,7 +39,7 @@ public class PostService {
     public PostResponse getPost(Long postId) {
         PostResponse postResponse = postRepository.findById(postId)
                 .map(PostResponse::from)
-                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
 
         return postResponse;
     }
@@ -57,7 +58,7 @@ public class PostService {
     @Transactional
     public void editPost(Long postId, PostEditRequest postEditRequest) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
 
         post.changeTitle(postEditRequest.getTitle());
         post.changeContent(postEditRequest.getContent());
@@ -67,14 +68,14 @@ public class PostService {
     @Transactional
     public void removePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
 
         postRepository.delete(post);
     }
 
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("카테고리를 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
     }
 
 }
