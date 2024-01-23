@@ -1,5 +1,6 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.domain.file.File;
 import com.peeerr.climbing.domain.file.FileRepository;
 import com.peeerr.climbing.domain.post.Post;
@@ -25,7 +26,7 @@ public class FileService {
     @Transactional
     public void uploadFiles(FileUploadRequest fileUploadRequest) {
         Post post = postRepository.findById(fileUploadRequest.getPostId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
 
         List<FileStoreDto> files = storageManagement.storeFiles(fileUploadRequest.getFiles());
 
@@ -47,7 +48,7 @@ public class FileService {
     @Transactional
     public void updateDeleteFlag(Long fileId) {
         File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 파일을 찾을 수 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.FILE_NOT_FOUND));
 
         file.changeDeleted(true);
     }
