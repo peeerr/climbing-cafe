@@ -6,6 +6,9 @@ public class MessageConstant {
     public static final String VALIDATION_ERROR = "입력 데이터의 유효성을 검사하던 중 문제가 발생했습니다.";
     public static final String NO_FILE_SELECTED = "파일을 선택하지 않았습니다. 파일을 선택해주세요.";
 
+    /* FileService */
+    public static final String FILE_ALREADY_DELETED = "이미 삭제된 파일입니다.";
+
     /* StorageManagement */
     public static final String FILE_STORE_FAILED = "파일 저장에 실패했습니다.";
     public static final String DIRECTORY_CREATE_FAILED = "파일을 저장할 디렉토리 생성에 실패했습니다.";
