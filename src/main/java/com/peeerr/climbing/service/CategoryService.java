@@ -36,18 +36,22 @@ public class CategoryService {
     }
 
     @Transactional
-    public void addCategory(CategoryCreateRequest request) {
+    public CategoryResponse addCategory(CategoryCreateRequest request) {
         Category category = Category.of(request.getCategoryName());
 
-        categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+
+        return CategoryResponse.from(savedCategory);
     }
 
     @Transactional
-    public void editCategory(Long categoryId, CategoryEditRequest request) {
+    public CategoryResponse editCategory(Long categoryId, CategoryEditRequest request) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
 
         category.changeCategoryName(request.getCategoryName());
+
+        return CategoryResponse.from(category);
     }
 
     @Transactional

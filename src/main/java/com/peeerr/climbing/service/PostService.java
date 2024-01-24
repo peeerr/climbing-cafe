@@ -45,24 +45,28 @@ public class PostService {
     }
 
     @Transactional
-    public void addPost(PostCreateRequest postCreateRequest) {
+    public PostResponse addPost(PostCreateRequest postCreateRequest) {
         Post post = Post.builder()
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
                 .category(getCategory(postCreateRequest.getCategoryId()))
                 .build();
 
-        postRepository.save(post);
+        Post savedPost = postRepository.save(post);
+
+        return PostResponse.from(savedPost);
     }
 
     @Transactional
-    public void editPost(Long postId, PostEditRequest postEditRequest) {
+    public PostResponse editPost(Long postId, PostEditRequest postEditRequest) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
 
         post.changeTitle(postEditRequest.getTitle());
         post.changeContent(postEditRequest.getContent());
         post.changeCategory(getCategory(postEditRequest.getCategoryId()));
+
+        return PostResponse.from(post);
     }
 
     @Transactional
