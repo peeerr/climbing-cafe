@@ -1,6 +1,7 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.config.constant.MessageConstant;
+import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.file.request.FileUploadRequest;
 import com.peeerr.climbing.exception.ex.ValidationException;
 import com.peeerr.climbing.service.FileService;
@@ -9,11 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -24,36 +24,30 @@ public class FileController {
     private final FileService fileService;
 
     @PostMapping
-    public ResponseEntity<?> fileUpload(@ModelAttribute @Valid FileUploadRequest fileUploadRequest,
-                                        BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errorMap = new HashMap<>();
-
-            for (FieldError error: bindingResult.getFieldErrors()) {
-                errorMap.put(error.getField(), error.getDefaultMessage());
-            }
-
-            throw new ValidationException("유효성 검사 오류", errorMap);
-        }
-
-        for (MultipartFile file: fileUploadRequest.getFiles()) {
-            if (file.isEmpty()) {
-                throw new ValidationException("유효성 검사 오류", Map.of("files", "파일을 첨부해야 합니다."));
+    public ResponseEntity<ApiResponse> fileUpload(@ModelAttribute @Valid FileUploadRequest fileUploadRequest,
+                                                  BindingResult bindingResult) {
+        if (fileUploadRequest.getFiles() == null) {
+            throw new ValidationException(MessageConstant.VALIDATION_ERROR, Map.of("files", MessageConstant.NO_FILE_SELECTED));
+        } else {
+            for (MultipartFile file: fileUploadRequest.getFiles()) {
+                if (file.isEmpty()) {
+                    throw new ValidationException(MessageConstant.VALIDATION_ERROR, Map.of("files", MessageConstant.NO_FILE_SELECTED));
+                }
             }
         }
 
-        fileService.uploadFiles(fileUploadRequest);
+        List<String> uploadedFilesAllPaths = fileService.uploadFiles(fileUploadRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.of("success", "파일 업로드 성공", null));
+                .body(ApiResponse.success(uploadedFilesAllPaths));
     }
 
     @DeleteMapping("/{fileId}")
-    public ResponseEntity<?> fileUpdateDeleteFlag(@PathVariable Long fileId) {
+    public ResponseEntity<ApiResponse> fileUpdateDeleteFlag(@PathVariable Long fileId) {
         fileService.updateDeleteFlag(fileId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.of("success", "파일 삭제 성공", null));
+                .body(ApiResponse.success());
     }
 
 }

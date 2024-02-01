@@ -1,5 +1,6 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
@@ -29,30 +30,34 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryResponse getCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 카테고리입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
 
         return CategoryResponse.from(category);
     }
 
     @Transactional
-    public void addCategory(CategoryCreateRequest request) {
+    public CategoryResponse addCategory(CategoryCreateRequest request) {
         Category category = Category.of(request.getCategoryName());
 
-        categoryRepository.save(category);
+        Category savedCategory = categoryRepository.save(category);
+
+        return CategoryResponse.from(savedCategory);
     }
 
     @Transactional
-    public void editCategory(Long categoryId, CategoryEditRequest request) {
+    public CategoryResponse editCategory(Long categoryId, CategoryEditRequest request) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 카테고리입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
 
         category.changeCategoryName(request.getCategoryName());
+
+        return CategoryResponse.from(category);
     }
 
     @Transactional
     public void removeCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 카테고리입니다."));
+                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(category);
     }
