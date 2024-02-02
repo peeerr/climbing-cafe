@@ -14,7 +14,7 @@ public class PostCreateRequest {
     @NotBlank(message = "제목을 입력해 주세요.")
     private String title;
 
-    @NotBlank(message = "본문을 입력해 주세요")
+    @NotBlank(message = "본문을 입력해 주세요.")
     private String content;
 
     @NotNull(message = "카테고리를 선택해 주세요.")
