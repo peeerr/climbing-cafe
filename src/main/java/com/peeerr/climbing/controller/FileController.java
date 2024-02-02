@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.config.constant.MessageConstant;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.file.request.FileUploadRequest;
 import com.peeerr.climbing.exception.ex.ValidationException;
@@ -27,11 +27,11 @@ public class FileController {
     public ResponseEntity<ApiResponse> fileUpload(@ModelAttribute @Valid FileUploadRequest fileUploadRequest,
                                                   BindingResult bindingResult) {
         if (fileUploadRequest.getFiles() == null) {
-            throw new ValidationException(MessageConstant.VALIDATION_ERROR, Map.of("files", MessageConstant.NO_FILE_SELECTED));
+            throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
         } else {
             for (MultipartFile file: fileUploadRequest.getFiles()) {
                 if (file.isEmpty()) {
-                    throw new ValidationException(MessageConstant.VALIDATION_ERROR, Map.of("files", MessageConstant.NO_FILE_SELECTED));
+                    throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
                 }
             }
         }

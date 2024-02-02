@@ -1,4 +1,4 @@
-package com.peeerr.climbing.exception;
+package com.peeerr.climbing.exception.constant;
 
 public class ErrorMessage {
 

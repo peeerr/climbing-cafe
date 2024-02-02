@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.config.constant.MessageConstant;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
@@ -30,7 +30,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryResponse getCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         return CategoryResponse.from(category);
     }
@@ -47,7 +47,7 @@ public class CategoryService {
     @Transactional
     public CategoryResponse editCategory(Long categoryId, CategoryEditRequest request) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         category.changeCategoryName(request.getCategoryName());
 
@@ -57,7 +57,7 @@ public class CategoryService {
     @Transactional
     public void removeCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(category);
     }

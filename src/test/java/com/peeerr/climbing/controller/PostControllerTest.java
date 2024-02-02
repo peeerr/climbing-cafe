@@ -2,7 +2,6 @@ package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.aop.ValidationCheckAspect;
-import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;

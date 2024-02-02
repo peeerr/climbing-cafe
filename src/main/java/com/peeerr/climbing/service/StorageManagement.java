@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.config.constant.MessageConstant;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.dto.file.FileStoreDto;
 import com.peeerr.climbing.exception.ex.DirectoryCreateException;
 import com.peeerr.climbing.exception.ex.FileStoreException;
@@ -47,13 +47,13 @@ public class StorageManagement {
                 Files.createDirectories(storeDirectoryPath);
             }
         } catch (Exception e) {
-            throw new DirectoryCreateException(MessageConstant.DIRECTORY_CREATE_FAILED);
+            throw new DirectoryCreateException(ErrorMessage.DIRECTORY_CREATE_FAILED);
         }
 
         try {
             file.transferTo(new File(filePath));
         } catch (Exception e) {
-            throw new FileStoreException(MessageConstant.FILE_STORE_FAILED);
+            throw new FileStoreException(ErrorMessage.FILE_STORE_FAILED);
         }
 
         return FileStoreDto.of(originalFilename, filename, filePath);
