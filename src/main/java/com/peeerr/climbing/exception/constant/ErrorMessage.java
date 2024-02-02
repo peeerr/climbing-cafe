@@ -1,6 +1,6 @@
-package com.peeerr.climbing.config.constant;
+package com.peeerr.climbing.exception;
 
-public class MessageConstant {
+public class ErrorMessage {
 
     /* Validation */
     public static final String VALIDATION_ERROR = "입력 데이터의 유효성을 검사하던 중 문제가 발생했습니다.";
@@ -18,6 +18,9 @@ public class MessageConstant {
 
     /* Category */
     public static final String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
+
+    /* User */
+    public static final String USER_NOT_FOUND = "존재하지 않는 계정입니다. 회원가입 후 로그인해 주세요.";
 
     /* File */
     public static final String FILE_NOT_FOUND = "존재하지 않는 파일입니다.";
