@@ -18,6 +18,7 @@ public class ErrorMessage {
 
     /* UserService */
     public static final String PASSWORD_CONFIRMATION_FAILED = "비밀번호 확인에 실패했습니다. 동일한 비밀번호를 입력해 주세요.";
+    public static final String MEMBER_DUPLICATED = "이미 존재하는 회원입니다.";
 
     /* Post */
     public static final String POST_NOT_FOUND = "존재하지 않는 게시물입니다.";
