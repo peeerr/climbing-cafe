@@ -37,7 +37,9 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse addCategory(CategoryCreateRequest request) {
-        Category category = Category.of(request.getCategoryName());
+        Category category = Category.builder()
+                .categoryName(request.getCategoryName())
+                .build();
 
         Category savedCategory = categoryRepository.save(category);
 
