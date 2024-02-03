@@ -1,17 +1,19 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.category.response.CategoryResponse;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -37,6 +39,8 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse addCategory(CategoryCreateRequest request) {
+        validateDuplicateCategory(request.getCategoryName());
+
         Category category = Category.builder()
                 .categoryName(request.getCategoryName())
                 .build();
@@ -48,6 +52,8 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse editCategory(Long categoryId, CategoryEditRequest request) {
+        validateDuplicateCategory(request.getCategoryName());
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
@@ -62,6 +68,14 @@ public class CategoryService {
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(category);
+    }
+
+    public void validateDuplicateCategory(String categoryName) {
+        Optional<Category> category = categoryRepository.findCategoryByCategoryName(categoryName);
+
+        category.ifPresent(foundCategory -> {
+            throw new DuplicationException(ErrorMessage.CATEGORY_DUPLICATED);
+        });
     }
 
 }

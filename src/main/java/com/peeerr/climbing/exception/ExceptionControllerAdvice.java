@@ -48,4 +48,10 @@ public class ExceptionControllerAdvice {
                 .body(ApiResponse.of(e.getMessage()));
     }
 
+    @ExceptionHandler(DuplicationException.class)
+    public ResponseEntity<ApiResponse> duplicated(DuplicationException e) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.of(e.getMessage()));
+    }
+
 }
