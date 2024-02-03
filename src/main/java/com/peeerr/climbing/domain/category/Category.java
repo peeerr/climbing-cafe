@@ -4,6 +4,7 @@ import com.peeerr.climbing.domain.BaseEntity;
 import com.peeerr.climbing.domain.post.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +20,7 @@ public class Category extends BaseEntity {
     @Id
     private Long id;
 
-    @Column(length = 20)
+    @Column(length = 20, unique = true, nullable = false)
     private String categoryName;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -29,19 +30,8 @@ public class Category extends BaseEntity {
         this.categoryName = categoryName;
     }
 
-    public static Category of(String category) {
-        return new Category(category);
-    }
-
-    public static Category of(Long id, String category) {
-        return new Category(id, category);
-    }
-
-    private Category(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    private Category(Long id, String categoryName) {
+    @Builder
+    public Category(Long id, String categoryName) {
         this.id = id;
         this.categoryName = categoryName;
     }
