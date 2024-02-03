@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.peeerr.climbing.domain.BaseEntity;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.file.File;
-import com.peeerr.climbing.domain.user.User;
+import com.peeerr.climbing.domain.user.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -38,17 +38,18 @@ public class Post extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnoreProperties("posts")
     @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
+    private Member member;
 
     @JsonIgnoreProperties("post")
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<File> file = new ArrayList<>();
 
     @Builder
-    private Post(String title, String content, Category category) {
+    private Post(String title, String content, Category category, Member member) {
         this.title = title;
         this.content = content;
         this.category = category;
+        this.member = member;
     }
 
     public void changeTitle(String title) {
