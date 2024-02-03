@@ -1,5 +1,6 @@
 package com.peeerr.climbing.controller;
 
+import com.peeerr.climbing.config.auth.CustomUserDetails;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +43,9 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,
-                                  BindingResult bindingResult) {
-        PostResponse addedPost = postService.addPost(postCreateRequest);
+                                               BindingResult bindingResult,
+                                               @AuthenticationPrincipal CustomUserDetails userDetails) {
+        PostResponse addedPost = postService.addPost(postCreateRequest, userDetails.getMember());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(addedPost));

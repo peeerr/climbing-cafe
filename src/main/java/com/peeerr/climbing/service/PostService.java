@@ -1,5 +1,6 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
@@ -45,11 +46,12 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse addPost(PostCreateRequest postCreateRequest) {
+    public PostResponse addPost(PostCreateRequest postCreateRequest, Member member) {
         Post post = Post.builder()
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
                 .category(getCategory(postCreateRequest.getCategoryId()))
+                .member(member)
                 .build();
 
         Post savedPost = postRepository.save(post);
