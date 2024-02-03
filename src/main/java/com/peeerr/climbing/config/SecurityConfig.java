@@ -24,6 +24,7 @@ public class SecurityConfig {
         http
                 .csrf(c -> c.disable())
                 .formLogin(form -> form
+                        .usernameParameter("email")
                         .loginProcessingUrl("/api/users/login")
                         .failureHandler(failureHandler))
                 .authorizeHttpRequests(auth -> auth
