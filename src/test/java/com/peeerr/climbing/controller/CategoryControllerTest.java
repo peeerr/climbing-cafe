@@ -1,6 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peeerr.climbing.config.SecurityConfig;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
@@ -9,8 +10,11 @@ import com.peeerr.climbing.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -25,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = CategoryController.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class CategoryControllerTest {
 
     @Autowired
@@ -118,7 +123,7 @@ class CategoryControllerTest {
         //given
         Long categoryId = 1L;
         CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
-        CategoryResponse response = CategoryResponse.from(Category.of("후기 게시판"));
+        CategoryResponse response = CategoryResponse.from(Category.builder().categoryName("후기 게시판").build());
 
         given(categoryService.editCategory(anyLong(), any(CategoryEditRequest.class))).willReturn(response);
 

@@ -91,7 +91,7 @@ class PostServiceTest {
         // given
         Long categoryId = 1L;
         PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", categoryId);
-        Category category = Category.of("자유 게시판");
+        Category category = Category.builder().categoryName("자유 게시판").build();
 
         Post post = Post.builder()
                 .title(request.getTitle())
@@ -119,7 +119,7 @@ class PostServiceTest {
         Post post = createPost();
 
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
-        Category category = Category.of(categoryId, "후기 게시판");
+        Category category = Category.builder().id(categoryId).categoryName("후기 게시판").build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
@@ -186,7 +186,7 @@ class PostServiceTest {
     }
 
     private Post createPost() {
-        Category category = Category.of("자유 게시판");
+        Category category = Category.builder().categoryName("자유 게시판").build();
         Post post = Post.builder()
                 .title("제목 테스트")
                 .content("본문 테스트")

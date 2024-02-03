@@ -20,7 +20,7 @@ class CategoryRepositoryTest {
     void save() throws Exception {
         //given
         String categoryName = "자유 게시판";
-        Category category = Category.of(categoryName);
+        Category category = Category.builder().categoryName(categoryName).build();
 
         //when
         Category savedCategory = categoryRepository.save(category);
@@ -37,9 +37,9 @@ class CategoryRepositoryTest {
         String categoryName2 = "후기 게시판";
         String categoryName3 = "인기 게시판";
 
-        Category category1 = Category.of(categoryName1);
-        Category category2 = Category.of(categoryName2);
-        Category category3 = Category.of(categoryName3);
+        Category category1 = Category.builder().categoryName(categoryName1).build();
+        Category category2 = Category.builder().categoryName(categoryName2).build();
+        Category category3 = Category.builder().categoryName(categoryName3).build();
 
         categoryRepository.saveAll(List.of(category1, category2, category3));
 
@@ -61,7 +61,7 @@ class CategoryRepositoryTest {
     void findById() throws Exception {
         //given
         String categoryName = "자유 게시판";
-        Category category = Category.of(categoryName);
+        Category category = Category.builder().categoryName(categoryName).build();
 
         Category savedCategory = categoryRepository.save(category);
         Long categoryId = savedCategory.getId();
@@ -79,7 +79,7 @@ class CategoryRepositoryTest {
     void deleteById() throws Exception {
         //given
         String categoryName = "자유 게시판";
-        Category category = Category.of(categoryName);
+        Category category = Category.builder().categoryName(categoryName).build();
 
         Long categoryId = categoryRepository.save(category).getId();
         long count = categoryRepository.count();

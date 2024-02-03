@@ -49,7 +49,7 @@ class CategoryServiceTest {
     void getCategory() throws Exception {
         //given
         Long categoryId = 1L;
-        Category category = Category.of("자유 게시판");
+        Category category = Category.builder().categoryName("자유 게시판").build();
 
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
@@ -82,7 +82,7 @@ class CategoryServiceTest {
     void addCategory() throws Exception {
         //given
         CategoryCreateRequest request = CategoryCreateRequest.of("자유 게시판");
-        Category category = Category.of(request.getCategoryName());
+        Category category = Category.builder().categoryName(request.getCategoryName()).build();
 
         given(categoryRepository.save(any(Category.class))).willReturn(category);
 
@@ -98,7 +98,7 @@ class CategoryServiceTest {
     void editCategory() throws Exception {
         //given
         Long categoryId = 1L;
-        Category category = Category.of("자유 게시판");
+        Category category = Category.builder().categoryName("자유 게시판").build();
         CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
 
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
@@ -133,7 +133,7 @@ class CategoryServiceTest {
     void removeCategory() throws Exception {
         //given
         Long categoryId = 1L;
-        Category category = Category.of("자유 게시판");
+        Category category = Category.builder().categoryName("자유 게시판").build();
 
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
         willDoNothing().given(categoryRepository).delete(category);

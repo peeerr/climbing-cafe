@@ -2,11 +2,15 @@ package com.peeerr.climbing.domain.post;
 
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
+import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.domain.user.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
@@ -18,6 +22,8 @@ class PostRepositoryTest {
 
     @Autowired private PostRepository postRepository;
     @Autowired private CategoryRepository categoryRepository;
+    @Autowired private MemberRepository memberRepository;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @DisplayName("게시물 하나를 저장한다.")
     @Test
@@ -38,22 +44,30 @@ class PostRepositoryTest {
     @Test
     void findAll() throws Exception {
         //given
-        Category category = categoryRepository.save(Category.of("자유 게시판"));
+        Category category = categoryRepository.save(Category.builder().categoryName("자유 게시판").build());
+        Member member = memberRepository.save(Member.builder()
+                .username("test")
+                .password(passwordEncoder.encode("test1234"))
+                .email("test@example.com")
+                .build());
 
         Post post1 = Post.builder()
                 .title("제목 테스트1")
                 .content("본문 테스트1")
                 .category(category)
+                .member(member)
                 .build();
         Post post2 = Post.builder()
                 .title("제목 테스트2")
                 .content("본문 테스트2")
                 .category(category)
+                .member(member)
                 .build();
         Post post3 = Post.builder()
                 .title("제목 테스트3")
                 .content("본문 테스트3")
                 .category(category)
+                .member(member)
                 .build();
 
         Pageable pageable = PageRequest.of(0, 2, Sort.Direction.DESC, "id");
@@ -110,10 +124,17 @@ class PostRepositoryTest {
     }
 
     private Post createPost() {
-        Category category = categoryRepository.save(Category.of("자유 게시판"));
+        Category category = categoryRepository.save(Category.builder().categoryName("자유 게시판").build());
+        Member member = memberRepository.save(Member.builder()
+                .username("test")
+                .password(passwordEncoder.encode("test1234"))
+                .email("test@example.com")
+                .build());
+
         Post post = Post.builder()
                 .title("제목 테스트")
                 .content("본문 테스트")
+                .member(member)
                 .category(category)
                 .build();
 
