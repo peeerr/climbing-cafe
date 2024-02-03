@@ -11,14 +11,14 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QUser is a Querydsl query type for User
+ * QMember is a Querydsl query type for Member
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QUser extends EntityPathBase<User> {
+public class QMember extends EntityPathBase<Member> {
 
-    private static final long serialVersionUID = 1367946937L;
+    private static final long serialVersionUID = 95277576L;
 
-    public static final QUser user = new QUser("user");
+    public static final QMember member = new QMember("member1");
 
     public final com.peeerr.climbing.domain.QBaseEntity _super = new com.peeerr.climbing.domain.QBaseEntity(this);
 
@@ -36,20 +36,20 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<com.peeerr.climbing.domain.post.Post, com.peeerr.climbing.domain.post.QPost> posts = this.<com.peeerr.climbing.domain.post.Post, com.peeerr.climbing.domain.post.QPost>createList("posts", com.peeerr.climbing.domain.post.Post.class, com.peeerr.climbing.domain.post.QPost.class, PathInits.DIRECT2);
 
-    public final EnumPath<UserRole> role = createEnum("role", UserRole.class);
+    public final EnumPath<MemberRole> role = createEnum("role", MemberRole.class);
 
     public final StringPath username = createString("username");
 
-    public QUser(String variable) {
-        super(User.class, forVariable(variable));
+    public QMember(String variable) {
+        super(Member.class, forVariable(variable));
     }
 
-    public QUser(Path<? extends User> path) {
+    public QMember(Path<? extends Member> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QUser(PathMetadata metadata) {
-        super(User.class, metadata);
+    public QMember(PathMetadata metadata) {
+        super(Member.class, metadata);
     }
 
 }

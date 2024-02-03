@@ -4,6 +4,7 @@ import com.peeerr.climbing.domain.BaseEntity;
 import com.peeerr.climbing.domain.post.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,5 +35,12 @@ public class User extends BaseEntity {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
+
+    @Builder
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 
 }
