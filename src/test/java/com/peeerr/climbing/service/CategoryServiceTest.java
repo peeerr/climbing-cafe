@@ -5,6 +5,7 @@ import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.category.response.CategoryResponse;
+import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -93,6 +94,22 @@ class CategoryServiceTest {
         then(categoryRepository).should().save(any(Category.class));
     }
 
+    @DisplayName("새로운 카테고리 하나를 추가하는데, 해당 카테고리 이름이 이미 존재하면 예외를 던진다.")
+    @Test
+    void addCategoryWithDuplicatedCategoryName() throws Exception {
+        //given
+        CategoryCreateRequest request = CategoryCreateRequest.of("자유 게시판");
+        Category category = Category.builder().categoryName(request.getCategoryName()).build();
+
+        given(categoryRepository.findCategoryByCategoryName(request.getCategoryName())).willReturn(Optional.of(category));
+
+        //when & then
+        assertThrows(DuplicationException.class,
+                () -> categoryService.addCategory(request));
+
+        then(categoryRepository).should().findCategoryByCategoryName(request.getCategoryName());
+    }
+
     @DisplayName("수정 정보를 받아 카테고리를 수정한다.")
     @Test
     void editCategory() throws Exception {
@@ -110,6 +127,23 @@ class CategoryServiceTest {
         assertThat(category.getCategoryName()).isEqualTo(request.getCategoryName());
 
         then(categoryRepository).should().findById(categoryId);
+    }
+
+    @DisplayName("수정 정보를 받아 카테고리를 수정하는데, 해당 카테고리 이름이 이미 존재하면 예외를 던진다.")
+    @Test
+    void editCategoryWithDuplicatedCategoryName() throws Exception {
+        //given
+        Long categoryId = 1L;
+        CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
+        Category category = Category.builder().categoryName(request.getCategoryName()).build();
+
+        given(categoryRepository.findCategoryByCategoryName(request.getCategoryName())).willReturn(Optional.of(category));
+
+        //when & then
+        assertThrows(DuplicationException.class,
+                () -> categoryService.editCategory(categoryId, request));
+
+        then(categoryRepository).should().findCategoryByCategoryName(request.getCategoryName());
     }
 
     @DisplayName("id를 받아 카테고리를 수정하는데, 해당하는 카테고리가 없으면 예외를 던진다.")
