@@ -1,7 +1,6 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.config.SecurityConfig;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
@@ -11,10 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -99,24 +96,6 @@ class CategoryControllerTest {
         then(categoryService).should().addCategory(any(CategoryCreateRequest.class));
     }
 
-//    @DisplayName("새로운 카테고리를 추가하는데, 카테고리명이 비어 있으면 예외를 던진다.")
-//    @Test
-//    void categoryAddWithoutCategoryName() throws Exception {
-//        //given
-//        CategoryCreateRequest post = CategoryCreateRequest.of(" ");
-//
-//        //when
-//        ResultActions result = mvc.perform(post("/api/categories")
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(mapper.writeValueAsString(post)));
-//
-//        //then
-//        result
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.message").value("fail"))
-//                .andDo(print());
-//    }
-
     @DisplayName("id와 수정 정보를 받아서, 해당 id의 카테고리를 수정한다.")
     @Test
     void categoryEdit() throws Exception {
@@ -140,24 +119,6 @@ class CategoryControllerTest {
 
         then(categoryService).should().editCategory(anyLong(), any(CategoryEditRequest.class));
     }
-
-//    @DisplayName("기존 카테고리를 수정하는데, 카테고리명이 비어 있으면 예외를 던진다.")
-//    @Test
-//    void categoryEditWithoutCategoryName() throws Exception {
-//        //given
-//        CategoryEditRequest request = CategoryEditRequest.of("");
-//
-//        //when
-//        ResultActions result = mvc.perform(put("/api/categories/{categoryId}", 1L)
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
-//                .content(mapper.writeValueAsString(request)));
-//
-//        //then
-//        result
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.message").value("fail"))
-//                .andDo(print());
-//    }
 
     @DisplayName("id가 주어지면, 해당 카테고리를 삭제한다.")
     @Test
