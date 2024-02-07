@@ -1,6 +1,6 @@
 package com.peeerr.climbing.aop;
 
-import com.peeerr.climbing.config.constant.MessageConstant;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ex.ValidationException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -31,7 +31,7 @@ public class ValidationCheckAspect {
                         errorMap.put(error.getField(), error.getDefaultMessage());
                     }
 
-                    throw new ValidationException(MessageConstant.VALIDATION_ERROR, errorMap);
+                    throw new ValidationException(ErrorMessage.VALIDATION_ERROR, errorMap);
                 }
 
             }

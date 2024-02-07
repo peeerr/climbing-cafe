@@ -4,6 +4,7 @@ import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
+import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
@@ -91,19 +92,25 @@ class PostServiceTest {
         // given
         Long categoryId = 1L;
         PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", categoryId);
-        Category category = Category.of("자유 게시판");
+        Category category = Category.builder().categoryName("자유 게시판").build();
+        Member member = Member.builder()
+                .username("test")
+                .email("test@example.com")
+                .password("test")
+                .build();
 
         Post post = Post.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
                 .category(category)
+                .member(member)
                 .build();
 
         given(postRepository.save(any(Post.class))).willReturn(post);
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
         //when
-        postService.addPost(request);
+        postService.addPost(request, member);
 
         //then
         then(postRepository).should().save(any(Post.class));
@@ -119,7 +126,7 @@ class PostServiceTest {
         Post post = createPost();
 
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
-        Category category = Category.of(categoryId, "후기 게시판");
+        Category category = Category.builder().id(categoryId).categoryName("후기 게시판").build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
@@ -138,7 +145,7 @@ class PostServiceTest {
 
     @DisplayName("id를 받아 게시물을 수정하는데, 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
-    void editPostWithNonExistPostId() throws Exception {
+    void editPostWithNonExistPost() throws Exception {
         //given
         Long postId = 1L;
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
@@ -172,7 +179,7 @@ class PostServiceTest {
 
     @DisplayName("id를 받아 게시물을 삭제하는데 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
-    void removePostWithNonExistPostId() throws Exception {
+    void removePostWithNonExistPost() throws Exception {
         //given
         Long postId = 1L;
 
@@ -186,7 +193,7 @@ class PostServiceTest {
     }
 
     private Post createPost() {
-        Category category = Category.of("자유 게시판");
+        Category category = Category.builder().categoryName("자유 게시판").build();
         Post post = Post.builder()
                 .title("제목 테스트")
                 .content("본문 테스트")

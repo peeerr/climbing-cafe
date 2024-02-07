@@ -1,7 +1,7 @@
 package com.peeerr.climbing.exception;
 
-import com.peeerr.climbing.config.constant.MessageConstant;
 import com.peeerr.climbing.dto.common.ApiResponse;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ex.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public ResponseEntity<?> fileMaxSize(MaxUploadSizeExceededException e) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body(ApiResponse.of(MessageConstant.FILE_SIZE_EXCEEDED));
+                .body(ApiResponse.of(ErrorMessage.FILE_SIZE_EXCEEDED));
     }
 
     @ExceptionHandler(DirectoryCreateException.class)
@@ -44,6 +44,12 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(FileAlreadyDeletedException.class)
     public ResponseEntity<ApiResponse> fileAlreadyDeleted(FileAlreadyDeletedException e) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.of(e.getMessage()));
+    }
+
+    @ExceptionHandler(DuplicationException.class)
+    public ResponseEntity<ApiResponse> duplicated(DuplicationException e) {
         return ResponseEntity.badRequest()
                 .body(ApiResponse.of(e.getMessage()));
     }

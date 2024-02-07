@@ -5,7 +5,8 @@ import com.peeerr.climbing.service.FileService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -22,7 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = FileController.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class FileControllerTest {
 
     @Autowired
@@ -56,26 +58,6 @@ class FileControllerTest {
 
         then(fileService).should().uploadFiles(any(FileUploadRequest.class));
     }
-
-//    @DisplayName("여러 개의 파일을 요청 받아 저장하는데, 첨부된 파일이 없으면 예외를 발생시킨다.")
-//    @Test
-//    void fileUploadWithNotingFile() throws Exception {
-//        //given
-//        Long postId = 1L;
-//
-//        //when
-//        ResultActions result = mvc.perform(multipart("/api/files")
-//                .file("files", null)
-//                .file("files", null)
-//                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-//                .param("postId", String.valueOf(postId)));
-//
-//        //then
-//        result
-//                .andDo(print())
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.message").value("fail"));
-//    }
 
     @DisplayName("파일 id 를 받아 삭제 처리한다. (유저 권한 기준)")
     @Test

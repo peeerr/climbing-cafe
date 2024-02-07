@@ -35,6 +35,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final com.peeerr.climbing.domain.user.QMember member;
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
@@ -59,6 +61,7 @@ public class QPost extends EntityPathBase<Post> {
     public QPost(Class<? extends Post> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.category = inits.isInitialized("category") ? new com.peeerr.climbing.domain.category.QCategory(forProperty("category")) : null;
+        this.member = inits.isInitialized("member") ? new com.peeerr.climbing.domain.user.QMember(forProperty("member")) : null;
     }
 
 }

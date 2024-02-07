@@ -1,6 +1,7 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.config.constant.MessageConstant;
+import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.post.Post;
@@ -39,17 +40,18 @@ public class PostService {
     public PostResponse getPost(Long postId) {
         PostResponse postResponse = postRepository.findById(postId)
                 .map(PostResponse::from)
-                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
         return postResponse;
     }
 
     @Transactional
-    public PostResponse addPost(PostCreateRequest postCreateRequest) {
+    public PostResponse addPost(PostCreateRequest postCreateRequest, Member member) {
         Post post = Post.builder()
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
                 .category(getCategory(postCreateRequest.getCategoryId()))
+                .member(member)
                 .build();
 
         Post savedPost = postRepository.save(post);
@@ -60,7 +62,7 @@ public class PostService {
     @Transactional
     public PostResponse editPost(Long postId, PostEditRequest postEditRequest) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
         post.changeTitle(postEditRequest.getTitle());
         post.changeContent(postEditRequest.getContent());
@@ -72,14 +74,14 @@ public class PostService {
     @Transactional
     public void removePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.POST_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
         postRepository.delete(post);
     }
 
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(MessageConstant.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
     }
 
 }
