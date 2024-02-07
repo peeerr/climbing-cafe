@@ -21,7 +21,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long registerUser(MemberCreateRequest request) {
+    public Long addMember(MemberCreateRequest request) {
         validateDuplicateUser(request.getUsername(), request.getEmail());
 
         if (!request.getPassword().equals(request.getCheckPassword())) {

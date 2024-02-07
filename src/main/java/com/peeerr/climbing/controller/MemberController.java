@@ -21,9 +21,9 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> signupUser(@RequestBody @Valid MemberCreateRequest memberCreateRequest,
-                                              BindingResult bindingResult) {
-        Long userId = memberService.registerUser(memberCreateRequest);
+    public ResponseEntity<ApiResponse> memberAdd(@RequestBody @Valid MemberCreateRequest memberCreateRequest,
+                                                 BindingResult bindingResult) {
+        Long userId = memberService.addMember(memberCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(userId));
