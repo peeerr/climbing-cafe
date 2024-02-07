@@ -2,7 +2,7 @@ package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.dto.user.request.MemberCreateRequest;
+import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.ValidationException;
 import org.junit.jupiter.api.DisplayName;

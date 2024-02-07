@@ -1,7 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.dto.user.request.MemberCreateRequest;
+import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
