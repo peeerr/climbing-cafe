@@ -18,7 +18,8 @@ public class ErrorMessage {
 
     /* UserService */
     public static final String PASSWORD_CONFIRMATION_FAILED = "비밀번호 확인에 실패했습니다. 동일한 비밀번호를 입력해 주세요.";
-    public static final String MEMBER_DUPLICATED = "이미 존재하는 회원입니다.";
+    public static final String USERNAME_DUPLICATED = "이미 존재하는 닉네임입니다.";
+    public static final String EMAIL_DUPLICATED = "이미 존재하는 이메일입니다.";
 
     /* Post */
     public static final String POST_NOT_FOUND = "존재하지 않는 게시물입니다.";
@@ -27,7 +28,7 @@ public class ErrorMessage {
     public static final String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
 
     /* User */
-    public static final String USER_NOT_FOUND = "존재하지 않는 아이디입니다.";
+    public static final String MEMBER_NOT_FOUND = "존재하지 않는 아이디입니다.";
 
     /* File */
     public static final String FILE_NOT_FOUND = "존재하지 않는 파일입니다.";

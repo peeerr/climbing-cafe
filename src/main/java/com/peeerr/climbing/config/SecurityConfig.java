@@ -28,8 +28,8 @@ public class SecurityConfig {
                         .loginProcessingUrl("/api/users/login")
                         .failureHandler(failureHandler))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/users/**").permitAll()
-                        .requestMatchers("/api/**").authenticated()
+//                        .requestMatchers("/api/users/**").permitAll()
+//                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll());
 
         return http.build();
