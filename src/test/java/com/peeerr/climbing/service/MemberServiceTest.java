@@ -63,12 +63,14 @@ class MemberServiceTest {
         MemberCreateRequest request = MemberCreateRequest.of("test", "test1234", "test1234", "test@example.com");
         Member member = Member.builder().build();
 
-        given(memberRepository.findUserByUsernameOrEmail(request.getUsername(), request.getEmail())).willReturn(Optional.of(member));
+        given(memberRepository.findMemberByUsername(request.getUsername())).willReturn(Optional.of(member));
+        given(memberRepository.findMemberByEmail(request.getEmail())).willReturn(Optional.of(member));
 
         //when & then
         assertThrows(DuplicationException.class, () -> memberService.addMember(request));
 
-        then(memberRepository).should().findUserByUsernameOrEmail(request.getUsername(), request.getEmail());
+        then(memberRepository).should().findMemberByUsername(request.getUsername());
+        then(memberRepository).should().findMemberByEmail(request.getEmail());
     }
 
 }
