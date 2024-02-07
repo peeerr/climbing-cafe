@@ -148,7 +148,7 @@ class CategoryServiceTest {
 
     @DisplayName("id를 받아 카테고리를 수정하는데, 해당하는 카테고리가 없으면 예외를 던진다.")
     @Test
-    void editPostWithNonExistPostId() throws Exception {
+    void editPostWithNonExistCategory() throws Exception {
         //given
         Long categoryId = 1L;
         CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
@@ -182,7 +182,7 @@ class CategoryServiceTest {
 
     @DisplayName("id를 받아 카테고리를 삭제하는데 해당하는 카테고리가 없으면 예외를 던진다.")
     @Test
-    void removePostWithNonExistCategoryId() throws Exception {
+    void removePostWithNonExistCategory() throws Exception {
         //given
         Long categoryId = 1L;
 

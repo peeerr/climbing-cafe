@@ -145,7 +145,7 @@ class PostServiceTest {
 
     @DisplayName("id를 받아 게시물을 수정하는데, 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
-    void editPostWithNonExistPostId() throws Exception {
+    void editPostWithNonExistPost() throws Exception {
         //given
         Long postId = 1L;
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
@@ -179,7 +179,7 @@ class PostServiceTest {
 
     @DisplayName("id를 받아 게시물을 삭제하는데 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
-    void removePostWithNonExistPostId() throws Exception {
+    void removePostWithNonExistPost() throws Exception {
         //given
         Long postId = 1L;
 
