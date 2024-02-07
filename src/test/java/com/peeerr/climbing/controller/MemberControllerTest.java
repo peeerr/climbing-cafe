@@ -2,6 +2,8 @@ package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
+import com.peeerr.climbing.dto.member.request.MemberEditRequest;
+import com.peeerr.climbing.dto.member.response.MemberResponse;
 import com.peeerr.climbing.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,6 +53,34 @@ class MemberControllerTest {
                 .andDo(print());
 
         then(memberService).should().addMember(request);
+    }
+
+    @DisplayName("회원 정보를 받아, 회원 정보(username, email)를 수정한다.")
+    @Test
+    void memberEdit() throws Exception {
+        //given
+        Long memberId = 1L;
+        String editUsername = "test";
+        String editEmail = "test@example.com";
+        MemberEditRequest request = MemberEditRequest.of(editUsername, editEmail);
+        MemberResponse response = MemberResponse.of(editUsername, editEmail);
+
+        given(memberService.editMember(memberId, request)).willReturn(response);
+
+        //when
+        ResultActions result = mvc.perform(put("/api/members/{memberId}", memberId)
+                .content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        //then
+        result
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("success"))
+                .andExpect(jsonPath("$.data.username").value(editUsername))
+                .andExpect(jsonPath("$.data.email").value(editEmail))
+                .andDo(print());
+
+        then(memberService).should().editMember(memberId, request);
     }
 
 }

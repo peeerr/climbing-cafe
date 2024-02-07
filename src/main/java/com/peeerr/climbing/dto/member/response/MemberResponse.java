@@ -16,4 +16,8 @@ public class MemberResponse {
         return new MemberResponse(member.getUsername(), member.getEmail());
     }
 
+    public static MemberResponse of(String username, String email) {
+        return new MemberResponse(username, email);
+    }
+
 }
