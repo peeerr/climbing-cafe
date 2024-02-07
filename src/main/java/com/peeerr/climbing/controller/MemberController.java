@@ -1,7 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.dto.common.ApiResponse;
-import com.peeerr.climbing.dto.user.request.UserCreateRequest;
+import com.peeerr.climbing.dto.user.request.MemberCreateRequest;
 import com.peeerr.climbing.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
 @RestController
-public class UserController {
+public class MemberController {
 
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> signupUser(@RequestBody @Valid UserCreateRequest userCreateRequest,
+    public ResponseEntity<ApiResponse> signupUser(@RequestBody @Valid MemberCreateRequest memberCreateRequest,
                                               BindingResult bindingResult) {
-        Long userId = memberService.registerUser(userCreateRequest);
+        Long userId = memberService.registerUser(memberCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(userId));

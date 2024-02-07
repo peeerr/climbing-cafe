@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class UserCreateRequest {
+public class MemberCreateRequest {
 
     @Pattern(regexp = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$", message = "2자 이상 16자 이하, 영어 또는 숫자 또는 한글로 구성해 주세요.")
     @NotBlank(message = "닉네임을 입력해 주세요.")
@@ -27,8 +27,8 @@ public class UserCreateRequest {
     @NotBlank(message = "이메일을 입력해 주세요.")
     private String email;
 
-    public static UserCreateRequest of(String username, String password, String checkPassword, String email) {
-        return new UserCreateRequest(username, password, checkPassword, email);
+    public static MemberCreateRequest of(String username, String password, String checkPassword, String email) {
+        return new MemberCreateRequest(username, password, checkPassword, email);
     }
 
 }

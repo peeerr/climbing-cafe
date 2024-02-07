@@ -1,9 +1,8 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.dto.user.request.UserCreateRequest;
+import com.peeerr.climbing.dto.user.request.MemberCreateRequest;
 import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.ValidationException;
@@ -22,7 +21,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long registerUser(UserCreateRequest request) {
+    public Long registerUser(MemberCreateRequest request) {
         validateDuplicateUser(request.getUsername(), request.getEmail());
 
         if (!request.getPassword().equals(request.getCheckPassword())) {
