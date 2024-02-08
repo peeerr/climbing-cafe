@@ -54,4 +54,10 @@ public class ExceptionControllerAdvice {
                 .body(ApiResponse.of(e.getMessage()));
     }
 
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ApiResponse> unAuthorizedAccess(UnauthorizedAccessException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(ApiResponse.of(e.getMessage()));
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.peeerr.climbing.controller;
 
+import com.peeerr.climbing.annotation.OwnerCheck;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.request.MemberEditRequest;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import static com.peeerr.climbing.annotation.OwnerCheck.MemberIdSource;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
@@ -28,6 +31,7 @@ public class MemberController {
                 .body(ApiResponse.success(memberId));
     }
 
+    @OwnerCheck(source = MemberIdSource.ARGUMENT)
     @PutMapping("/{memberId}")
     public ResponseEntity<ApiResponse> memberEdit(@PathVariable Long memberId,
                                                   @RequestBody @Valid MemberEditRequest memberEditRequest,

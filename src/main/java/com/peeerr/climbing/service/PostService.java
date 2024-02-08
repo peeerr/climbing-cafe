@@ -79,6 +79,16 @@ public class PostService {
         postRepository.delete(post);
     }
 
+    @Transactional
+    public Long getMember(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
+
+        Long memberId = post.getMember().getId();
+
+        return memberId;
+    }
+
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));

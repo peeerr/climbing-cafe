@@ -27,8 +27,9 @@ public class ErrorMessage {
     /* Category */
     public static final String CATEGORY_NOT_FOUND = "존재하지 않는 카테고리입니다.";
 
-    /* User */
+    /* Member */
     public static final String MEMBER_NOT_FOUND = "존재하지 않는 아이디입니다.";
+    public static final String NO_ACCESS_PERMISSION = "접근 권한이 없습니다.";
 
     /* File */
     public static final String FILE_NOT_FOUND = "존재하지 않는 파일입니다.";
