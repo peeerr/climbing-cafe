@@ -92,4 +92,30 @@ class MemberControllerTest {
         then(memberService).should().editMember(memberId, request);
     }
 
+    @DisplayName("[접근 권한X] 회원 정보를 받아 회원 정보를 수정하는데, 해당 회원과 로그인 회원이 일치하지 않으면 예외를 던진다.")
+    @Test
+    void memberEditWithoutMatchingMember() throws Exception {
+        //given
+        Long memberId = 1L;
+        String editUsername = "test";
+        String editEmail = "test@example.com";
+        MemberEditRequest request = MemberEditRequest.of(editUsername, editEmail);
+
+        Member member = Member.builder()
+                .id(2L)
+                .build();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+
+        //when
+        ResultActions result = mvc.perform(put("/api/members/{memberId}", memberId)
+                .with(SecurityMockMvcRequestPostProcessors.user(userDetails))
+                .content(mapper.writeValueAsString(request))
+                .contentType(MediaType.APPLICATION_JSON_VALUE));
+
+        //then
+        result
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
 }
