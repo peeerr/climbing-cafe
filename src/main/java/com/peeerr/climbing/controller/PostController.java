@@ -1,10 +1,12 @@
 package com.peeerr.climbing.controller;
 
+import com.peeerr.climbing.annotation.OwnerCheck;
 import com.peeerr.climbing.config.auth.CustomUserDetails;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
+import com.peeerr.climbing.service.MemberService;
 import com.peeerr.climbing.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -51,6 +53,7 @@ public class PostController {
                 .body(ApiResponse.success(addedPost));
     }
 
+    @OwnerCheck
     @PutMapping("/{postId}")
     public ResponseEntity<ApiResponse> postEdit(@PathVariable Long postId,
                                       @RequestBody @Valid PostEditRequest postEditRequest,
@@ -61,6 +64,7 @@ public class PostController {
                 .body(ApiResponse.success(editedPost));
     }
 
+    @OwnerCheck
     @DeleteMapping("/{postId}")
     public ResponseEntity<ApiResponse> postRemove(@PathVariable Long postId) {
         postService.removePost(postId);
