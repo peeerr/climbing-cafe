@@ -25,11 +25,11 @@ public class SecurityConfig {
                 .csrf(c -> c.disable())
                 .formLogin(form -> form
                         .usernameParameter("email")
-                        .loginProcessingUrl("/api/users/login")
+                        .loginProcessingUrl("/api/members/login")
                         .failureHandler(failureHandler))
                 .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/api/users/**").permitAll()
-//                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/members/**").permitAll()
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll());
 
         return http.build();
