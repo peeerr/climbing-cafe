@@ -113,7 +113,7 @@ class PostControllerTest {
 
     @DisplayName("게시물 id와 수정 정보가 주어지면 해당 게시물을 수정한다.")
     @Test
-    void editPost() throws Exception {
+    void postEdit() throws Exception {
         //given
         Long postId = 1L;
         Long memberId = 1L;
@@ -148,6 +148,35 @@ class PostControllerTest {
         then(postService).should().editPost(anyLong(), any(PostEditRequest.class));
     }
 
+    @DisplayName("[접근 권한X] 게시물을 수정하는데, 해당 게시물 소유자와 로그인 회원이 다르면 예외를 던진다.")
+    @Test
+    void postEditWithoutMatchingMember() throws Exception {
+        //given
+        Long postId = 1L;
+        Long memberId = 1L;
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
+
+        // Post Owner != Login Member
+        Member member = Member.builder()
+                .id(memberId)
+                .build();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+        given(postService.getMember(postId)).willReturn(2L);
+
+        //when
+        ResultActions result = mvc.perform(put("/api/posts/{postId}", postId)
+                .with(SecurityMockMvcRequestPostProcessors.user(userDetails))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
+
+        //then
+        result
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+
+        then(postService).should().getMember(postId);
+    }
+
     @DisplayName("게시물 id가 주어지면 해당 게시물을 삭제한다.")
     @Test
     void postRemove() throws Exception {
@@ -176,6 +205,32 @@ class PostControllerTest {
 
         then(postService).should().getMember(postId);
         then(postService).should().removePost(postId);
+    }
+
+    @DisplayName("[접근 권한X] 게시물을 삭제하는데, 해당 게시물 소유자와 로그인 회원이 다르면 예외를 던진다.")
+    @Test
+    void postRemoveWithoutMatchingMember() throws Exception {
+        //given
+        Long postId = 1L;
+        Long memberId = 1L;
+
+        // Post Owner != Login Member
+        Member member = Member.builder()
+                .id(memberId)
+                .build();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+        given(postService.getMember(postId)).willReturn(2L);
+
+        //when
+        ResultActions result = mvc.perform(delete("/api/posts/{postId}", postId)
+                .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
+
+        //then
+        result
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+
+        then(postService).should().getMember(postId);
     }
 
 }
