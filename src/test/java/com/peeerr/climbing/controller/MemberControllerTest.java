@@ -1,6 +1,8 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peeerr.climbing.config.auth.CustomUserDetails;
+import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.request.MemberEditRequest;
 import com.peeerr.climbing.dto.member.response.MemberResponse;
@@ -12,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -65,10 +68,16 @@ class MemberControllerTest {
         MemberEditRequest request = MemberEditRequest.of(editUsername, editEmail);
         MemberResponse response = MemberResponse.of(editUsername, editEmail);
 
+        Member member = Member.builder()
+                .id(memberId)
+                .build();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+
         given(memberService.editMember(memberId, request)).willReturn(response);
 
         //when
         ResultActions result = mvc.perform(put("/api/members/{memberId}", memberId)
+                .with(SecurityMockMvcRequestPostProcessors.user(userDetails))
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
 

@@ -115,12 +115,26 @@ class PostControllerTest {
     @Test
     void editPost() throws Exception {
         //given
+        Long postId = 1L;
+        Long memberId = 1L;
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
-        given(postService.editPost(anyLong(), any(PostEditRequest.class))).willReturn(any(PostResponse.class));
+        Category category = Category.builder().categoryName("자유 게시판").build();
+        Post post = Post.builder().category(category).build();
+        PostResponse response = PostResponse.from(post);
+
+        // Post Owner == Login Member
+        Member member = Member.builder()
+                .id(memberId)
+                .build();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+        given(postService.getMember(postId)).willReturn(member.getId());
+
+        given(postService.editPost(anyLong(), any(PostEditRequest.class))).willReturn(response);
 
         //when
-        ResultActions result = mvc.perform(put("/api/posts/{postId}", anyLong())
+        ResultActions result = mvc.perform(put("/api/posts/{postId}", postId)
+                .with(SecurityMockMvcRequestPostProcessors.user(userDetails))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request)));
 
@@ -130,6 +144,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("success"))
                 .andDo(print());
 
+        then(postService).should().getMember(postId);
         then(postService).should().editPost(anyLong(), any(PostEditRequest.class));
     }
 
@@ -137,10 +152,21 @@ class PostControllerTest {
     @Test
     void postRemove() throws Exception {
         //given
-        willDoNothing().given(postService).removePost(anyLong());
+        Long postId = 1L;
+        Long memberId = 1L;
+
+        // Post Owner == Login Member
+        Member member = Member.builder()
+                .id(memberId)
+                .build();
+        CustomUserDetails userDetails = new CustomUserDetails(member);
+        given(postService.getMember(postId)).willReturn(member.getId());
+
+        willDoNothing().given(postService).removePost(postId);
 
         //when
-        ResultActions result = mvc.perform(delete("/api/posts/{postId}", anyLong()));
+        ResultActions result = mvc.perform(delete("/api/posts/{postId}", postId)
+                .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
 
         //then
         result
@@ -148,7 +174,8 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("success"))
                 .andDo(print());
 
-        then(postService).should().removePost(anyLong());
+        then(postService).should().getMember(postId);
+        then(postService).should().removePost(postId);
     }
 
 }
