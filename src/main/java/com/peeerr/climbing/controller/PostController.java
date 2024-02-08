@@ -6,7 +6,6 @@ import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
-import com.peeerr.climbing.service.MemberService;
 import com.peeerr.climbing.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,8 +55,8 @@ public class PostController {
     @OwnerCheck
     @PutMapping("/{postId}")
     public ResponseEntity<ApiResponse> postEdit(@PathVariable Long postId,
-                                      @RequestBody @Valid PostEditRequest postEditRequest,
-                                      BindingResult bindingResult) {
+                                                @RequestBody @Valid PostEditRequest postEditRequest,
+                                                BindingResult bindingResult) {
         PostResponse editedPost = postService.editPost(postId, postEditRequest);
 
         return ResponseEntity.ok()
