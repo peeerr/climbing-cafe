@@ -7,8 +7,8 @@ import com.peeerr.climbing.dto.member.request.MemberEditRequest;
 import com.peeerr.climbing.dto.member.response.MemberResponse;
 import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
+import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
 import com.peeerr.climbing.exception.ex.ValidationException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -83,11 +83,14 @@ class MemberServiceTest {
     void editMember() throws Exception {
         //given
         Long memberId = 1L;
+        Long loginId = 1L;
+
         String editUsername = "editTest";
         String editEmail = "editTest@example.com";
         MemberEditRequest request = MemberEditRequest.of(editUsername, editEmail);
 
         Member member = Member.builder()
+                .id(loginId)
                 .username("test")
                 .email("test@example.com")
                 .build();
@@ -95,11 +98,34 @@ class MemberServiceTest {
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
 
         //when
-        MemberResponse response = memberService.editMember(memberId, request);
+        MemberResponse response = memberService.editMember(memberId, request, loginId);
 
         //then
         assertThat(response.getUsername()).isEqualTo(editUsername);
         assertThat(response.getEmail()).isEqualTo(editEmail);
+
+        then(memberRepository).should().findById(memberId);
+    }
+
+    @DisplayName("[접근 권한X] 회원 정보를 수정하는데, 로그인 사용자와 수정 대상자가 다르면 예외를 던진다.")
+    @Test
+    void editMemberWithoutPermission() throws Exception {
+        //given
+        Long memberId = 1L;
+        Long loginId = 1L;
+
+        MemberEditRequest request = MemberEditRequest.of("editTest", "editTest@example.com");
+
+        Member member = Member.builder()
+                .id(2L)
+                .username("test")
+                .email("test@example.com")
+                .build();
+
+        given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
+
+        //when & then
+        assertThrows(UnauthorizedAccessException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
@@ -109,11 +135,13 @@ class MemberServiceTest {
     void editMemberWithNonExistMember() throws Exception {
         //given
         Long memberId = 1L;
+        Long loginId = 1L;
+
         MemberEditRequest request = MemberEditRequest.of("test", "test@example.com");
         given(memberRepository.findById(memberId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class, () -> memberService.editMember(memberId, request));
+        assertThrows(EntityNotFoundException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
@@ -123,11 +151,14 @@ class MemberServiceTest {
     void editMemberWithDuplicatedUsername() throws Exception {
         //given
         Long memberId = 1L;
+        Long loginId = 1L;
+
         String editUsername = "editTest";
         String editEmail = "test@example.com";
         MemberEditRequest request = MemberEditRequest.of(editUsername, editEmail);
 
         Member member = Member.builder()
+                .id(loginId)
                 .username("test")
                 .email("test@example.com")
                 .build();
@@ -136,7 +167,7 @@ class MemberServiceTest {
         given(memberRepository.findMemberByUsername(editUsername)).willReturn(Optional.of(member));
 
         //when & then
-        assertThrows(DuplicationException.class, () -> memberService.editMember(memberId, request));
+        assertThrows(DuplicationException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
         then(memberRepository).should().findMemberByUsername(editUsername);
@@ -147,11 +178,14 @@ class MemberServiceTest {
     void editMemberWithDuplicatedEmail() throws Exception {
         //given
         Long memberId = 1L;
+        Long loginId = 1L;
+
         String editUsername = "test";
         String editEmail = "editTest@example.com";
         MemberEditRequest request = MemberEditRequest.of(editUsername, editEmail);
 
         Member member = Member.builder()
+                .id(loginId)
                 .username("test")
                 .email("test@example.com")
                 .build();
@@ -160,7 +194,7 @@ class MemberServiceTest {
         given(memberRepository.findMemberByEmail(editEmail)).willReturn(Optional.of(member));
 
         //when & then
-        assertThrows(DuplicationException.class, () -> memberService.editMember(memberId, request));
+        assertThrows(DuplicationException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
         then(memberRepository).should().findMemberByEmail(editEmail);

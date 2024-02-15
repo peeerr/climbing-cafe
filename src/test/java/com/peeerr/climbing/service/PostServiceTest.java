@@ -9,6 +9,7 @@ import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
+import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +58,7 @@ class PostServiceTest {
     void getPost() throws Exception {
         //given
         Long postId = 1L;
-        Post post = createPost();
+        Post post = createPost(1L);
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
@@ -122,8 +123,9 @@ class PostServiceTest {
     void editPost() throws Exception {
         //given
         Long postId = 1L;
+        Long loginId = 1L;
         Long categoryId = 2L;
-        Post post = createPost();
+        Post post = createPost(loginId);
 
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
         Category category = Category.builder().id(categoryId).categoryName("후기 게시판").build();
@@ -132,7 +134,7 @@ class PostServiceTest {
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
         //when
-        postService.editPost(postId, request);
+        postService.editPost(postId, request, loginId);
 
         //then
         assertThat(post.getTitle()).isEqualTo(request.getTitle());
@@ -143,18 +145,38 @@ class PostServiceTest {
         then(categoryRepository).should().findById(categoryId);
     }
 
+    @DisplayName("[접근 권한X] 게시글 정보를 수정하는데, 로그인 사용자와 게시글 작성자가 다르면 예외를 던진다.")
+    @Test
+    void editPostWithoutPermission() throws Exception {
+        //given
+        Long postId = 1L;
+        Long loginId = 1L;
+
+        Long categoryId = 2L;
+        Post post = createPost(2L);
+
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
+
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+
+        //when & then
+        assertThrows(UnauthorizedAccessException.class, () -> postService.editPost(postId, request, loginId));
+        then(postRepository).should().findById(postId);
+    }
+
     @DisplayName("id를 받아 게시물을 수정하는데, 해당하는 게시물이 없으면 예외를 던진다.")
     @Test
     void editPostWithNonExistPost() throws Exception {
         //given
         Long postId = 1L;
+        Long loginId = 1L;
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
         assertThrows(EntityNotFoundException.class,
-                () -> postService.editPost(postId, request));
+                () -> postService.editPost(postId, request, loginId));
 
         then(postRepository).should().findById(postId);
     }
@@ -164,17 +186,35 @@ class PostServiceTest {
     void removePost() throws Exception {
         //given
         Long postId = 1L;
-        Post post = createPost();
+        Long loginId = 1L;
+
+        Post post = createPost(loginId);
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
         willDoNothing().given(postRepository).delete(post);
 
         //when
-        postService.removePost(postId);
+        postService.removePost(postId, loginId);
 
         //then
         then(postRepository).should().findById(postId);
         then(postRepository).should().delete(post);
+    }
+
+    @DisplayName("[접근 권한X] 게시글을 삭제하는데, 로그인 사용자와 게시글 작성자가 다르면 예외를 던진다.")
+    @Test
+    void removePostWithoutPermission() throws Exception {
+        //given
+        Long postId = 1L;
+        Long loginId = 1L;
+
+        Post post = createPost(2L);
+
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+
+        //when & then
+        assertThrows(UnauthorizedAccessException.class, () -> postService.removePost(postId, loginId));
+        then(postRepository).should().findById(postId);
     }
 
     @DisplayName("id를 받아 게시물을 삭제하는데 해당하는 게시물이 없으면 예외를 던진다.")
@@ -182,19 +222,21 @@ class PostServiceTest {
     void removePostWithNonExistPost() throws Exception {
         //given
         Long postId = 1L;
+        Long loginId = 1L;
 
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
         assertThrows(EntityNotFoundException.class,
-                () -> postService.removePost(postId));
+                () -> postService.removePost(postId, loginId));
 
         then(postRepository).should().findById(postId);
     }
 
-    private Post createPost() {
+    private Post createPost(Long loginId) {
         Category category = Category.builder().categoryName("자유 게시판").build();
         Post post = Post.builder()
+                .member(Member.builder().id(loginId).build())
                 .title("제목 테스트")
                 .content("본문 테스트")
                 .category(category)
