@@ -8,6 +8,7 @@ import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
+import com.peeerr.climbing.dto.post.response.PostWithCommentsResponse;
 import com.peeerr.climbing.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ class PostControllerTest {
     void postDetail() throws Exception {
         //given
         Long categoryId = 1L;
-        given(postService.getPost(anyLong())).willReturn(any(PostResponse.class));
+        given(postService.getPostWithComments(anyLong())).willReturn(any(PostWithCommentsResponse.class));
 
         //when
         ResultActions result = mvc.perform(get("/api/posts/{postId}", categoryId));
@@ -80,7 +81,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("success"))
                 .andDo(print());
 
-        then(postService).should().getPost(anyLong());
+        then(postService).should().getPostWithComments(anyLong());
     }
 
     @DisplayName("새로운 게시물을 작성한다.")
@@ -116,21 +117,17 @@ class PostControllerTest {
     void postEdit() throws Exception {
         //given
         Long postId = 1L;
-        Long memberId = 1L;
-        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
+        Long loginId = 1L;
 
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
         Category category = Category.builder().categoryName("자유 게시판").build();
         Post post = Post.builder().category(category).build();
+
         PostResponse response = PostResponse.from(post);
 
-        // Post Owner == Login Member
-        Member member = Member.builder()
-                .id(memberId)
-                .build();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
-        given(postService.getMember(postId)).willReturn(member.getId());
+        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(loginId).build());
 
-        given(postService.editPost(anyLong(), any(PostEditRequest.class))).willReturn(response);
+        given(postService.editPost(anyLong(), any(PostEditRequest.class), anyLong())).willReturn(response);
 
         //when
         ResultActions result = mvc.perform(put("/api/posts/{postId}", postId)
@@ -144,37 +141,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("success"))
                 .andDo(print());
 
-        then(postService).should().getMember(postId);
-        then(postService).should().editPost(anyLong(), any(PostEditRequest.class));
-    }
-
-    @DisplayName("[접근 권한X] 게시물을 수정하는데, 해당 게시물 소유자와 로그인 회원이 다르면 예외를 던진다.")
-    @Test
-    void postEditWithoutMatchingMember() throws Exception {
-        //given
-        Long postId = 1L;
-        Long memberId = 1L;
-        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
-
-        // Post Owner != Login Member
-        Member member = Member.builder()
-                .id(memberId)
-                .build();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
-        given(postService.getMember(postId)).willReturn(2L);
-
-        //when
-        ResultActions result = mvc.perform(put("/api/posts/{postId}", postId)
-                .with(SecurityMockMvcRequestPostProcessors.user(userDetails))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(mapper.writeValueAsString(request)));
-
-        //then
-        result
-                .andExpect(status().isUnauthorized())
-                .andDo(print());
-
-        then(postService).should().getMember(postId);
+        then(postService).should().editPost(anyLong(), any(PostEditRequest.class), anyLong());
     }
 
     @DisplayName("게시물 id가 주어지면 해당 게시물을 삭제한다.")
@@ -182,16 +149,11 @@ class PostControllerTest {
     void postRemove() throws Exception {
         //given
         Long postId = 1L;
-        Long memberId = 1L;
+        Long loginId = 1L;
 
-        // Post Owner == Login Member
-        Member member = Member.builder()
-                .id(memberId)
-                .build();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
-        given(postService.getMember(postId)).willReturn(member.getId());
+        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(loginId).build());
 
-        willDoNothing().given(postService).removePost(postId);
+        willDoNothing().given(postService).removePost(postId, loginId);
 
         //when
         ResultActions result = mvc.perform(delete("/api/posts/{postId}", postId)
@@ -203,34 +165,7 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("success"))
                 .andDo(print());
 
-        then(postService).should().getMember(postId);
-        then(postService).should().removePost(postId);
-    }
-
-    @DisplayName("[접근 권한X] 게시물을 삭제하는데, 해당 게시물 소유자와 로그인 회원이 다르면 예외를 던진다.")
-    @Test
-    void postRemoveWithoutMatchingMember() throws Exception {
-        //given
-        Long postId = 1L;
-        Long memberId = 1L;
-
-        // Post Owner != Login Member
-        Member member = Member.builder()
-                .id(memberId)
-                .build();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
-        given(postService.getMember(postId)).willReturn(2L);
-
-        //when
-        ResultActions result = mvc.perform(delete("/api/posts/{postId}", postId)
-                .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
-
-        //then
-        result
-                .andExpect(status().isUnauthorized())
-                .andDo(print());
-
-        then(postService).should().getMember(postId);
+        then(postService).should().removePost(postId, loginId);
     }
 
 }

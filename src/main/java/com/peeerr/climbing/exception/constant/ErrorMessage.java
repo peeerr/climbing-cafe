@@ -35,4 +35,7 @@ public class ErrorMessage {
     public static final String FILE_NOT_FOUND = "존재하지 않는 파일입니다.";
     public static final String FILE_SIZE_EXCEEDED = "전체 파일 크기를 10MB 이하로 첨부해 주세요.";
 
+    /* Comment */
+    public static final String COMMENT_NOT_FOUND = "존재하지 않는 댓글입니다.";
+
 }

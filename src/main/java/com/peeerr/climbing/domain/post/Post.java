@@ -3,6 +3,7 @@ package com.peeerr.climbing.domain.post;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.peeerr.climbing.domain.BaseEntity;
 import com.peeerr.climbing.domain.category.Category;
+import com.peeerr.climbing.domain.comment.Comment;
 import com.peeerr.climbing.domain.file.File;
 import com.peeerr.climbing.domain.user.Member;
 import jakarta.persistence.*;
@@ -35,10 +36,14 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Category category;
 
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = false)
     @JsonIgnoreProperties("posts")
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
+
+    @JsonIgnoreProperties("post")
+    @OneToMany(mappedBy = "post")
+    private List<Comment> comments = new ArrayList<>();
 
     @JsonIgnoreProperties("post")
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)

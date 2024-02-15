@@ -8,6 +8,7 @@ import com.peeerr.climbing.dto.member.response.MemberResponse;
 import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
+import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
 import com.peeerr.climbing.exception.ex.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,9 +44,13 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse editMember(Long memberId, MemberEditRequest request) {
+    public MemberResponse editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+
+        if (!member.getId().equals(loginId)) {
+            throw new UnauthorizedAccessException(ErrorMessage.NO_ACCESS_PERMISSION);
+        }
 
         if (!member.getUsername().equals(request.getUsername())) {
             validateDuplicateUsername(request.getUsername());
