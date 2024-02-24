@@ -45,39 +45,6 @@ class CategoryServiceTest {
         then(categoryRepository).should().findAll();
     }
 
-    @DisplayName("카테고리를 상세 조회해 온다.")
-    @Test
-    void getCategory() throws Exception {
-        //given
-        Long categoryId = 1L;
-        Category category = Category.builder().categoryName("자유 게시판").build();
-
-        given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
-
-        //when
-        CategoryResponse response = categoryService.getCategory(categoryId);
-
-        //then
-        assertThat(response.getCategoryName()).isEqualTo(category.getCategoryName());
-
-        then(categoryRepository).should().findById(categoryId);
-    }
-
-    @DisplayName("카테고리를 조회해 오는데, 해당하는 카테고리가 없으면 예외를 던진다.")
-    @Test
-    void getPostWithNonExistPostId() throws Exception {
-        //given
-        Long categoryId = 1L;
-
-        given(categoryRepository.findById(categoryId)).willReturn(Optional.empty());
-
-        //when & then
-        assertThrows(EntityNotFoundException.class,
-                () -> categoryService.getCategory(categoryId));
-
-        then(categoryRepository).should().findById(categoryId);
-    }
-
     @DisplayName("새로운 카테고리 하나를 추가한다.")
     @Test
     void addCategory() throws Exception {

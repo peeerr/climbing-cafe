@@ -21,6 +21,10 @@ public class ErrorMessage {
     public static final String USERNAME_DUPLICATED = "이미 존재하는 닉네임입니다.";
     public static final String EMAIL_DUPLICATED = "이미 존재하는 이메일입니다.";
 
+    /* LikeService */
+    public static final String LIKE_ALREADY_EXISTS = "이미 좋아요를 누른 게시물입니다.";
+    public static final String LIKE_NOT_FOUND = "해당 게시물에 좋아요를 누르지 않았습니다.";
+
     /* Post */
     public static final String POST_NOT_FOUND = "존재하지 않는 게시물입니다.";
 
