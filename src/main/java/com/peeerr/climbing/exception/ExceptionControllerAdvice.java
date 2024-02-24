@@ -60,4 +60,10 @@ public class ExceptionControllerAdvice {
                 .body(ApiResponse.of(e.getMessage()));
     }
 
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ApiResponse> alreadyExists(AlreadyExistsException e) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.of(e.getMessage()));
+    }
+
 }
