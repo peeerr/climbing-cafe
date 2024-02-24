@@ -56,25 +56,6 @@ class CategoryControllerTest {
         then(categoryService).should().getCategories();
     }
 
-    @DisplayName("id가 주어지면, 카테고리 하나를 조회해 온다.")
-    @Test
-    void categoryDetail() throws Exception {
-        //given
-        Long categoryId = 1L;
-
-        given(categoryService.getCategory(anyLong())).willReturn(any(CategoryResponse.class));
-
-        //when
-        ResultActions result = mvc.perform(get("/api/categories/{categoryId}", categoryId));
-
-        //then
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"));
-
-        then(categoryService).should().getCategory(anyLong());
-    }
-
     @DisplayName("새로운 카테고리를 추가한다.")
     @Test
     void categoryAdd() throws Exception {

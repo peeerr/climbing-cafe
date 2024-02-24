@@ -29,15 +29,6 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    // TODO: 이거 제거 (테스트 코드 리팩토링)
-    @Transactional(readOnly = true)
-    public CategoryResponse getCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
-
-        return CategoryResponse.from(category);
-    }
-
     @Transactional
     public CategoryResponse addCategory(CategoryCreateRequest request) {
         validateDuplicateCategory(request.getCategoryName());

@@ -16,12 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -44,7 +47,7 @@ class PostControllerTest {
     @MockBean
     private PostService postService;
 
-    @DisplayName("게시물 전체를 조회해 온다.")
+    @DisplayName("게시물 전체를 조회한다.")
     @Test
     void postList() throws Exception {
         //given
@@ -52,9 +55,7 @@ class PostControllerTest {
 
         //when
         ResultActions result = mvc.perform(get("/api/posts")
-                .queryParam("page", String.valueOf(0))
-                .queryParam("size", String.valueOf(10))
-                .queryParam("sort", "id,desc"));
+                .queryParam("page", String.valueOf(1)));
 
         //then
         result
@@ -65,15 +66,18 @@ class PostControllerTest {
         then(postService).should().getPosts(any(Pageable.class));
     }
 
-    @DisplayName("게시물 id가 주어지면 해당 게시물을 조회한다.")
+    @DisplayName("카테고리 ID르 받아, 해당 카테고리에 해당되는 모든 게시물을 조회한다.")
     @Test
-    void postDetail() throws Exception {
+    void postListByCategory() throws Exception {
         //given
-        Long categoryId = 1L;
-        given(postService.getPostWithComments(anyLong())).willReturn(any(PostWithCommentsResponse.class));
+        Pageable pageable = Pageable.ofSize(1);
+        Page<PostResponse> response = new PageImpl<>(List.of(), pageable, 1);
+
+        given(postService.getPostsByCategory(anyLong(), any(Pageable.class))).willReturn(response);
 
         //when
-        ResultActions result = mvc.perform(get("/api/posts/{postId}", categoryId));
+        ResultActions result = mvc.perform(get("/api/posts/{categoryId}", 1L)
+                .queryParam("page", String.valueOf(0)));
 
         //then
         result
@@ -81,19 +85,40 @@ class PostControllerTest {
                 .andExpect(jsonPath("$.message").value("success"))
                 .andDo(print());
 
-        then(postService).should().getPostWithComments(anyLong());
+        then(postService).should().getPostsByCategory(anyLong(), any(Pageable.class));
     }
+
+//    @DisplayName("게시물 id가 주어지면 해당 게시물을 조회한다.")
+//    @Test
+//    void postDetail() throws Exception {
+//        //given
+//        Long categoryId = 1L;
+//        given(postService.getPostWithComments(anyLong())).willReturn(any(PostWithCommentsResponse.class));
+//
+//        //when
+//        ResultActions result = mvc.perform(get("/api/posts/{postId}", categoryId));
+//
+//        //then
+//        result
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.message").value("success"))
+//                .andDo(print());
+//
+//        then(postService).should().getPostWithComments(anyLong());
+//    }
 
     @DisplayName("새로운 게시물을 작성한다.")
     @Test
     void postAdd() throws Exception {
         //given
         PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", 1L);
-        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().build());
 
+        Member member = Member.builder().username("test").build();
         Category category = Category.builder().categoryName("자유 게시판").build();
-        Post post = Post.builder().category(category).build();
+        Post post = Post.builder().category(category).member(member).build();
         PostResponse response = PostResponse.from(post);
+
+        CustomUserDetails userDetails = new CustomUserDetails(member);
 
         given(postService.addPost(any(PostCreateRequest.class), any(Member.class))).willReturn(response);
 
@@ -120,12 +145,13 @@ class PostControllerTest {
         Long loginId = 1L;
 
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
+        Member member = Member.builder().id(loginId).username("test").build();
         Category category = Category.builder().categoryName("자유 게시판").build();
-        Post post = Post.builder().category(category).build();
+        Post post = Post.builder().category(category).member(member).build();
 
         PostResponse response = PostResponse.from(post);
 
-        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(loginId).build());
+        CustomUserDetails userDetails = new CustomUserDetails(member);
 
         given(postService.editPost(anyLong(), any(PostEditRequest.class), anyLong())).willReturn(response);
 
