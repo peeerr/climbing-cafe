@@ -12,11 +12,11 @@ import java.util.List;
 @Getter
 public class CategoryResponse {
 
+    private Long categoryId;
     private String categoryName;
-    private List<Post> posts;
 
     public static CategoryResponse from(Category category) {
-        return new CategoryResponse(category.getCategoryName(), category.getPosts());
+        return new CategoryResponse(category.getId(), category.getCategoryName());
     }
 
 }

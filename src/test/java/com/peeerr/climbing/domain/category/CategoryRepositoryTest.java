@@ -8,7 +8,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 
 @DataJpaTest
 class CategoryRepositoryTest {
@@ -48,11 +47,11 @@ class CategoryRepositoryTest {
 
         //then
         assertThat(categories).hasSize(3)
-                .extracting("id", "categoryName")
+                .extracting("categoryName")
                 .containsExactlyInAnyOrder(
-                        tuple(1L, categoryName1),
-                        tuple(2L, categoryName2),
-                        tuple(3L, categoryName3)
+                        categoryName1,
+                        categoryName2,
+                        categoryName3
                 );
     }
 

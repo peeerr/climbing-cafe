@@ -1,6 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.config.auth.CustomUserDetails;
+import com.peeerr.climbing.dto.category.response.CategoryResponse;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
@@ -26,21 +27,33 @@ public class PostController {
 
     private final PostService postService;
 
+    // TODO: 이거 N+1 문제
     @GetMapping
-    public ResponseEntity<ApiResponse> postList(@PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<ApiResponse> postList(@PageableDefault(size = 20, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<PostResponse> posts = postService.getPosts(pageable);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(posts));
     }
 
-    @GetMapping("/{postId}")
-    public ResponseEntity<ApiResponse> postDetail(@PathVariable Long postId) {
-        PostWithCommentsResponse post = postService.getPostWithComments(postId);
+    // TODO: 쿼리 줄이기 + 요청 지금 느림
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<ApiResponse> postListByCategory(@PathVariable Long categoryId,
+                                                          @PageableDefault(size = 20, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostResponse> category = postService.getPostsByCategory(categoryId, pageable);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(post));
+                .body(ApiResponse.success(category));
     }
+//    // TODO: 위에 API 랑 URL도 같고 요청 파라미터도 같아서 충돌 문제 해결
+//    // TODO: 이거 하나 실행하는데 쿼리가 4개(게시물 + (멤버 + 카테고리 + 댓글)) 날라감
+//    @GetMapping("/{postId}")
+//    public ResponseEntity<ApiResponse> postDetail(@PathVariable Long postId) {
+//        PostWithCommentsResponse post = postService.getPostWithComments(postId);
+//
+//        return ResponseEntity.ok()
+//                .body(ApiResponse.success(post));
+//    }
 
     @PostMapping
     public ResponseEntity<ApiResponse> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,

@@ -29,14 +29,6 @@ public class CategoryController {
                 .body(ApiResponse.success(categories));
     }
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse> categoryDetail(@PathVariable Long categoryId) {
-        CategoryResponse category = categoryService.getCategory(categoryId);
-
-        return ResponseEntity.ok()
-                .body(ApiResponse.success(category));
-    }
-
     @PostMapping
     public ResponseEntity<ApiResponse> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest,
                                          BindingResult bindingResult) {

@@ -5,6 +5,7 @@ import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.dto.category.response.CategoryResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.response.PostResponse;
@@ -32,6 +33,15 @@ public class PostService {
     @Transactional(readOnly = true)
     public Page<PostResponse> getPosts(Pageable pageable) {
         List<PostResponse> posts = postRepository.findAll(pageable).stream()
+                .map(PostResponse::from)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(posts, pageable, posts.size());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostResponse> getPostsByCategory(Long categoryId, Pageable pageable) {
+        List<PostResponse> posts = postRepository.findPostsByCategoryId(categoryId, pageable).stream()
                 .map(PostResponse::from)
                 .collect(Collectors.toList());
 
@@ -95,16 +105,6 @@ public class PostService {
         }
 
         postRepository.delete(post);
-    }
-
-    @Transactional
-    public Long getMember(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
-
-        Long memberId = post.getMember().getId();
-
-        return memberId;
     }
 
     private Category getCategory(Long categoryId) {
