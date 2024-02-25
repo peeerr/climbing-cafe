@@ -5,9 +5,9 @@ import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
-import com.peeerr.climbing.dto.category.response.CategoryResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
+import com.peeerr.climbing.dto.post.request.PostSearchCondition;
 import com.peeerr.climbing.dto.post.response.PostResponse;
 import com.peeerr.climbing.dto.post.response.PostWithCommentsResponse;
 import com.peeerr.climbing.exception.constant.ErrorMessage;
@@ -31,17 +31,8 @@ public class PostService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public Page<PostResponse> getPosts(Pageable pageable) {
-        List<PostResponse> posts = postRepository.findAll(pageable).stream()
-                .map(PostResponse::from)
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(posts, pageable, posts.size());
-    }
-
-    @Transactional(readOnly = true)
-    public Page<PostResponse> getPostsByCategory(Long categoryId, Pageable pageable) {
-        List<PostResponse> posts = postRepository.findPostsByCategoryId(categoryId, pageable).stream()
+    public Page<PostResponse> getPostsFilteredByBoardIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
+        List<PostResponse> posts = postRepository.getPostsFilteredByBoardIdAndSearchWord(categoryId, condition).stream()
                 .map(PostResponse::from)
                 .collect(Collectors.toList());
 
