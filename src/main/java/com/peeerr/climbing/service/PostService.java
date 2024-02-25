@@ -50,10 +50,9 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostWithCommentsResponse getPostWithComments(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
-
-        return PostWithCommentsResponse.from(post);
+        return postRepository.findById(postId)
+                .map(PostWithCommentsResponse::from)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
     }
 
     @Transactional
