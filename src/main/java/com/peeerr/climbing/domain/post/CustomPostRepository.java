@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface CustomPostRepository {
 
-    List<Post> getPostsFilteredByBoardIdAndSearchWord(Long categoryId, PostSearchCondition condition);
+    List<Post> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition);
 
 }

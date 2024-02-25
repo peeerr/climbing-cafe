@@ -31,21 +31,12 @@ public class PostService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public Page<PostResponse> getPostsFilteredByBoardIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
-        List<PostResponse> posts = postRepository.getPostsFilteredByBoardIdAndSearchWord(categoryId, condition).stream()
+    public Page<PostResponse> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
+        List<PostResponse> posts = postRepository.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition).stream()
                 .map(PostResponse::from)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(posts, pageable, posts.size());
-    }
-
-    @Transactional(readOnly = true)
-    public PostResponse getPost(Long postId) {
-        PostResponse postResponse = postRepository.findById(postId)
-                .map(PostResponse::from)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
-
-        return postResponse;
     }
 
     @Transactional(readOnly = true)

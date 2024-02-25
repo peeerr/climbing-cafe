@@ -29,10 +29,10 @@ public class PostController {
 
     // TODO: 쿼리 줄이기 + 요청 느림
     @GetMapping
-    public ResponseEntity<ApiResponse> postListFilteredByBoardIdAndSearchWord(@RequestParam(required = false) final Long boardId,
-                                                          @ModelAttribute PostSearchCondition condition,
-                                                          @PageableDefault(size = 20, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<PostResponse> posts = postService.getPostsFilteredByBoardIdAndSearchWord(boardId, condition, pageable);
+    public ResponseEntity<ApiResponse> postListFilteredByCategoryIdAndSearchWord(@RequestParam(required = false) final Long categoryId,
+                                                                                 @ModelAttribute PostSearchCondition condition,
+                                                                                 @PageableDefault(size = 20, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(posts));

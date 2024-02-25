@@ -20,17 +20,17 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
     }
 
     @Override
-    public List<Post> getPostsFilteredByBoardIdAndSearchWord(Long boardId, PostSearchCondition condition) {
+    public List<Post> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition) {
         List<Post> posts = queryFactory
                 .selectFrom(post)
-                .where(boardEq(boardId), titleContains(condition.getTitle()), contentContains(condition.getContent()))
+                .where(categoryEq(categoryId), titleContains(condition.getTitle()), contentContains(condition.getContent()))
                 .fetch();
 
         return posts;
     }
 
-    public BooleanExpression boardEq(Long boardId) {
-        return !Objects.isNull(boardId) ? post.category.id.eq(boardId) : null;
+    public BooleanExpression categoryEq(Long categoryId) {
+        return !Objects.isNull(categoryId) ? post.category.id.eq(categoryId) : null;
     }
 
     public BooleanExpression titleContains(String title) {
