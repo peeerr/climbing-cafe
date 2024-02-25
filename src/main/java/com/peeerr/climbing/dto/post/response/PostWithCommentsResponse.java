@@ -1,6 +1,7 @@
 package com.peeerr.climbing.dto.post.response;
 
 import com.peeerr.climbing.domain.comment.Comment;
+import com.peeerr.climbing.domain.file.File;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.dto.comment.response.CommentResponse;
 import lombok.AccessLevel;
@@ -19,10 +20,12 @@ import java.util.stream.Collectors;
 @Getter
 public class PostWithCommentsResponse {
 
+    private Long postId;
     private String title;
     private String content;
-    private String username;
     private String categoryName;
+    private String writer;
+    private List<String> filePaths;
 
     private List<CommentResponse> comments;
 
@@ -30,10 +33,14 @@ public class PostWithCommentsResponse {
     private LocalDateTime modifyDate;
 
     public static PostWithCommentsResponse from(Post post) {
-        return new PostWithCommentsResponse(post.getTitle(),
+        return new PostWithCommentsResponse(post.getId(),
+                post.getTitle(),
                 post.getContent(),
-                post.getMember().getUsername(),
                 post.getCategory().getCategoryName(),
+                post.getMember().getUsername(),
+                post.getFiles().stream()
+                        .map(File::getFilePath)
+                        .collect(Collectors.toList()),
                 organizeComments(post.getComments()),
                 post.getCreateDate(),
                 post.getModifyDate());

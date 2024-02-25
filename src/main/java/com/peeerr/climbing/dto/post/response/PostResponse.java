@@ -11,16 +11,18 @@ import java.time.LocalDateTime;
 @Getter
 public class PostResponse {
 
+    private Long postId;
     private String title;
     private String content;
     private String categoryName;
-    private String author;
+    private String writer;
 
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
 
     public static PostResponse from(Post post) {
-        return new PostResponse(post.getTitle(),
+        return new PostResponse(post.getId(),
+                post.getTitle(),
                 post.getContent(),
                 post.getCategory().getCategoryName(),
                 post.getMember().getUsername(),
