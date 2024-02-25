@@ -7,7 +7,9 @@ import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
+import com.peeerr.climbing.dto.post.request.PostSearchCondition;
 import com.peeerr.climbing.dto.post.response.PostResponse;
+import com.peeerr.climbing.dto.post.response.PostWithCommentsResponse;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,25 +40,45 @@ class PostServiceTest {
     @Mock
     private CategoryRepository categoryRepository;
     
-    @DisplayName("게시물 전체를 페이징해서 조회해 온다.")
+    @DisplayName("게시물들을 카테고리와 검색어로 필터링해서 조회한다.")
     @Test
-    void getPosts() throws Exception {
+    void getPostsFilteredByCategoryIdAndSearchWord() throws Exception {
         //given
+        Long categoryId = 1L;
         Pageable pageable = Pageable.ofSize(10);
-        given(postRepository.findAll(pageable)).willReturn(Page.empty());
+        PostSearchCondition condition = PostSearchCondition.of("제목 검색 테스트", "본문 검색 테스트");
+
+        given(postRepository.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition)).willReturn(List.of());
         
         //when
-        Page<PostResponse> posts = postService.getPosts(pageable);
+        Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
 
         //then
         assertThat(posts).isEmpty();
 
-        then(postRepository).should().findAll(pageable);
+        then(postRepository).should().getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition);
+    }
+
+    @DisplayName("게시물들을 필터링해서 조회하는데, 카테고리와 검색어가 주어지지 않으면 모든 게시물을 조회한다.")
+    @Test
+    void getPosts() throws Exception {
+        //given
+        Pageable pageable = Pageable.ofSize(10);
+
+        given(postRepository.getPostsFilteredByCategoryIdAndSearchWord(null, null)).willReturn(List.of());
+
+        //when
+        Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(null, null, pageable);
+
+        //then
+        assertThat(posts).isEmpty();
+
+        then(postRepository).should().getPostsFilteredByCategoryIdAndSearchWord(null, null);
     }
 
     @DisplayName("게시물 하나를 조회해 온다.")
     @Test
-    void getPost() throws Exception {
+    void getPostWithComments() throws Exception {
         //given
         Long postId = 1L;
         Post post = createPost(1L);
@@ -63,26 +86,11 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
         //when
-        PostResponse response = postService.getPost(postId);
+        PostWithCommentsResponse response = postService.getPostWithComments(postId);
 
         //then
         assertThat(response.getTitle()).isEqualTo("제목 테스트");
         assertThat(response.getContent()).isEqualTo("본문 테스트");
-
-        then(postRepository).should().findById(postId);
-    }
-
-    @DisplayName("게시물을 조회해 오는데, 해당하는 게시물이 없으면 예외를 던진다.")
-    @Test
-    void getPostWithNonExistPostId() throws Exception {
-        //given
-        Long postId = 1L;
-
-        given(postRepository.findById(postId)).willReturn(Optional.empty());
-
-        //when & then
-        assertThrows(EntityNotFoundException.class,
-                () -> postService.getPost(postId));
 
         then(postRepository).should().findById(postId);
     }
