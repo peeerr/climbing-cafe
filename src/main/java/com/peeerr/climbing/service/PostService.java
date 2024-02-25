@@ -32,7 +32,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Page<PostResponse> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
-        List<PostResponse> posts = postRepository.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition).stream()
+        List<PostResponse> posts = postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition).stream()
                 .map(PostResponse::from)
                 .collect(Collectors.toList());
 

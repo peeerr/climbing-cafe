@@ -48,7 +48,7 @@ class PostServiceTest {
         Pageable pageable = Pageable.ofSize(10);
         PostSearchCondition condition = PostSearchCondition.of("제목 검색 테스트", "본문 검색 테스트");
 
-        given(postRepository.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition)).willReturn(List.of());
+        given(postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition)).willReturn(List.of());
         
         //when
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
@@ -56,7 +56,7 @@ class PostServiceTest {
         //then
         assertThat(posts).isEmpty();
 
-        then(postRepository).should().getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition);
+        then(postRepository).should().findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition);
     }
 
     @DisplayName("게시물들을 필터링해서 조회하는데, 카테고리와 검색어가 주어지지 않으면 모든 게시물을 조회한다.")
@@ -65,7 +65,7 @@ class PostServiceTest {
         //given
         Pageable pageable = Pageable.ofSize(10);
 
-        given(postRepository.getPostsFilteredByCategoryIdAndSearchWord(null, null)).willReturn(List.of());
+        given(postRepository.findPostsFilteredByCategoryIdAndSearchWord(null, null)).willReturn(List.of());
 
         //when
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(null, null, pageable);
@@ -73,7 +73,7 @@ class PostServiceTest {
         //then
         assertThat(posts).isEmpty();
 
-        then(postRepository).should().getPostsFilteredByCategoryIdAndSearchWord(null, null);
+        then(postRepository).should().findPostsFilteredByCategoryIdAndSearchWord(null, null);
     }
 
     @DisplayName("게시물 하나를 조회해 온다.")

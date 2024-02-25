@@ -20,7 +20,7 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
     }
 
     @Override
-    public List<Post> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition) {
+    public List<Post> findPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition) {
         List<Post> posts = queryFactory
                 .selectFrom(post)
                 .where(categoryEq(categoryId), titleContains(condition.getTitle()), contentContains(condition.getContent()))
