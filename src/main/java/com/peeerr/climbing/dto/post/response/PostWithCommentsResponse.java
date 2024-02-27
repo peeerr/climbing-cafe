@@ -46,6 +46,9 @@ public class PostWithCommentsResponse {
                 post.getModifyDate());
     }
 
+    /*
+     * 댓글, 대댓글 위치 잡기
+     */
     private static List<CommentResponse> organizeComments(List<Comment> comments) {
         Map<Long, CommentResponse> map = comments.stream()
                 .map(CommentResponse::from)
