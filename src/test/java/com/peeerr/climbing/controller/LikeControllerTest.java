@@ -38,7 +38,7 @@ class LikeControllerTest {
         given(likeService.getLikeCount(postId)).willReturn(likeCount);
 
         //when
-        ResultActions result = mvc.perform(get("/api/likes/{postId}", postId));
+        ResultActions result = mvc.perform(get("/api/likes/{postId}/count", postId));
 
         //then
         result
