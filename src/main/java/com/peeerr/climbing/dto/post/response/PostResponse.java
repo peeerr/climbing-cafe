@@ -1,13 +1,13 @@
 package com.peeerr.climbing.dto.post.response;
 
 import com.peeerr.climbing.domain.post.Post;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class PostResponse {
 
@@ -28,6 +28,17 @@ public class PostResponse {
                 post.getMember().getUsername(),
                 post.getCreateDate(),
                 post.getModifyDate());
+    }
+
+    @QueryProjection
+    public PostResponse(Long postId, String title, String content, String categoryName, String writer, LocalDateTime createDate, LocalDateTime modifyDate) {
+        this.postId = postId;
+        this.title = title;
+        this.content = content;
+        this.categoryName = categoryName;
+        this.writer = writer;
+        this.createDate = createDate;
+        this.modifyDate = modifyDate;
     }
 
 }
