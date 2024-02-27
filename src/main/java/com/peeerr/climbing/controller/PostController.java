@@ -12,8 +12,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,18 +25,16 @@ public class PostController {
 
     private final PostService postService;
 
-    // TODO: 쿼리 줄이기 + 요청 느림
     @GetMapping
     public ResponseEntity<ApiResponse> postListFilteredByCategoryIdAndSearchWord(@RequestParam(required = false) final Long categoryId,
                                                                                  @ModelAttribute PostSearchCondition condition,
-                                                                                 @PageableDefault(size = 20, sort = "createDate", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                                 Pageable pageable) {
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(posts));
     }
 
-    // TODO: 이거 하나 실행하는데 쿼리가 4개(게시물 + (멤버 + 카테고리 + 댓글)) 날라감
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse> postDetail(@PathVariable Long postId) {
         PostWithCommentsResponse post = postService.getPostWithComments(postId);
