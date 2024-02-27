@@ -48,7 +48,7 @@ class PostServiceTest {
         Pageable pageable = Pageable.ofSize(10);
         PostSearchCondition condition = PostSearchCondition.of("제목 검색 테스트", "본문 검색 테스트");
 
-        given(postRepository.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition)).willReturn(List.of());
+        given(postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable)).willReturn(Page.empty());
         
         //when
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
@@ -56,7 +56,7 @@ class PostServiceTest {
         //then
         assertThat(posts).isEmpty();
 
-        then(postRepository).should().getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition);
+        then(postRepository).should().findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
     }
 
     @DisplayName("게시물들을 필터링해서 조회하는데, 카테고리와 검색어가 주어지지 않으면 모든 게시물을 조회한다.")
@@ -65,7 +65,7 @@ class PostServiceTest {
         //given
         Pageable pageable = Pageable.ofSize(10);
 
-        given(postRepository.getPostsFilteredByCategoryIdAndSearchWord(null, null)).willReturn(List.of());
+        given(postRepository.findPostsFilteredByCategoryIdAndSearchWord(null, null, pageable)).willReturn(Page.empty());
 
         //when
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(null, null, pageable);
@@ -73,7 +73,7 @@ class PostServiceTest {
         //then
         assertThat(posts).isEmpty();
 
-        then(postRepository).should().getPostsFilteredByCategoryIdAndSearchWord(null, null);
+        then(postRepository).should().findPostsFilteredByCategoryIdAndSearchWord(null, null, pageable);
     }
 
     @DisplayName("게시물 하나를 조회해 온다.")
@@ -83,7 +83,7 @@ class PostServiceTest {
         Long postId = 1L;
         Post post = createPost(1L);
 
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
 
         //when
         PostWithCommentsResponse response = postService.getPostWithComments(postId);
@@ -92,7 +92,7 @@ class PostServiceTest {
         assertThat(response.getTitle()).isEqualTo("제목 테스트");
         assertThat(response.getContent()).isEqualTo("본문 테스트");
 
-        then(postRepository).should().findById(postId);
+        then(postRepository).should().findPostById(postId);
     }
 
     @DisplayName("새로운 게시물 하나를 추가한다.")

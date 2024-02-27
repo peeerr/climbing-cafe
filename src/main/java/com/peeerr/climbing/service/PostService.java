@@ -32,16 +32,19 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Page<PostResponse> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
-        List<PostResponse> posts = postRepository.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition).stream()
+        List<PostResponse> posts = postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable).stream()
                 .map(PostResponse::from)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(posts, pageable, posts.size());
     }
 
+    /*
+     * 게시물 상세조회
+     */
     @Transactional(readOnly = true)
     public PostWithCommentsResponse getPostWithComments(Long postId) {
-        return postRepository.findById(postId)
+        return postRepository.findPostById(postId)
                 .map(PostWithCommentsResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
     }
