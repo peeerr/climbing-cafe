@@ -15,13 +15,9 @@ import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -32,11 +28,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public Page<PostResponse> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
-        List<PostResponse> posts = postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable).stream()
-                .map(PostResponse::from)
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(posts, pageable, posts.size());
+        return postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
     }
 
     /*

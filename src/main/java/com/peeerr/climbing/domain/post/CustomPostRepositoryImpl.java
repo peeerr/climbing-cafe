@@ -1,6 +1,8 @@
 package com.peeerr.climbing.domain.post;
 
 import com.peeerr.climbing.dto.post.request.PostSearchCondition;
+import com.peeerr.climbing.dto.post.response.PostResponse;
+import com.peeerr.climbing.dto.post.response.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -28,11 +30,19 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
     }
 
     @Override
-    public Page<Post> findPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
-        List<Post> posts = queryFactory
-                .selectFrom(post)
-                .join(post.category, category).fetchJoin()
-                .join(post.member, member).fetchJoin()
+    public Page<PostResponse> findPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
+        List<PostResponse> posts = queryFactory
+                .select(new QPostResponse(
+                        post.id,
+                        post.title,
+                        post.content,
+                        post.category.categoryName,
+                        post.member.username,
+                        post.createDate,
+                        post.modifyDate))
+                .from(post)
+                .join(post.category, category)
+                .join(post.member, member)
                 .where(categoryEq(categoryId), titleContains(condition.getTitle()), contentContains(condition.getContent()))
                 .orderBy(post.createDate.desc())
                 .offset(pageable.getOffset())
