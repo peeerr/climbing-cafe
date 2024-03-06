@@ -66,4 +66,10 @@ public class ExceptionControllerAdvice {
                 .body(ApiResponse.of(e.getMessage()));
     }
 
+    @ExceptionHandler(FileTypeException.class)
+    public ResponseEntity<ApiResponse> fileType(FileTypeException e) {
+        return ResponseEntity.badRequest()
+                .body(ApiResponse.of(e.getMessage()));
+    }
+
 }
