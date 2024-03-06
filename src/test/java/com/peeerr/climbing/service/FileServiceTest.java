@@ -26,7 +26,7 @@ import static org.mockito.BDDMockito.then;
 class FileServiceTest {
 
     @Mock
-    private StorageManagement storageManagement;
+    private S3FileUploader s3FileUploader;
 
     @Mock
     private FileRepository fileRepository;
@@ -46,7 +46,7 @@ class FileServiceTest {
         Post post = Post.builder().build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
-        given(storageManagement.storeFiles(request.getFiles())).willReturn(List.of());
+        given(s3FileUploader.uploadFiles(request.getFiles())).willReturn(List.of());
         given(fileRepository.saveAll(List.of())).willReturn(List.of());
 
         //when
@@ -54,7 +54,7 @@ class FileServiceTest {
 
         //then
         then(postRepository).should().findById(postId);
-        then(storageManagement).should().storeFiles(request.getFiles());
+        then(s3FileUploader).should().uploadFiles(request.getFiles());
         then(fileRepository).should().saveAll(List.of());
     }
 

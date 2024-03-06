@@ -20,7 +20,7 @@ import java.util.List;
 @Service
 public class FileService {
 
-    private final StorageManagement storageManagement;
+    private final S3FileUploader s3FileUploader;
     private final FileRepository fileRepository;
     private final PostRepository postRepository;
 
@@ -29,15 +29,15 @@ public class FileService {
         Post post = postRepository.findById(fileUploadRequest.getPostId())
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
-        List<FileStoreDto> files = storageManagement.storeFiles(fileUploadRequest.getFiles());
+        List<FileStoreDto> fileDtos = s3FileUploader.uploadFiles(fileUploadRequest.getFiles());
 
         List<File> fileEntities = new ArrayList<>();
-        for (FileStoreDto file : files) {
+        for (FileStoreDto fileDto : fileDtos) {
             File fileEntity = File.builder()
                     .post(post)
-                    .originalFilename(file.getOriginalFilename())
-                    .filename(file.getFilename())
-                    .filePath(file.getFilePath())
+                    .originalFilename(fileDto.getOriginalFilename())
+                    .filename(fileDto.getFilename())
+                    .filePath(fileDto.getFilePath())
                     .build();
 
             fileEntities.add(fileEntity);
