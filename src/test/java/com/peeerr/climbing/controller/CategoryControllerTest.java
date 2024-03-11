@@ -9,10 +9,10 @@ import com.peeerr.climbing.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -21,13 +21,14 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@WithMockUser
+@WebMvcTest(controllers = CategoryController.class)
 class CategoryControllerTest {
 
     @Autowired
@@ -66,6 +67,7 @@ class CategoryControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/categories")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request)));
 
@@ -89,6 +91,7 @@ class CategoryControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/categories/{categoryId}", categoryId)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request)));
 
@@ -109,7 +112,8 @@ class CategoryControllerTest {
         willDoNothing().given(categoryService).removeCategory(anyLong());
 
         //when
-        ResultActions result = mvc.perform(delete("/api/categories/{categoryId}", categoryId));
+        ResultActions result = mvc.perform(delete("/api/categories/{categoryId}", categoryId)
+                .with(csrf()));
 
         //then
         result

@@ -9,22 +9,23 @@ import com.peeerr.climbing.service.CommentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@WithMockUser
+@WebMvcTest(controllers = CommentController.class)
 class CommentControllerTest {
 
     @Autowired private MockMvc mvc;
@@ -45,6 +46,7 @@ class CommentControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/comments")
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request))
                 .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
@@ -71,6 +73,7 @@ class CommentControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/comments/{commentId}", commentId)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request))
                 .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
@@ -96,6 +99,7 @@ class CommentControllerTest {
 
         //when
         ResultActions result = mvc.perform(delete("/api/comments/{commentId}", commentId)
+                .with(csrf())
                 .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
 
         //then

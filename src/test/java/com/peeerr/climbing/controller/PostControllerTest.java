@@ -14,14 +14,13 @@ import com.peeerr.climbing.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -31,13 +30,14 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@AutoConfigureMockMvc
-@SpringBootTest
+@WithMockUser
+@WebMvcTest(controllers = PostController.class)
 class PostControllerTest {
 
     @Autowired
@@ -107,6 +107,7 @@ class PostControllerTest {
 
         //when
         ResultActions result = mvc.perform(post("/api/posts")
+                .with(csrf())
                 .with(SecurityMockMvcRequestPostProcessors.user(userDetails))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request)));
@@ -140,6 +141,7 @@ class PostControllerTest {
 
         //when
         ResultActions result = mvc.perform(put("/api/posts/{postId}", postId)
+                .with(csrf())
                 .with(SecurityMockMvcRequestPostProcessors.user(userDetails))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request)));
@@ -166,6 +168,7 @@ class PostControllerTest {
 
         //when
         ResultActions result = mvc.perform(delete("/api/posts/{postId}", postId)
+                .with(csrf())
                 .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
 
         //then
