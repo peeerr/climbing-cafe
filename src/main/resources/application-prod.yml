@@ -17,6 +17,7 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
+        dialect: org.hibernate.dialect.MySQLDialect
 
   servlet:
     multipart:
