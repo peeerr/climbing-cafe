@@ -43,8 +43,7 @@ jobs:
 
       - name: Show Current Time
         run: echo "${{steps.current-time.outputs.formattedTime}}"
-        
-      # EB에 배포
+
       - name: Create deployment zip file
         run: |
           mkdir -p deploy
@@ -53,6 +52,7 @@ jobs:
           cp -r .ebextensions deploy/.ebextensions
           cd deploy && zip -r deploy.zip .
 
+      # EB에 배포
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
         with:
