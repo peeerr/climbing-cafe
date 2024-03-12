@@ -24,9 +24,6 @@ jobs:
         with:
           files: ./src/main/resources/application-prod.yml
         env:
-          spring.datasource.url: ${{ secrets.DB_URL }}
-          spring.datasource.username: ${{ secrets.DB_USERNAME }}
-          spring.datasource.password: ${{ secrets.DB_PASSWORD }}
           aws.s3.bucket: ${{ secrets.AWS_S3_BUCKET }}
           aws.s3.accessKey: ${{ secrets.AWS_S3_ACCESS_KEY }}
           aws.s3.secretKey: ${{ secrets.AWS_S3_SECRET_KEY }}
@@ -35,7 +32,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew clean build -x test
+        run: ./gradlew clean build
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
@@ -61,8 +58,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
-          application_name: climbing-sv
-          environment_name: Climbing-sv-env
+          application_name: climbing
+          environment_name: Climbing-env
           version_label: climbing-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
