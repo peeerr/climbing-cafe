@@ -9,6 +9,7 @@ spring:
     url: jdbc:mysql://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}
     username: ${RDS_USERNAME}
     password: ${RDS_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
@@ -17,7 +18,6 @@ spring:
     properties:
       hibernate:
         default_batch_fetch_size: 100
-        dialect: org.hibernate.dialect.MySQLDialect
 
   servlet:
     multipart:
