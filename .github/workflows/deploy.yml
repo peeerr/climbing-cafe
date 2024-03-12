@@ -19,10 +19,12 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Set application-prod.yml
+      - name: Set AwsS3 Key at yaml
         uses: microsoft/variable-substitution@v1
         with:
-          files: ./src/main/resources/application-prod.yml
+          files:
+            - ./src/main/resources/application-ci.yml
+            - ./src/main/resources/application-prod.yml
         env:
           aws.s3.bucket: ${{ secrets.AWS_S3_BUCKET }}
           aws.s3.accessKey: ${{ secrets.AWS_S3_ACCESS_KEY }}
@@ -32,7 +34,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew test -i
+        run: ./gradlew clean build
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
