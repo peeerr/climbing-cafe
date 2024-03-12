@@ -35,7 +35,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew test -i
+        run: ./gradlew clean build -x test
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
@@ -50,7 +50,7 @@ jobs:
       # EB에 배포
       - name: Create deployment zip file
         run: |
-          mkdir deploy
+          mkdir -p deploy
           cp build/libs/*.jar deploy/application.jar
           cp Procfile deploy/Procfile
           cp -r .ebextensions deploy/.ebextensions
