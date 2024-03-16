@@ -4,7 +4,6 @@ import com.peeerr.climbing.domain.file.File;
 import com.peeerr.climbing.domain.file.FileRepository;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.dto.file.request.FileUploadRequest;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,8 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,19 +41,19 @@ class FileServiceTest {
     void uploadFiles() throws Exception {
         //given
         Long postId = 1L;
-        FileUploadRequest request = FileUploadRequest.of(postId, List.of());
+        List<MultipartFile> files = List.of();
         Post post = Post.builder().build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
-        given(s3FileUploader.uploadFiles(request.getFiles())).willReturn(List.of());
+        given(s3FileUploader.uploadFiles(files)).willReturn(List.of());
         given(fileRepository.saveAll(List.of())).willReturn(List.of());
 
         //when
-        fileService.uploadFiles(request);
+        fileService.uploadFiles(postId, files);
 
         //then
         then(postRepository).should().findById(postId);
-        then(s3FileUploader).should().uploadFiles(request.getFiles());
+        then(s3FileUploader).should().uploadFiles(files);
         then(fileRepository).should().saveAll(List.of());
     }
 
@@ -63,13 +62,13 @@ class FileServiceTest {
     void uploadFilesWithNonExistPostId() throws Exception {
         //given
         Long postId = 1L;
-        FileUploadRequest request = FileUploadRequest.of(postId, Collections.emptyList());
+        List<MultipartFile> files = List.of();
 
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
         assertThrows(EntityNotFoundException.class,
-                () -> fileService.uploadFiles(request));
+                () -> fileService.uploadFiles(postId, files));
 
         then(postRepository).should().findById(postId);
     }

@@ -1,17 +1,17 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.domain.file.File;
 import com.peeerr.climbing.domain.file.FileRepository;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.dto.file.FileStoreDto;
-import com.peeerr.climbing.dto.file.request.FileUploadRequest;
+import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.FileAlreadyDeletedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +25,14 @@ public class FileService {
     private final PostRepository postRepository;
 
     @Transactional
-    public List<String> uploadFiles(FileUploadRequest fileUploadRequest) {
-        Post post = postRepository.findById(fileUploadRequest.getPostId())
+    public List<String> uploadFiles(Long postId, List<MultipartFile> files) {
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
-        List<FileStoreDto> fileDtos = s3FileUploader.uploadFiles(fileUploadRequest.getFiles());
+        List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
 
         List<File> fileEntities = new ArrayList<>();
-        for (FileStoreDto fileDto : fileDtos) {
+        for (FileStoreDto fileDto : storedFiles) {
             File fileEntity = File.builder()
                     .post(post)
                     .originalFilename(fileDto.getOriginalFilename())
