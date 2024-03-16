@@ -63,7 +63,7 @@ class CategoryControllerTest {
         //given
         CategoryCreateRequest request = CategoryCreateRequest.of("자유 게시판");
 
-        given(categoryService.addCategory(any(CategoryCreateRequest.class))).willReturn(any(CategoryResponse.class));
+        willDoNothing().given(categoryService).addCategory(any(CategoryCreateRequest.class));
 
         //when
         ResultActions result = mvc.perform(post("/api/categories")
@@ -87,7 +87,7 @@ class CategoryControllerTest {
         CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
         CategoryResponse response = CategoryResponse.from(Category.builder().categoryName("후기 게시판").build());
 
-        given(categoryService.editCategory(anyLong(), any(CategoryEditRequest.class))).willReturn(response);
+        willDoNothing().given(categoryService).editCategory(anyLong(), any(CategoryEditRequest.class));
 
         //when
         ResultActions result = mvc.perform(put("/api/categories/{categoryId}", categoryId)

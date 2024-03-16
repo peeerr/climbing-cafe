@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class PostWithCommentsResponse {
+public class PostDetailResponse {
 
     private Long postId;
     private String title;
@@ -32,8 +32,8 @@ public class PostWithCommentsResponse {
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
 
-    public static PostWithCommentsResponse from(Post post) {
-        return new PostWithCommentsResponse(post.getId(),
+    public static PostDetailResponse from(Post post) {
+        return new PostDetailResponse(post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getCategory().getCategoryName(),

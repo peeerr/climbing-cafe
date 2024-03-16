@@ -4,7 +4,6 @@ import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
 import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.request.MemberEditRequest;
-import com.peeerr.climbing.dto.member.response.MemberResponse;
 import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
@@ -98,12 +97,9 @@ class MemberServiceTest {
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
 
         //when
-        MemberResponse response = memberService.editMember(memberId, request, loginId);
+        memberService.editMember(memberId, request, loginId);
 
         //then
-        assertThat(response.getUsername()).isEqualTo(editUsername);
-        assertThat(response.getEmail()).isEqualTo(editEmail);
-
         then(memberRepository).should().findById(memberId);
     }
 

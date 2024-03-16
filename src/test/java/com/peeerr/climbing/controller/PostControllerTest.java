@@ -2,14 +2,12 @@ package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.config.auth.CustomUserDetails;
-import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.request.PostSearchCondition;
+import com.peeerr.climbing.dto.post.response.PostDetailResponse;
 import com.peeerr.climbing.dto.post.response.PostResponse;
-import com.peeerr.climbing.dto.post.response.PostWithCommentsResponse;
 import com.peeerr.climbing.service.PostService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -76,7 +74,7 @@ class PostControllerTest {
     void postDetail() throws Exception {
         //given
         Long categoryId = 1L;
-        given(postService.getPostWithComments(anyLong())).willReturn(any(PostWithCommentsResponse.class));
+        given(postService.getPostWithComments(anyLong())).willReturn(any(PostDetailResponse.class));
 
         //when
         ResultActions result = mvc.perform(get("/api/posts/{postId}", categoryId));
@@ -97,13 +95,9 @@ class PostControllerTest {
         PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", 1L);
 
         Member member = Member.builder().username("test").build();
-        Category category = Category.builder().categoryName("자유 게시판").build();
-        Post post = Post.builder().category(category).member(member).build();
-        PostResponse response = PostResponse.from(post);
-
         CustomUserDetails userDetails = new CustomUserDetails(member);
 
-        given(postService.addPost(any(PostCreateRequest.class), any(Member.class))).willReturn(response);
+        willDoNothing().given(postService).addPost(any(PostCreateRequest.class), any(Member.class));
 
         //when
         ResultActions result = mvc.perform(post("/api/posts")
@@ -129,15 +123,11 @@ class PostControllerTest {
         Long loginId = 1L;
 
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
+
         Member member = Member.builder().id(loginId).username("test").build();
-        Category category = Category.builder().categoryName("자유 게시판").build();
-        Post post = Post.builder().category(category).member(member).build();
-
-        PostResponse response = PostResponse.from(post);
-
         CustomUserDetails userDetails = new CustomUserDetails(member);
 
-        given(postService.editPost(anyLong(), any(PostEditRequest.class), anyLong())).willReturn(response);
+        willDoNothing().given(postService).editPost(anyLong(), any(PostEditRequest.class), anyLong());
 
         //when
         ResultActions result = mvc.perform(put("/api/posts/{postId}", postId)

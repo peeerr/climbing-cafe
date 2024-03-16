@@ -5,7 +5,6 @@ import com.peeerr.climbing.config.auth.CustomUserDetails;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.request.MemberEditRequest;
-import com.peeerr.climbing.dto.member.response.MemberResponse;
 import com.peeerr.climbing.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,6 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -40,10 +38,9 @@ class MemberControllerTest {
     @Test
     void memberAdd() throws Exception {
         //given
-        Long memberId = 1L;
         MemberCreateRequest request = MemberCreateRequest.of("test", "test1234", "test1234", "test@example.com");
 
-        given(memberService.addMember(request)).willReturn(memberId);
+        willDoNothing().given(memberService).addMember(request);
 
         //when
         ResultActions result = mvc.perform(post("/api/members")
@@ -54,9 +51,7 @@ class MemberControllerTest {
         //then
         result
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"))
-                .andExpect(jsonPath("$.data").value(memberId))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value("success"));
 
         then(memberService).should().addMember(request);
     }
@@ -71,11 +66,10 @@ class MemberControllerTest {
         String editUsername = "test";
         String editEmail = "test@example.com";
         MemberEditRequest request = MemberEditRequest.of(editUsername, editEmail);
-        MemberResponse response = MemberResponse.of(editUsername, editEmail);
 
         CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(loginId).build());
 
-        given(memberService.editMember(anyLong(), any(MemberEditRequest.class), anyLong())).willReturn(response);
+        willDoNothing().given(memberService).editMember(anyLong(), any(MemberEditRequest.class), anyLong());
 
         //when
         ResultActions result = mvc.perform(put("/api/members/{memberId}", memberId)
@@ -87,10 +81,7 @@ class MemberControllerTest {
         //then
         result
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
-                .andExpect(jsonPath("$.data.username").value(editUsername))
-                .andExpect(jsonPath("$.data.email").value(editEmail))
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value("success"));
 
         then(memberService).should().editMember(anyLong(), any(MemberEditRequest.class), anyLong());
     }

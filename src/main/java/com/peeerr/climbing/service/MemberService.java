@@ -4,7 +4,6 @@ import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
 import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.request.MemberEditRequest;
-import com.peeerr.climbing.dto.member.response.MemberResponse;
 import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
@@ -25,7 +24,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long addMember(MemberCreateRequest request) {
+    public void addMember(MemberCreateRequest request) {
         validateDuplicateUser(request.getUsername(), request.getEmail());
 
         if (!request.getPassword().equals(request.getCheckPassword())) {
@@ -38,13 +37,11 @@ public class MemberService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .build();
 
-        Member savedEntity = memberRepository.save(member);
-
-        return savedEntity.getId();
+        memberRepository.save(member);
     }
 
     @Transactional
-    public MemberResponse editMember(Long memberId, MemberEditRequest request, Long loginId) {
+    public void editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
 
@@ -61,10 +58,6 @@ public class MemberService {
             validateDuplicateEmail(request.getEmail());
             member.changeEmail(request.getEmail());
         }
-
-        MemberResponse response = MemberResponse.from(member);
-
-        return response;
     }
 
     public void validateDuplicateUser(String username, String email) {

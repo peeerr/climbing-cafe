@@ -9,7 +9,7 @@ import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.request.PostSearchCondition;
 import com.peeerr.climbing.dto.post.response.PostResponse;
-import com.peeerr.climbing.dto.post.response.PostWithCommentsResponse;
+import com.peeerr.climbing.dto.post.response.PostDetailResponse;
 import com.peeerr.climbing.exception.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
@@ -26,6 +26,9 @@ public class PostService {
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
 
+    /*
+     * 게시판, 검색어로 필터링된 모든 게시물 조회
+     */
     @Transactional(readOnly = true)
     public Page<PostResponse> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
         return postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
@@ -35,14 +38,14 @@ public class PostService {
      * 게시물 상세조회
      */
     @Transactional(readOnly = true)
-    public PostWithCommentsResponse getPostWithComments(Long postId) {
+    public PostDetailResponse getPostWithComments(Long postId) {
         return postRepository.findPostById(postId)
-                .map(PostWithCommentsResponse::from)
+                .map(PostDetailResponse::from)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
     }
 
     @Transactional
-    public PostResponse addPost(PostCreateRequest postCreateRequest, Member member) {
+    public void addPost(PostCreateRequest postCreateRequest, Member member) {
         Post post = Post.builder()
                 .title(postCreateRequest.getTitle())
                 .content(postCreateRequest.getContent())
@@ -50,13 +53,11 @@ public class PostService {
                 .member(member)
                 .build();
 
-        Post savedPost = postRepository.save(post);
-
-        return PostResponse.from(savedPost);
+        postRepository.save(post);
     }
 
     @Transactional
-    public PostResponse editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
+    public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
@@ -67,8 +68,6 @@ public class PostService {
         post.changeTitle(postEditRequest.getTitle());
         post.changeContent(postEditRequest.getContent());
         post.changeCategory(getCategory(postEditRequest.getCategoryId()));
-
-        return PostResponse.from(post);
     }
 
     @Transactional

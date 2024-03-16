@@ -30,28 +30,24 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponse addCategory(CategoryCreateRequest request) {
+    public void addCategory(CategoryCreateRequest request) {
         validateDuplicateCategory(request.getCategoryName());
 
         Category category = Category.builder()
                 .categoryName(request.getCategoryName())
                 .build();
 
-        Category savedCategory = categoryRepository.save(category);
-
-        return CategoryResponse.from(savedCategory);
+        categoryRepository.save(category);
     }
 
     @Transactional
-    public CategoryResponse editCategory(Long categoryId, CategoryEditRequest request) {
+    public void editCategory(Long categoryId, CategoryEditRequest request) {
         validateDuplicateCategory(request.getCategoryName());
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         category.changeCategoryName(request.getCategoryName());
-
-        return CategoryResponse.from(category);
     }
 
     @Transactional

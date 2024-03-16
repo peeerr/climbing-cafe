@@ -9,7 +9,7 @@ import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.request.PostSearchCondition;
 import com.peeerr.climbing.dto.post.response.PostResponse;
-import com.peeerr.climbing.dto.post.response.PostWithCommentsResponse;
+import com.peeerr.climbing.dto.post.response.PostDetailResponse;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -86,7 +85,7 @@ class PostServiceTest {
         given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
 
         //when
-        PostWithCommentsResponse response = postService.getPostWithComments(postId);
+        PostDetailResponse response = postService.getPostWithComments(postId);
 
         //then
         assertThat(response.getTitle()).isEqualTo("제목 테스트");

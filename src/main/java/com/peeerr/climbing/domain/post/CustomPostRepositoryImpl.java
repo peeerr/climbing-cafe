@@ -36,8 +36,6 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
                         post.id,
                         post.title,
                         post.content,
-                        post.category.categoryName,
-                        post.member.username,
                         post.createDate,
                         post.modifyDate))
                 .from(post)
