@@ -1,0 +1,83 @@
+= 피크스퀘어 API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectnums:
+:sectlinks:
+:sectanchors:
+
+[[api]]
+
+== 게시물 조회 - 필터링 및 검색
+
+=== 요청
+
+include::{snippets}/post-list-filtered/http-request.adoc[]
+
+include::{snippets}/post-list-filtered/query-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/post-list-filtered/http-response.adoc[]
+
+include::{snippets}/post-list-filtered/response-fields.adoc[]
+
+== 게시물 상세 조회
+
+=== 요청
+
+include::{snippets}/post-detail/http-request.adoc[]
+
+include::{snippets}/post-detail/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/post-detail/http-response.adoc[]
+
+include::{snippets}/post-detail/response-fields.adoc[]
+
+== 게시물 작성
+
+=== 요청
+
+include::{snippets}/post-create/http-request.adoc[]
+
+include::{snippets}/post-create/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/post-create/http-response.adoc[]
+
+include::{snippets}/post-create/response-fields.adoc[]
+
+== 게시물 수정
+
+=== 요청
+
+include::{snippets}/post-edit/http-request.adoc[]
+
+include::{snippets}/post-edit/path-parameters.adoc[]
+
+include::{snippets}/post-edit/request-fields.adoc[]
+
+=== 응답
+
+include::{snippets}/post-edit/http-response.adoc[]
+
+include::{snippets}/post-edit/response-fields.adoc[]
+
+== 게시물 삭제
+
+=== 요청
+
+include::{snippets}/post-remove/http-request.adoc[]
+
+include::{snippets}/post-remove/path-parameters.adoc[]
+
+=== 응답
+
+include::{snippets}/post-remove/http-response.adoc[]
+
+include::{snippets}/post-remove/response-fields.adoc[]

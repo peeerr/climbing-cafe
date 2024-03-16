@@ -34,8 +34,8 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
         List<PostResponse> posts = queryFactory
                 .select(new QPostResponse(
                         post.id,
-                        post.title,
-                        post.content,
+                        post.category.categoryName,
+                        post.member.username,
                         post.createDate,
                         post.modifyDate))
                 .from(post)
