@@ -57,12 +57,14 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
 
     @Override
     public Optional<Post> findPostById(Long postId) {
-        return Optional.of(queryFactory
-                .selectFrom(post)
-                .join(post.category, category).fetchJoin()
-                .join(post.member, member).fetchJoin()
-                .where(post.id.eq(postId))
-                .fetchOne());
+        Post post = queryFactory
+                .selectFrom(QPost.post)
+                .join(QPost.post.category, category).fetchJoin()
+                .join(QPost.post.member, member).fetchJoin()
+                .where(QPost.post.id.eq(postId))
+                .fetchOne();
+
+        return post != null ? Optional.of(post) : Optional.empty();
     }
 
     public BooleanExpression categoryEq(Long categoryId) {
