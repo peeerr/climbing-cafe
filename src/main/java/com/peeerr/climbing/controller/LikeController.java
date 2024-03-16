@@ -10,13 +10,13 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/likes")
+@RequestMapping("/api/posts/{postId}/likes")
 @RestController
 public class LikeController {
 
     private final LikeService likeService;
 
-    @GetMapping("/{postId}/count")
+    @GetMapping("/count")
     public ResponseEntity<ApiResponse> likeCount(@PathVariable Long postId) {
         Long likeCount = likeService.getLikeCount(postId);
 
@@ -24,7 +24,7 @@ public class LikeController {
                 .body(ApiResponse.success(likeCount));
     }
 
-    @PostMapping("/{postId}")
+    @PostMapping
     public ResponseEntity<ApiResponse> likeAdd(@PathVariable Long postId,
                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
         likeService.like(userDetails.getMember().getId(), postId);
@@ -33,7 +33,7 @@ public class LikeController {
                 .body(ApiResponse.success());
     }
 
-    @DeleteMapping("/{postId}")
+    @DeleteMapping
     public ResponseEntity<ApiResponse> likeRemove(@PathVariable Long postId,
                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
         likeService.unlike(userDetails.getMember().getId(), postId);

@@ -5,8 +5,8 @@ import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.post.request.PostCreateRequest;
 import com.peeerr.climbing.dto.post.request.PostEditRequest;
 import com.peeerr.climbing.dto.post.request.PostSearchCondition;
+import com.peeerr.climbing.dto.post.response.PostDetailResponse;
 import com.peeerr.climbing.dto.post.response.PostResponse;
-import com.peeerr.climbing.dto.post.response.PostWithCommentsResponse;
 import com.peeerr.climbing.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +25,9 @@ public class PostController {
 
     private final PostService postService;
 
+    /*
+     * 게시판, 검색어로 필터링된 모든 게시물 조회
+     */
     @GetMapping
     public ResponseEntity<ApiResponse> postListFilteredByCategoryIdAndSearchWord(@RequestParam(required = false) final Long categoryId,
                                                                                  @ModelAttribute PostSearchCondition condition,
@@ -34,10 +37,13 @@ public class PostController {
         return ResponseEntity.ok()
                 .body(ApiResponse.success(posts));
     }
-
+    
+    /*
+     * 게시물 상세조회
+     */
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse> postDetail(@PathVariable Long postId) {
-        PostWithCommentsResponse post = postService.getPostWithComments(postId);
+        PostDetailResponse post = postService.getPostWithComments(postId);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(post));
@@ -47,10 +53,10 @@ public class PostController {
     public ResponseEntity<ApiResponse> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,
                                                BindingResult bindingResult,
                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
-        PostResponse addedPost = postService.addPost(postCreateRequest, userDetails.getMember());
+        postService.addPost(postCreateRequest, userDetails.getMember());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(addedPost));
+                .body(ApiResponse.success());
     }
 
     @PutMapping("/{postId}")
@@ -59,10 +65,10 @@ public class PostController {
                                                 BindingResult bindingResult,
                                                 @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long loginId = userDetails.getMember().getId();
-        PostResponse editedPost = postService.editPost(postId, postEditRequest, loginId);
+        postService.editPost(postId, postEditRequest, loginId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(editedPost));
+                .body(ApiResponse.success());
     }
 
     @DeleteMapping("/{postId}")
