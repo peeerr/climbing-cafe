@@ -32,20 +32,20 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<ApiResponse> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest,
                                          BindingResult bindingResult) {
-        CategoryResponse addedCategory = categoryService.addCategory(categoryCreateRequest);
+        categoryService.addCategory(categoryCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(addedCategory));
+                .body(ApiResponse.success());
     }
 
     @PutMapping("/{categoryId}")
     public ResponseEntity<ApiResponse> categoryEdit(@PathVariable Long categoryId,
                                           @RequestBody @Valid CategoryEditRequest categoryEditRequest,
                                           BindingResult bindingResult) {
-        CategoryResponse editedCategory = categoryService.editCategory(categoryId, categoryEditRequest);
+        categoryService.editCategory(categoryId, categoryEditRequest);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(editedCategory));
+                .body(ApiResponse.success());
     }
     
     @DeleteMapping("/{categoryId}")

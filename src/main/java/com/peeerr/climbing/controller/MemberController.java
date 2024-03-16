@@ -4,7 +4,6 @@ import com.peeerr.climbing.config.auth.CustomUserDetails;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.request.MemberEditRequest;
-import com.peeerr.climbing.dto.member.response.MemberResponse;
 import com.peeerr.climbing.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +23,10 @@ public class MemberController {
     @PostMapping
     public ResponseEntity<ApiResponse> memberAdd(@RequestBody @Valid MemberCreateRequest memberCreateRequest,
                                                  BindingResult bindingResult) {
-        Long memberId = memberService.addMember(memberCreateRequest);
+        memberService.addMember(memberCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(memberId));
+                .body(ApiResponse.success());
     }
 
     @PutMapping("/{memberId}")
@@ -36,10 +35,10 @@ public class MemberController {
                                                   BindingResult bindingResult,
                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long loginId = userDetails.getMember().getId();
-        MemberResponse memberResponse = memberService.editMember(memberId, memberEditRequest, loginId);
+        memberService.editMember(memberId, memberEditRequest, loginId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(memberResponse));
+                .body(ApiResponse.success());
     }
 
 }

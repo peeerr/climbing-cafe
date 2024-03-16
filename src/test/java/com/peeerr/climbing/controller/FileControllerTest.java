@@ -1,6 +1,5 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.file.request.FileUploadRequest;
 import com.peeerr.climbing.service.FileService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Collections;
+import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -42,10 +41,10 @@ class FileControllerTest {
         MockMultipartFile file1 = new MockMultipartFile("files", "example1.jpg", "image/jpeg", "image1".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("files", "example2.jpg", "image/jpeg", "image2".getBytes());
 
-        given(fileService.uploadFiles(any(FileUploadRequest.class))).willReturn(Collections.emptyList());
+        given(fileService.uploadFiles(anyLong(), any(List.class))).willReturn(Collections.emptyList());
 
         //when
-        ResultActions result = mvc.perform(multipart("/api/files")
+        ResultActions result = mvc.perform(multipart("/api/posts/{postId}/files", postId)
                 .file(file1)
                 .file(file2)
                 .with(csrf())
@@ -58,7 +57,7 @@ class FileControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("success"));
 
-        then(fileService).should().uploadFiles(any(FileUploadRequest.class));
+        then(fileService).should().uploadFiles(anyLong(), any(List.class));
     }
 
     @DisplayName("파일 id 를 받아 삭제 처리한다. (유저 권한 기준)")
@@ -69,7 +68,7 @@ class FileControllerTest {
         willDoNothing().given(fileService).updateDeleteFlag(fileId);
 
         //when
-        ResultActions result = mvc.perform(delete("/api/files/{fileId}", fileId)
+        ResultActions result = mvc.perform(delete("/api/posts/{postId}/files/{fileId}", 1L, fileId)
                 .with(csrf()));
 
         //then

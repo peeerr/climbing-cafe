@@ -14,24 +14,26 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/comments")
+@RequestMapping("/api/posts/{postId}/comments")
 @RestController
 public class CommentController {
 
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> commentAdd(@RequestBody @Valid CommentCreateRequest request,
+    public ResponseEntity<ApiResponse> commentAdd(@PathVariable Long postId,
+                                                  @RequestBody @Valid CommentCreateRequest request,
                                                   BindingResult bindingResult,
                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
-        commentService.addComment(request, userDetails.getMember());
+        commentService.addComment(postId, request, userDetails.getMember());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success());
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<ApiResponse> commentEdit(@PathVariable Long commentId,
+    public ResponseEntity<ApiResponse> commentEdit(@PathVariable Long postId,
+                                                   @PathVariable Long commentId,
                                                    @RequestBody @Valid CommentEditRequest request,
                                                    BindingResult bindingResult,
                                                    @AuthenticationPrincipal CustomUserDetails userDetails) {
@@ -43,7 +45,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<ApiResponse> commentRemove(@PathVariable Long commentId,
+    public ResponseEntity<ApiResponse> commentRemove(@PathVariable Long postId,
+                                                     @PathVariable Long commentId,
                                                      @AuthenticationPrincipal CustomUserDetails userDetails) {
         Long loginId = userDetails.getMember().getId();
         commentService.removeComment(commentId, loginId);

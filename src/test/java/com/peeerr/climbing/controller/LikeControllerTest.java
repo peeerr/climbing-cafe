@@ -39,7 +39,7 @@ class LikeControllerTest {
         given(likeService.getLikeCount(postId)).willReturn(likeCount);
 
         //when
-        ResultActions result = mvc.perform(get("/api/likes/{postId}/count", postId));
+        ResultActions result = mvc.perform(get("/api/posts/{postId}/likes/count", postId));
 
         //then
         result
@@ -60,7 +60,7 @@ class LikeControllerTest {
         willDoNothing().given(likeService).like(memberId, postId);
 
         //when
-        ResultActions result = mvc.perform(post("/api/likes/{postId}", postId)
+        ResultActions result = mvc.perform(post("/api/posts/{postId}/likes", postId)
                 .with(csrf())
                 .with(user(userDetails)));
 
@@ -84,7 +84,7 @@ class LikeControllerTest {
         willDoNothing().given(likeService).unlike(memberId, postId);
 
         //when
-        ResultActions result = mvc.perform(delete("/api/likes/{postId}", postId)
+        ResultActions result = mvc.perform(delete("/api/posts/{postId}/likes", postId)
                 .with(csrf())
                 .with(user(userDetails)));
 
