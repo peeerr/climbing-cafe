@@ -38,14 +38,14 @@ class CommentControllerTest {
     @Test
     void commentAdd() throws Exception {
         //given
-        CommentCreateRequest request = CommentCreateRequest.of(1L, 1L, "댓글 테스트");
+        CommentCreateRequest request = CommentCreateRequest.of(1L, "댓글 테스트");
 
-        willDoNothing().given(commentService).addComment(any(CommentCreateRequest.class), any(Member.class));
+        willDoNothing().given(commentService).addComment(anyLong(), any(CommentCreateRequest.class), any(Member.class));
 
         CustomUserDetails userDetails = new CustomUserDetails(Member.builder().build());
 
         //when
-        ResultActions result = mvc.perform(post("/api/comments")
+        ResultActions result = mvc.perform(post("/api/posts/{postId}/comments", 1L)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request))
@@ -56,13 +56,14 @@ class CommentControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.message").value("success"));
 
-        then(commentService).should().addComment(any(CommentCreateRequest.class), any(Member.class));
+        then(commentService).should().addComment(anyLong(), any(CommentCreateRequest.class), any(Member.class));
     }
 
     @DisplayName("댓글 하나를 수정한다.")
     @Test
     void commentEdit() throws Exception {
         //given
+        Long postId = 1L;
         Long commentId = 1L;
         CommentEditRequest request = CommentEditRequest.of("댓글 수정 테스트");
         Long loginId = 1L;
@@ -72,7 +73,7 @@ class CommentControllerTest {
         willDoNothing().given(commentService).editComment(anyLong(), any(CommentEditRequest.class), anyLong());
 
         //when
-        ResultActions result = mvc.perform(put("/api/comments/{commentId}", commentId)
+        ResultActions result = mvc.perform(put("/api/posts/{postId}/comments/{commentId}", postId, commentId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request))
@@ -90,6 +91,7 @@ class CommentControllerTest {
     @Test
     void commentRemove() throws Exception {
         //given
+        Long postId = 1L;
         Long commentId = 1L;
         Long loginId = 1L;
 
@@ -98,7 +100,7 @@ class CommentControllerTest {
         willDoNothing().given(commentService).removeComment(anyLong(), anyLong());
 
         //when
-        ResultActions result = mvc.perform(delete("/api/comments/{commentId}", commentId)
+        ResultActions result = mvc.perform(delete("/api/posts/{postId}/comments/{commentId}", postId, commentId)
                 .with(csrf())
                 .with(SecurityMockMvcRequestPostProcessors.user(userDetails)));
 

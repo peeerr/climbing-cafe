@@ -8,7 +8,6 @@ import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.comment.request.CommentCreateRequest;
 import com.peeerr.climbing.dto.comment.request.CommentEditRequest;
 import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +39,7 @@ class CommentServiceTest {
         Long postId = 1L;
         Long parentId = 1L;
 
-        CommentCreateRequest request = CommentCreateRequest.of(postId, parentId, "댓글 테스트");
+        CommentCreateRequest request = CommentCreateRequest.of(parentId, "댓글 테스트");
         Member member = Member.builder().build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(Post.builder().build()));
@@ -48,7 +47,7 @@ class CommentServiceTest {
         given(commentRepository.save(any(Comment.class))).willReturn(Comment.builder().build());
 
         //when
-        commentService.addComment(request, member);
+        commentService.addComment(postId, request, member);
 
         //then
         then(postRepository).should().findById(postId);

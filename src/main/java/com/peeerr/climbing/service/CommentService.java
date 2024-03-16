@@ -22,8 +22,8 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public void addComment(CommentCreateRequest request, Member member) {
-        Post post = postRepository.findById(request.getPostId()).orElseThrow(
+    public void addComment(Long postId, CommentCreateRequest request, Member member) {
+        Post post = postRepository.findById(postId).orElseThrow(
                 () -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
         if (request.getParentId() == null) {
