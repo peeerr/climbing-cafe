@@ -33,9 +33,9 @@ jobs:
         with:
           files: ./src/main/resources/application-prod.yml
         env:
-          spring.datasource.url: ${{ secrets.AWS_S3_BUCKET }}
-          spring.datasource.username: ${{ secrets.AWS_S3_BUCKET }}
-          spring.datasource.password: ${{ secrets.AWS_S3_BUCKET }}
+          spring.datasource.url: ${{ secrets.DB_URL }}
+          spring.datasource.username: ${{ secrets.DB_USERNAME }}
+          spring.datasource.password: ${{ secrets.DB_PASSWORD }}
 
       - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
