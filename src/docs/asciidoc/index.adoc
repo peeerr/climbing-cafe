@@ -97,3 +97,66 @@ include::{snippets}/member-create/request-fields.adoc[]
 
 include::{snippets}/member-create/http-response.adoc[]
 include::{snippets}/member-create/response-fields.adoc[]
+
+=== PUT /api/members/{memberId} [회원정보 변경]
+
+==== 요청
+
+include::{snippets}/member-edit/http-request.adoc[]
+include::{snippets}/member-edit/path-parameters.adoc[]
+include::{snippets}/member-edit/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/member-edit/http-response.adoc[]
+include::{snippets}/member-edit/response-fields.adoc[]
+
+== 게시판 API
+
+=== GET /api/categories [모든 게시판 조회]
+
+==== 요청
+
+include::{snippets}/category-list/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/category-list/http-response.adoc[]
+include::{snippets}/category-list/response-fields.adoc[]
+
+=== POST /api/categories [게시판 생성]
+
+==== 요청
+
+include::{snippets}/category-create/http-request.adoc[]
+include::{snippets}/category-create/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/category-create/http-response.adoc[]
+include::{snippets}/category-create/response-fields.adoc[]
+
+=== PUT /api/categories/{categoryId} [게시판명 변경]
+
+==== 요청
+
+include::{snippets}/category-edit/http-request.adoc[]
+include::{snippets}/category-edit/path-parameters.adoc[]
+include::{snippets}/category-edit/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/category-edit/http-response.adoc[]
+include::{snippets}/category-edit/response-fields.adoc[]
+
+=== DELETE /api/categories/{categoryId} [게시판 삭제]
+
+==== 요청
+
+include::{snippets}/category-remove/http-request.adoc[]
+include::{snippets}/category-remove/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/category-remove/http-response.adoc[]
+include::{snippets}/category-remove/response-fields.adoc[]
