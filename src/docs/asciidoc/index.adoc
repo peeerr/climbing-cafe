@@ -10,51 +10,53 @@
 
 [[api]]
 
-== 게시물 조회 - 필터링 및 검색
+== 게시물 API
 
-=== 요청
+=== GET /api/posts [게시물 조회]
+
+==== 요청
 
 include::{snippets}/post-list-filtered/http-request.adoc[]
 
 include::{snippets}/post-list-filtered/query-parameters.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-list-filtered/http-response.adoc[]
 
 include::{snippets}/post-list-filtered/response-fields.adoc[]
 
-== 게시물 상세 조회
+=== GET /api/posts/{postId} [게시물 상세 조회]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-detail/http-request.adoc[]
 
 include::{snippets}/post-detail/path-parameters.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-detail/http-response.adoc[]
 
 include::{snippets}/post-detail/response-fields.adoc[]
 
-== 게시물 작성
+=== POST /api/posts [게시물 추가]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-create/http-request.adoc[]
 
 include::{snippets}/post-create/request-fields.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-create/http-response.adoc[]
 
 include::{snippets}/post-create/response-fields.adoc[]
 
-== 게시물 수정
+=== PUT /api/posts/{postId} [게시물 수정]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-edit/http-request.adoc[]
 
@@ -62,22 +64,36 @@ include::{snippets}/post-edit/path-parameters.adoc[]
 
 include::{snippets}/post-edit/request-fields.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-edit/http-response.adoc[]
 
 include::{snippets}/post-edit/response-fields.adoc[]
 
-== 게시물 삭제
+=== DELETE /api/posts/{postId} [게시물 삭제]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-remove/http-request.adoc[]
 
 include::{snippets}/post-remove/path-parameters.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-remove/http-response.adoc[]
 
 include::{snippets}/post-remove/response-fields.adoc[]
+
+== 회원 API
+
+=== POST /api/members [회원가입]
+
+==== 요청
+
+include::{snippets}/member-create/http-request.adoc[]
+include::{snippets}/member-create/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/member-create/http-response.adoc[]
+include::{snippets}/member-create/response-fields.adoc[]
