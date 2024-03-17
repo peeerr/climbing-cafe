@@ -26,7 +26,20 @@ public class FileService {
     private final PostRepository postRepository;
 
     @Transactional
-    public List<String> uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
+    public List<String> getFilesByPostId(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
+
+        List<String> filenames = new ArrayList<>();
+        for (File file : post.getFiles()) {
+            filenames.add(file.getFilename());
+        }
+
+        return s3FileUploader.getFiles(filenames);
+    }
+
+    @Transactional
+    public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
 
@@ -48,14 +61,7 @@ public class FileService {
             fileEntities.add(fileEntity);
         }
 
-        List<File> savedFiles = fileRepository.saveAll(fileEntities);
-
-        List<String> filePaths = new ArrayList<>();
-        for (File savedFile : savedFiles) {
-            filePaths.add(savedFile.getFilePath());
-        }
-
-        return filePaths;
+        fileRepository.saveAll(fileEntities);
     }
 
     @Transactional

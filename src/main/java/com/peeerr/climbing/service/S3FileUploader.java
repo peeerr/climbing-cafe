@@ -53,6 +53,16 @@ public class S3FileUploader {
                 .build();
     }
 
+    public List<String> getFiles(List<String> filenames) {
+        List<String> fileUrls = new ArrayList<>();
+
+        for (String filename : filenames) {
+            fileUrls.add(amazonS3.getUrl(bucket, filename).toString());
+        }
+
+        return fileUrls;
+    }
+
     public List<FileStoreDto> uploadFiles(List<MultipartFile> files) {
         List<FileStoreDto> storeFiles = new ArrayList<>();
 
@@ -86,11 +96,23 @@ public class S3FileUploader {
 //    public void deleteFile(String fileName) {
 //        amazonS3.deleteObject(bucket, fileName);
 //    }
+//
+//    public String checkFileType(MultipartFile file) throws IOException {
+//        String fileType = new Tika().detect(file.getInputStream());
+//
+//        if (MediaType.IMAGE_JPEG_VALUE.equals(fileType) || MediaType.IMAGE_PNG_VALUE.equals(fileType) || MediaType.IMAGE_GIF_VALUE.equals(fileType)) {
+//            return fileType;
+//        }
+//
+//        throw new FileTypeException(ErrorMessage.INVALID_FILE_TYPE);
+//    }
 
     public String checkFileType(MultipartFile file) throws IOException {
-        String fileType = new Tika().detect(file.getInputStream());
+        String fileType = file.getContentType();
 
-        if (MediaType.IMAGE_JPEG_VALUE.equals(fileType) || MediaType.IMAGE_PNG_VALUE.equals(fileType) || MediaType.IMAGE_GIF_VALUE.equals(fileType)) {
+        if (fileType != null && (fileType.equals(MediaType.IMAGE_JPEG_VALUE)
+                || fileType.equals(MediaType.IMAGE_PNG_VALUE)
+                || fileType.equals(MediaType.IMAGE_GIF_VALUE))) {
             return fileType;
         }
 

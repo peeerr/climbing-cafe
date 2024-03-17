@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +21,14 @@ import java.util.Map;
 public class FileController {
 
     private final FileService fileService;
+
+    @GetMapping
+    public ResponseEntity<ApiResponse> fileListByPost(@PathVariable Long postId) {
+        List<String> fileUrls = fileService.getFilesByPostId(postId);
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.success(fileUrls));
+    }
 
     @PostMapping
     public ResponseEntity<ApiResponse> fileUpload(@PathVariable Long postId,
@@ -38,10 +45,10 @@ public class FileController {
         }
 
         Long loginId = userDetails.getMember().getId();
-        List<String> uploadedFilesAllPaths = fileService.uploadFiles(loginId, postId, files);
+        fileService.uploadFiles(loginId, postId, files);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(uploadedFilesAllPaths));
+                .body(ApiResponse.success());
     }
 
     @DeleteMapping("/{fileId}")
