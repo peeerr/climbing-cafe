@@ -5,6 +5,7 @@ import com.peeerr.climbing.domain.BaseEntity;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.comment.Comment;
 import com.peeerr.climbing.domain.file.File;
+import com.peeerr.climbing.domain.like.Like;
 import com.peeerr.climbing.domain.user.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -48,6 +49,10 @@ public class Post extends BaseEntity {
     @JsonIgnoreProperties("post")
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
+
+    @JsonIgnoreProperties("post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Like> likes = new ArrayList<>();
 
     @Builder
     private Post(String title, String content, Category category, Member member) {
