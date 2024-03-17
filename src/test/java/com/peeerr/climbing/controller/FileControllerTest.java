@@ -11,11 +11,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.BDDMockito.*;
@@ -45,7 +43,7 @@ class FileControllerTest {
         MockMultipartFile file1 = new MockMultipartFile("files", "example1.jpg", "image/jpeg", "image1".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("files", "example2.jpg", "image/jpeg", "image2".getBytes());
 
-        given(fileService.uploadFiles(anyLong(), anyLong(), any(List.class))).willReturn(Collections.emptyList());
+        willDoNothing().given(fileService).uploadFiles(anyLong(), anyLong(), any(List.class));
 
         CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(1L).build());
 
