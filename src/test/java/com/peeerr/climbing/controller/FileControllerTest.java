@@ -19,8 +19,7 @@ import java.util.List;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,6 +33,26 @@ class FileControllerTest {
 
     @MockBean
     private FileService fileService;
+
+    @DisplayName("게시물 ID에 해당되는 모든 파일 URL 을 조회한다.")
+    @Test
+    void fileUrlListByPost() throws Exception {
+        //given
+        given(fileService.getFilesByPostId(anyLong())).willReturn(List.of());
+
+        Long postId = 1L;
+
+        //when
+        ResultActions result = mvc.perform(get("/api/posts/{postId}/files", postId)
+                .accept(MediaType.APPLICATION_JSON));
+
+        //then
+        result
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("message").value("success"));
+
+        then(fileService).should().getFilesByPostId(anyLong());
+    }
 
     @DisplayName("여러 개의 파일을 요청 받아 저장한다.")
     @Test

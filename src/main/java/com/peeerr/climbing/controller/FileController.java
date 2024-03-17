@@ -23,7 +23,7 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse> fileListByPost(@PathVariable Long postId) {
+    public ResponseEntity<ApiResponse> fileUrlListByPost(@PathVariable Long postId) {
         List<String> fileUrls = fileService.getFilesByPostId(postId);
 
         return ResponseEntity.ok()
