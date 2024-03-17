@@ -80,7 +80,7 @@ public class MemberDocTest {
                 ));
     }
     
-    @DisplayName("[통합 테스트/API 문서화] - 회원 정보 수정")
+    @DisplayName("[통합 테스트/API 문서화] - 회원정보 변경")
     @Test
     void memberEdit() throws Exception {
         //given
