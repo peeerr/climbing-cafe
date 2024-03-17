@@ -160,3 +160,42 @@ include::{snippets}/category-remove/path-parameters.adoc[]
 
 include::{snippets}/category-remove/http-response.adoc[]
 include::{snippets}/category-remove/response-fields.adoc[]
+
+== 파일 API
+
+=== GET /api/posts/{postId}/files [게시물에 존재하는 모든 파일 URL]
+
+==== 요청
+
+include::{snippets}/file-urls-for-post/http-request.adoc[]
+include::{snippets}/file-urls-for-post/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/file-urls-for-post/http-response.adoc[]
+include::{snippets}/file-urls-for-post/response-fields.adoc[]
+
+=== POST /api/posts/{postId}/files [파일 업로드]
+
+==== 요청
+
+include::{snippets}/file-upload/http-request.adoc[]
+include::{snippets}/file-upload/path-parameters.adoc[]
+include::{snippets}/file-upload/request-parts.adoc[]
+
+==== 응답
+
+include::{snippets}/file-upload/http-response.adoc[]
+include::{snippets}/file-upload/response-fields.adoc[]
+
+=== DELETE /api/posts/{postId}/files/{fileId} [파일 삭제 (유저 권한)]
+
+==== 요청
+
+include::{snippets}/file-remove/http-request.adoc[]
+include::{snippets}/file-remove/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/file-remove/http-response.adoc[]
+include::{snippets}/file-remove/response-fields.adoc[]
