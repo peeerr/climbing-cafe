@@ -239,3 +239,41 @@ include::{snippets}/comment-remove/path-parameters.adoc[]
 
 include::{snippets}/comment-remove/http-response.adoc[]
 include::{snippets}/comment-remove/response-fields.adoc[]
+
+== 좋아요 API
+
+=== GET /api/posts/{postId}/likes/count [게시물에 달린 좋아요 개수 조회]
+
+==== 요청
+
+include::{snippets}/like-count/http-request.adoc[]
+include::{snippets}/like-count/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/like-count/http-response.adoc[]
+include::{snippets}/like-count/response-fields.adoc[]
+
+=== POST /api/posts/{postId}/likes [게시물에 좋아요 달기]
+
+==== 요청
+
+include::{snippets}/like/http-request.adoc[]
+include::{snippets}/like/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/like/http-response.adoc[]
+include::{snippets}/like/response-fields.adoc[]
+
+=== DELETE /api/posts/{postId}/likes [좋아요 취소]
+
+==== 요청
+
+include::{snippets}/like-cancel/http-request.adoc[]
+include::{snippets}/like-cancel/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/like-cancel/http-response.adoc[]
+include::{snippets}/like-cancel/response-fields.adoc[]
