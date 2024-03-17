@@ -10,51 +10,53 @@
 
 [[api]]
 
-== 게시물 조회 - 필터링 및 검색
+== 게시물 API
 
-=== 요청
+=== GET /api/posts [게시물 조회]
+
+==== 요청
 
 include::{snippets}/post-list-filtered/http-request.adoc[]
 
 include::{snippets}/post-list-filtered/query-parameters.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-list-filtered/http-response.adoc[]
 
 include::{snippets}/post-list-filtered/response-fields.adoc[]
 
-== 게시물 상세 조회
+=== GET /api/posts/{postId} [게시물 상세 조회]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-detail/http-request.adoc[]
 
 include::{snippets}/post-detail/path-parameters.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-detail/http-response.adoc[]
 
 include::{snippets}/post-detail/response-fields.adoc[]
 
-== 게시물 작성
+=== POST /api/posts [게시물 추가]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-create/http-request.adoc[]
 
 include::{snippets}/post-create/request-fields.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-create/http-response.adoc[]
 
 include::{snippets}/post-create/response-fields.adoc[]
 
-== 게시물 수정
+=== PUT /api/posts/{postId} [게시물 수정]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-edit/http-request.adoc[]
 
@@ -62,22 +64,216 @@ include::{snippets}/post-edit/path-parameters.adoc[]
 
 include::{snippets}/post-edit/request-fields.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-edit/http-response.adoc[]
 
 include::{snippets}/post-edit/response-fields.adoc[]
 
-== 게시물 삭제
+=== DELETE /api/posts/{postId} [게시물 삭제]
 
-=== 요청
+==== 요청
 
 include::{snippets}/post-remove/http-request.adoc[]
 
 include::{snippets}/post-remove/path-parameters.adoc[]
 
-=== 응답
+==== 응답
 
 include::{snippets}/post-remove/http-response.adoc[]
 
 include::{snippets}/post-remove/response-fields.adoc[]
+
+== 회원 API
+
+=== POST /api/members [회원가입]
+
+==== 요청
+
+include::{snippets}/member-create/http-request.adoc[]
+include::{snippets}/member-create/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/member-create/http-response.adoc[]
+include::{snippets}/member-create/response-fields.adoc[]
+
+=== PUT /api/members/{memberId} [회원정보 변경]
+
+==== 요청
+
+include::{snippets}/member-edit/http-request.adoc[]
+include::{snippets}/member-edit/path-parameters.adoc[]
+include::{snippets}/member-edit/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/member-edit/http-response.adoc[]
+include::{snippets}/member-edit/response-fields.adoc[]
+
+== 게시판 API
+
+=== GET /api/categories [모든 게시판 조회]
+
+==== 요청
+
+include::{snippets}/category-list/http-request.adoc[]
+
+==== 응답
+
+include::{snippets}/category-list/http-response.adoc[]
+include::{snippets}/category-list/response-fields.adoc[]
+
+=== POST /api/categories [게시판 생성]
+
+==== 요청
+
+include::{snippets}/category-create/http-request.adoc[]
+include::{snippets}/category-create/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/category-create/http-response.adoc[]
+include::{snippets}/category-create/response-fields.adoc[]
+
+=== PUT /api/categories/{categoryId} [게시판명 변경]
+
+==== 요청
+
+include::{snippets}/category-edit/http-request.adoc[]
+include::{snippets}/category-edit/path-parameters.adoc[]
+include::{snippets}/category-edit/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/category-edit/http-response.adoc[]
+include::{snippets}/category-edit/response-fields.adoc[]
+
+=== DELETE /api/categories/{categoryId} [게시판 삭제]
+
+==== 요청
+
+include::{snippets}/category-remove/http-request.adoc[]
+include::{snippets}/category-remove/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/category-remove/http-response.adoc[]
+include::{snippets}/category-remove/response-fields.adoc[]
+
+== 파일 API
+
+=== GET /api/posts/{postId}/files [게시물에 존재하는 모든 파일 URL 조회]
+
+==== 요청
+
+include::{snippets}/file-urls-for-post/http-request.adoc[]
+include::{snippets}/file-urls-for-post/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/file-urls-for-post/http-response.adoc[]
+include::{snippets}/file-urls-for-post/response-fields.adoc[]
+
+=== POST /api/posts/{postId}/files [파일 업로드]
+
+==== 요청
+
+include::{snippets}/file-upload/http-request.adoc[]
+include::{snippets}/file-upload/path-parameters.adoc[]
+include::{snippets}/file-upload/request-parts.adoc[]
+
+==== 응답
+
+include::{snippets}/file-upload/http-response.adoc[]
+include::{snippets}/file-upload/response-fields.adoc[]
+
+=== DELETE /api/posts/{postId}/files/{fileId} [파일 삭제 (유저 권한)]
+
+==== 요청
+
+include::{snippets}/file-remove/http-request.adoc[]
+include::{snippets}/file-remove/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/file-remove/http-response.adoc[]
+include::{snippets}/file-remove/response-fields.adoc[]
+
+== 댓글 API
+
+=== POST /api/posts/{postId}/comments [게시물에 댓글 등록]
+
+==== 요청
+
+include::{snippets}/comment-create/http-request.adoc[]
+include::{snippets}/comment-create/path-parameters.adoc[]
+include::{snippets}/comment-create/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/comment-create/http-response.adoc[]
+include::{snippets}/comment-create/response-fields.adoc[]
+
+=== PUT /api/posts/{postId}/comments/{commentId} [댓글 수정]
+
+==== 요청
+
+include::{snippets}/comment-edit/http-request.adoc[]
+include::{snippets}/comment-edit/path-parameters.adoc[]
+include::{snippets}/comment-edit/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/comment-edit/http-response.adoc[]
+include::{snippets}/comment-edit/response-fields.adoc[]
+
+=== DELETE /api/posts/{postId}/comments/{commentId} [댓글 삭제]
+
+==== 요청
+
+include::{snippets}/comment-remove/http-request.adoc[]
+include::{snippets}/comment-remove/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/comment-remove/http-response.adoc[]
+include::{snippets}/comment-remove/response-fields.adoc[]
+
+== 좋아요 API
+
+=== GET /api/posts/{postId}/likes/count [게시물에 달린 좋아요 개수 조회]
+
+==== 요청
+
+include::{snippets}/like-count/http-request.adoc[]
+include::{snippets}/like-count/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/like-count/http-response.adoc[]
+include::{snippets}/like-count/response-fields.adoc[]
+
+=== POST /api/posts/{postId}/likes [게시물에 좋아요 달기]
+
+==== 요청
+
+include::{snippets}/like/http-request.adoc[]
+include::{snippets}/like/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/like/http-response.adoc[]
+include::{snippets}/like/response-fields.adoc[]
+
+=== DELETE /api/posts/{postId}/likes [좋아요 취소]
+
+==== 요청
+
+include::{snippets}/like-cancel/http-request.adoc[]
+include::{snippets}/like-cancel/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/like-cancel/http-response.adoc[]
+include::{snippets}/like-cancel/response-fields.adoc[]

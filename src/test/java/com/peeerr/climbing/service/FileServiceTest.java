@@ -4,7 +4,10 @@ import com.peeerr.climbing.domain.file.File;
 import com.peeerr.climbing.domain.file.FileRepository;
 import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
+import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
+import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,20 +39,49 @@ class FileServiceTest {
     @InjectMocks
     private FileService fileService;
 
+    @DisplayName("게시물 ID에 해당하는 모든 파일 URL 을 조회한다.")
+    @Test
+    void getFilesByPostId() throws Exception {
+        //given
+        Long postId = 1L;
+        Long memberId = 1L;
+
+        Post post = Post.builder()
+                .member(Member.builder().id(memberId).build())
+                .build();
+
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(s3FileUploader.getFiles(List.of())).willReturn(List.of());
+
+        //when
+        List<String> fileUrls = fileService.getFilesByPostId(postId);
+
+        //then
+        then(postRepository).should().findById(postId);
+        then(s3FileUploader).should().getFiles(List.of());
+
+        assertThat(fileUrls).isEmpty();
+    }
+
     @DisplayName("여러 개의 파일을 받아 저장한다.")
     @Test
     void uploadFiles() throws Exception {
         //given
         Long postId = 1L;
+        Long memberId = 1L;
         List<MultipartFile> files = List.of();
-        Post post = Post.builder().build();
+        Post post = Post.builder()
+                .member(Member.builder().id(memberId).build())
+                .build();
 
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
         given(s3FileUploader.uploadFiles(files)).willReturn(List.of());
         given(fileRepository.saveAll(List.of())).willReturn(List.of());
 
+        Long loginId = memberId;
+
         //when
-        fileService.uploadFiles(postId, files);
+        fileService.uploadFiles(loginId, postId, files);
 
         //then
         then(postRepository).should().findById(postId);
@@ -68,7 +100,29 @@ class FileServiceTest {
 
         //when & then
         assertThrows(EntityNotFoundException.class,
-                () -> fileService.uploadFiles(postId, files));
+                () -> fileService.uploadFiles(1L, postId, files));
+
+        then(postRepository).should().findById(postId);
+    }
+
+    @DisplayName("[파일 업로드 권한X] 게시물 작성자와 로그인 사용자가 일치하지 않으면 예외를 던진다.")
+    @Test
+    void uploadFilesWithNoPermission() throws Exception {
+        //given
+        Long postId = 1L;
+        Long memberId = 1L;
+        List<MultipartFile> files = List.of();
+        Post post = Post.builder()
+                .member(Member.builder().id(memberId).build())
+                .build();
+
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+
+        Long loginId = 2L;
+
+        //when & then
+        assertThrows(UnauthorizedAccessException.class,
+                () -> fileService.uploadFiles(loginId, postId, files));
 
         then(postRepository).should().findById(postId);
     }
@@ -78,14 +132,22 @@ class FileServiceTest {
     void updateDeleteFlag() throws Exception {
         //given
         Long fileId = 1L;
+        Long memberId = 1L;
+
+        Post post = Post.builder()
+                .member(Member.builder().id(memberId).build())
+                .build();
         File file = File.builder()
+                .post(post)
                 .deleted(false)
                 .build();
 
         given(fileRepository.findById(fileId)).willReturn(Optional.of(file));
 
+        Long loginId = memberId;
+
         //when
-        fileService.updateDeleteFlag(fileId);
+        fileService.updateDeleteFlag(loginId, fileId);
 
         //then
         assertThat(file.isDeleted()).isEqualTo(true);
@@ -103,7 +165,33 @@ class FileServiceTest {
 
         //when & then
         assertThrows(EntityNotFoundException.class,
-                () -> fileService.updateDeleteFlag(fileId));
+                () -> fileService.updateDeleteFlag(1L, fileId));
+
+        then(fileRepository).should().findById(fileId);
+    }
+
+    @DisplayName("[파일 업로드 권한X] 게시물 작성자와 로그인 사용자가 일치하지 않으면 예외를 던진다.")
+    @Test
+    void removePostWithNoPermission() throws Exception {
+        //given
+        Long fileId = 1L;
+        Long memberId = 1L;
+
+        Post post = Post.builder()
+                .member(Member.builder().id(memberId).build())
+                .build();
+        File file = File.builder()
+                .post(post)
+                .deleted(false)
+                .build();
+
+        Long loginId = 2L;
+
+        given(fileRepository.findById(fileId)).willReturn(Optional.of(file));
+
+        //when & then
+        assertThrows(UnauthorizedAccessException.class,
+                () -> fileService.updateDeleteFlag(loginId, fileId));
 
         then(fileRepository).should().findById(fileId);
     }

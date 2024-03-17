@@ -9,7 +9,7 @@ import lombok.*;
 @Getter
 public class MemberCreateRequest {
 
-    @Pattern(regexp = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$", message = "2자 이상 16자 이하, 영어 또는 숫자 또는 한글로 구성해 주세요.")
+    @Pattern(regexp = "^(?=.*[a-zA-Z0-9가-힣])[a-zA-Z0-9가-힣]{2,16}$", message = "2자 이상 16자 이하, 영어 또는 숫자 또는 한글로 구성해 주세요.")
     @NotBlank(message = "닉네임을 입력해 주세요.")
     private String username;
 

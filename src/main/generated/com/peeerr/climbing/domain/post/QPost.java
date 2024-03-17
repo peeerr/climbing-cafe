@@ -37,6 +37,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final ListPath<com.peeerr.climbing.domain.like.Like, com.peeerr.climbing.domain.like.QLike> likes = this.<com.peeerr.climbing.domain.like.Like, com.peeerr.climbing.domain.like.QLike>createList("likes", com.peeerr.climbing.domain.like.Like.class, com.peeerr.climbing.domain.like.QLike.class, PathInits.DIRECT2);
+
     public final com.peeerr.climbing.domain.user.QMember member;
 
     //inherited
