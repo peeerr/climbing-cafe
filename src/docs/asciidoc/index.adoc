@@ -163,7 +163,7 @@ include::{snippets}/category-remove/response-fields.adoc[]
 
 == 파일 API
 
-=== GET /api/posts/{postId}/files [게시물에 존재하는 모든 파일 URL]
+=== GET /api/posts/{postId}/files [게시물에 존재하는 모든 파일 URL 조회]
 
 ==== 요청
 
@@ -199,3 +199,43 @@ include::{snippets}/file-remove/path-parameters.adoc[]
 
 include::{snippets}/file-remove/http-response.adoc[]
 include::{snippets}/file-remove/response-fields.adoc[]
+
+== 댓글 API
+
+=== POST /api/posts/{postId}/comments [게시물에 댓글 등록]
+
+==== 요청
+
+include::{snippets}/comment-create/http-request.adoc[]
+include::{snippets}/comment-create/path-parameters.adoc[]
+include::{snippets}/comment-create/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/comment-create/http-response.adoc[]
+include::{snippets}/comment-create/response-fields.adoc[]
+
+=== PUT /api/posts/{postId}/comments/{commentId} [댓글 수정]
+
+==== 요청
+
+include::{snippets}/comment-edit/http-request.adoc[]
+include::{snippets}/comment-edit/path-parameters.adoc[]
+include::{snippets}/comment-edit/request-fields.adoc[]
+
+==== 응답
+
+include::{snippets}/comment-edit/http-response.adoc[]
+include::{snippets}/comment-edit/response-fields.adoc[]
+
+=== DELETE /api/posts/{postId}/comments/{commentId} [댓글 삭제]
+
+==== 요청
+
+include::{snippets}/comment-remove/http-request.adoc[]
+include::{snippets}/comment-remove/path-parameters.adoc[]
+
+==== 응답
+
+include::{snippets}/comment-remove/http-response.adoc[]
+include::{snippets}/comment-remove/response-fields.adoc[]
