@@ -41,9 +41,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: |
-          ./gradlew test -i > test_logs.txt
-          cat test_logs.txt
+        run: ./gradlew test -i
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
