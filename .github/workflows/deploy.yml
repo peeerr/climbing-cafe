@@ -37,11 +37,11 @@ jobs:
           spring.datasource.username: ${{ secrets.DB_USERNAME }}
           spring.datasource.password: ${{ secrets.DB_PASSWORD }}
 
-      - name: Grant execute permission to gradlew 
+      - name: Grant execute permission to gradlew
         run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./gradlew test -i
+        run: ./gradlew clean build --quiet
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
