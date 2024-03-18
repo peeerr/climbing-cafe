@@ -1,8 +1,11 @@
 package com.peeerr.climbing.integration.docs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.config.auth.CustomUserDetails;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
+import com.peeerr.climbing.domain.comment.CommentRepository;
+import com.peeerr.climbing.domain.file.FileRepository;
 import com.peeerr.climbing.domain.like.Like;
 import com.peeerr.climbing.domain.like.LikeRepository;
 import com.peeerr.climbing.domain.post.Post;
@@ -46,20 +49,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class LikeDocTest {
 
-    @Autowired private LikeRepository likeRepository;
+    @Autowired private FileRepository fileRepository;
     @Autowired private PostRepository postRepository;
     @Autowired private CategoryRepository categoryRepository;
     @Autowired private MemberRepository memberRepository;
+    @Autowired private CommentRepository commentRepository;
+    @Autowired private LikeRepository likeRepository;
 
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private MockMvc mockMvc;
 
     @BeforeEach
     public void cleanup() {
+        fileRepository.deleteAll();
+        commentRepository.deleteAll();
         likeRepository.deleteAll();
         postRepository.deleteAll();
-        categoryRepository.deleteAll();
         memberRepository.deleteAll();
+        categoryRepository.deleteAll();
     }
     
     @DisplayName("[통합 테스트/API 문서화] - 게시물에 달린 좋아요 개수 조회")

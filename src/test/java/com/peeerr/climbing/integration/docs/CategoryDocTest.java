@@ -3,6 +3,11 @@ package com.peeerr.climbing.integration.docs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
+import com.peeerr.climbing.domain.comment.CommentRepository;
+import com.peeerr.climbing.domain.file.FileRepository;
+import com.peeerr.climbing.domain.like.LikeRepository;
+import com.peeerr.climbing.domain.post.PostRepository;
+import com.peeerr.climbing.domain.user.MemberRepository;
 import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -39,12 +45,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class CategoryDocTest {
 
+    @Autowired private FileRepository fileRepository;
+    @Autowired private PostRepository postRepository;
     @Autowired private CategoryRepository categoryRepository;
+    @Autowired private MemberRepository memberRepository;
+    @Autowired private CommentRepository commentRepository;
+    @Autowired private LikeRepository likeRepository;
+
     @Autowired private ObjectMapper mapper;
     @Autowired private MockMvc mockMvc;
 
     @BeforeEach
     public void cleanup() {
+        fileRepository.deleteAll();
+        commentRepository.deleteAll();
+        likeRepository.deleteAll();
+        postRepository.deleteAll();
+        memberRepository.deleteAll();
         categoryRepository.deleteAll();
     }
 
