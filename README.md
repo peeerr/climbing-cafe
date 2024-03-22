@@ -1,6 +1,10 @@
 # climbing-cafe
 
-## API 문서
+## Architecture
+
+![architecture](https://github.com/peeerr/climbing-cafe/assets/103200144/647222a1-83d8-4950-94b7-edeaa180846b)
+
+## API Documentaton
 
 Spring REST Docs로 API 문서화 <br>
 http://climbing-env.eba-amm6vbzx.ap-northeast-2.elasticbeanstalk.com/docs/index.html
