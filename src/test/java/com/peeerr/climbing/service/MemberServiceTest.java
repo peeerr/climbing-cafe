@@ -2,8 +2,8 @@ package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
-import com.peeerr.climbing.dto.member.request.MemberEditRequest;
+import com.peeerr.climbing.dto.member.MemberCreateRequest;
+import com.peeerr.climbing.dto.member.MemberEditRequest;
 import com.peeerr.climbing.exception.ex.DuplicationException;
 import com.peeerr.climbing.exception.ex.EntityNotFoundException;
 import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;

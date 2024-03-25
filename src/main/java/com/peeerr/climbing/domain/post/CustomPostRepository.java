@@ -1,7 +1,7 @@
 package com.peeerr.climbing.domain.post;
 
-import com.peeerr.climbing.dto.post.request.PostSearchCondition;
-import com.peeerr.climbing.dto.post.response.PostResponse;
+import com.peeerr.climbing.dto.post.PostSearchCondition;
+import com.peeerr.climbing.dto.post.PostResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

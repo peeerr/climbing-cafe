@@ -1,8 +1,8 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
-import com.peeerr.climbing.dto.category.response.CategoryResponse;
+import com.peeerr.climbing.dto.category.CategoryCreateRequest;
+import com.peeerr.climbing.dto.category.CategoryEditRequest;
+import com.peeerr.climbing.dto.category.CategoryResponse;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.service.CategoryService;
 import jakarta.validation.Valid;

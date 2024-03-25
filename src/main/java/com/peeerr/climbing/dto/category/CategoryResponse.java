@@ -1,12 +1,9 @@
-package com.peeerr.climbing.dto.category.response;
+package com.peeerr.climbing.dto.category;
 
 import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.domain.post.Post;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter

@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.comment.request;
+package com.peeerr.climbing.dto.comment;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

@@ -2,9 +2,9 @@ package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
-import com.peeerr.climbing.dto.category.response.CategoryResponse;
+import com.peeerr.climbing.dto.category.CategoryCreateRequest;
+import com.peeerr.climbing.dto.category.CategoryEditRequest;
+import com.peeerr.climbing.dto.category.CategoryResponse;
 import com.peeerr.climbing.service.CategoryService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

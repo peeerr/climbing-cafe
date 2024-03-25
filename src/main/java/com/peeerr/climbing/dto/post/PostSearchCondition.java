@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.post.request;
+package com.peeerr.climbing.dto.post;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
