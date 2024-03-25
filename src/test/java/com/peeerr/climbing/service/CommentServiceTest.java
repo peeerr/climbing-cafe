@@ -7,7 +7,7 @@ import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.comment.CommentCreateRequest;
 import com.peeerr.climbing.dto.comment.CommentEditRequest;
-import com.peeerr.climbing.exception.ex.UnauthorizedAccessException;
+import com.peeerr.climbing.exception.UnauthorizedAccessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

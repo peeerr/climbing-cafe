@@ -1,4 +1,4 @@
-package com.peeerr.climbing.exception.ex;
+package com.peeerr.climbing.exception;
 
 public class FileAlreadyDeletedException extends RuntimeException {
 

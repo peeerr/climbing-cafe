@@ -1,8 +1,9 @@
-package com.peeerr.climbing.exception;
+package com.peeerr.climbing.advice;
 
-import com.peeerr.climbing.dto.common.ApiResponse;
-import com.peeerr.climbing.exception.constant.ErrorMessage;
-import com.peeerr.climbing.exception.ex.*;
+import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.advice.exception.*;
+import com.peeerr.climbing.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,7 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.config.auth.CustomUserDetails;
+import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.post.PostCreateRequest;
 import com.peeerr.climbing.dto.post.PostEditRequest;

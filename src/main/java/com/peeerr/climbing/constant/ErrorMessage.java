@@ -1,4 +1,4 @@
-package com.peeerr.climbing.exception.constant;
+package com.peeerr.climbing.constant;
 
 public class ErrorMessage {
 
@@ -14,13 +14,13 @@ public class ErrorMessage {
 
     /* StorageManagement */
     public static final String FILE_STORE_FAILED = "파일 저장에 실패했습니다.";
-    public static final String DIRECTORY_CREATE_FAILED = "파일을 저장할 디렉토리 생성에 실패했습니다.";
 
     /* S3FileUploader */
     public static final String INVALID_FILE_TYPE = "이미지 파일 형식만 첨부가 가능합니다. (JPEG, PNG, GIF)";
 
-    /* UserService */
+    /* MemberService */
     public static final String PASSWORD_CONFIRMATION_FAILED = "비밀번호 확인에 실패했습니다. 동일한 비밀번호를 입력해 주세요.";
+    public static final String INVALID_PASSWORD = "메시지";
     public static final String USERNAME_DUPLICATED = "이미 존재하는 닉네임입니다.";
     public static final String EMAIL_DUPLICATED = "이미 존재하는 이메일입니다.";
 
@@ -37,6 +37,7 @@ public class ErrorMessage {
     /* Member */
     public static final String MEMBER_NOT_FOUND = "존재하지 않는 아이디입니다.";
     public static final String NO_ACCESS_PERMISSION = "접근 권한이 없습니다.";
+    public static final String LOGIN_REQUIRED = "로그인 후 이용해 주세요.";
 
     /* File */
     public static final String FILE_NOT_FOUND = "존재하지 않는 파일입니다.";

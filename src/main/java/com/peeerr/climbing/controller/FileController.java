@@ -1,9 +1,9 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.config.auth.CustomUserDetails;
-import com.peeerr.climbing.dto.common.ApiResponse;
-import com.peeerr.climbing.exception.constant.ErrorMessage;
-import com.peeerr.climbing.exception.ex.ValidationException;
+import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ValidationException;
 import com.peeerr.climbing.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
