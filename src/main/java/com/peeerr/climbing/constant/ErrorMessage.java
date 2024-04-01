@@ -20,7 +20,7 @@ public class ErrorMessage {
 
     /* MemberService */
     public static final String PASSWORD_CONFIRMATION_FAILED = "비밀번호 확인에 실패했습니다. 동일한 비밀번호를 입력해 주세요.";
-    public static final String INVALID_PASSWORD = "메시지";
+    public static final String INVALID_PASSWORD = "비밀번호가 일치하지 않습니다.";
     public static final String USERNAME_DUPLICATED = "이미 존재하는 닉네임입니다.";
     public static final String EMAIL_DUPLICATED = "이미 존재하는 이메일입니다.";
 

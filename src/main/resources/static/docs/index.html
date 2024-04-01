@@ -483,16 +483,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#_회원_api">2. 회원 API</a>
 <ul class="sectlevel2">
-<li><a href="#_post_apimembers_회원가입">2.1. POST /api/members [회원가입]</a>
+<li><a href="#_post_apimembersregister_회원가입">2.1. POST /api/members/register [회원가입]</a>
 <ul class="sectlevel3">
 <li><a href="#_요청_6">2.1.1. 요청</a></li>
 <li><a href="#_응답_6">2.1.2. 응답</a></li>
 </ul>
 </li>
-<li><a href="#_put_apimembersmemberid_회원정보_변경">2.2. PUT /api/members/{memberId} [회원정보 변경]</a>
+<li><a href="#_post_apimemberslogin_로그인">2.2. POST /api/members/login [로그인]</a>
 <ul class="sectlevel3">
 <li><a href="#_요청_7">2.2.1. 요청</a></li>
 <li><a href="#_응답_7">2.2.2. 응답</a></li>
+</ul>
+</li>
+<li><a href="#_post_apimemberslogout_로그아웃">2.3. POST /api/members/logout [로그아웃]</a>
+<ul class="sectlevel3">
+<li><a href="#_요청_8">2.3.1. 요청</a></li>
+<li><a href="#_응답_8">2.3.2. 응답</a></li>
+</ul>
+</li>
+<li><a href="#_put_apimembersmemberid_회원정보_변경">2.4. PUT /api/members/{memberId} [회원정보 변경]</a>
+<ul class="sectlevel3">
+<li><a href="#_요청_9">2.4.1. 요청</a></li>
+<li><a href="#_응답_9">2.4.2. 응답</a></li>
 </ul>
 </li>
 </ul>
@@ -501,26 +513,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_get_apicategories_모든_게시판_조회">3.1. GET /api/categories [모든 게시판 조회]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_8">3.1.1. 요청</a></li>
-<li><a href="#_응답_8">3.1.2. 응답</a></li>
+<li><a href="#_요청_10">3.1.1. 요청</a></li>
+<li><a href="#_응답_10">3.1.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_post_apicategories_게시판_생성">3.2. POST /api/categories [게시판 생성]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_9">3.2.1. 요청</a></li>
-<li><a href="#_응답_9">3.2.2. 응답</a></li>
+<li><a href="#_요청_11">3.2.1. 요청</a></li>
+<li><a href="#_응답_11">3.2.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_put_apicategoriescategoryid_게시판명_변경">3.3. PUT /api/categories/{categoryId} [게시판명 변경]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_10">3.3.1. 요청</a></li>
-<li><a href="#_응답_10">3.3.2. 응답</a></li>
+<li><a href="#_요청_12">3.3.1. 요청</a></li>
+<li><a href="#_응답_12">3.3.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_delete_apicategoriescategoryid_게시판_삭제">3.4. DELETE /api/categories/{categoryId} [게시판 삭제]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_11">3.4.1. 요청</a></li>
-<li><a href="#_응답_11">3.4.2. 응답</a></li>
+<li><a href="#_요청_13">3.4.1. 요청</a></li>
+<li><a href="#_응답_13">3.4.2. 응답</a></li>
 </ul>
 </li>
 </ul>
@@ -529,20 +541,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_get_apipostspostidfiles_게시물에_존재하는_모든_파일_url_조회">4.1. GET /api/posts/{postId}/files [게시물에 존재하는 모든 파일 URL 조회]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_12">4.1.1. 요청</a></li>
-<li><a href="#_응답_12">4.1.2. 응답</a></li>
+<li><a href="#_요청_14">4.1.1. 요청</a></li>
+<li><a href="#_응답_14">4.1.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_post_apipostspostidfiles_파일_업로드">4.2. POST /api/posts/{postId}/files [파일 업로드]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_13">4.2.1. 요청</a></li>
-<li><a href="#_응답_13">4.2.2. 응답</a></li>
+<li><a href="#_요청_15">4.2.1. 요청</a></li>
+<li><a href="#_응답_15">4.2.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_delete_apipostspostidfilesfileid_파일_삭제_유저_권한">4.3. DELETE /api/posts/{postId}/files/{fileId} [파일 삭제 (유저 권한)]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_14">4.3.1. 요청</a></li>
-<li><a href="#_응답_14">4.3.2. 응답</a></li>
+<li><a href="#_요청_16">4.3.1. 요청</a></li>
+<li><a href="#_응답_16">4.3.2. 응답</a></li>
 </ul>
 </li>
 </ul>
@@ -551,20 +563,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_post_apipostspostidcomments_게시물에_댓글_등록">5.1. POST /api/posts/{postId}/comments [게시물에 댓글 등록]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_15">5.1.1. 요청</a></li>
-<li><a href="#_응답_15">5.1.2. 응답</a></li>
+<li><a href="#_요청_17">5.1.1. 요청</a></li>
+<li><a href="#_응답_17">5.1.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_put_apipostspostidcommentscommentid_댓글_수정">5.2. PUT /api/posts/{postId}/comments/{commentId} [댓글 수정]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_16">5.2.1. 요청</a></li>
-<li><a href="#_응답_16">5.2.2. 응답</a></li>
+<li><a href="#_요청_18">5.2.1. 요청</a></li>
+<li><a href="#_응답_18">5.2.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_delete_apipostspostidcommentscommentid_댓글_삭제">5.3. DELETE /api/posts/{postId}/comments/{commentId} [댓글 삭제]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_17">5.3.1. 요청</a></li>
-<li><a href="#_응답_17">5.3.2. 응답</a></li>
+<li><a href="#_요청_19">5.3.1. 요청</a></li>
+<li><a href="#_응답_19">5.3.2. 응답</a></li>
 </ul>
 </li>
 </ul>
@@ -573,20 +585,20 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_get_apipostspostidlikescount_게시물에_달린_좋아요_개수_조회">6.1. GET /api/posts/{postId}/likes/count [게시물에 달린 좋아요 개수 조회]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_18">6.1.1. 요청</a></li>
-<li><a href="#_응답_18">6.1.2. 응답</a></li>
+<li><a href="#_요청_20">6.1.1. 요청</a></li>
+<li><a href="#_응답_20">6.1.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_post_apipostspostidlikes_게시물에_좋아요_달기">6.2. POST /api/posts/{postId}/likes [게시물에 좋아요 달기]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_19">6.2.1. 요청</a></li>
-<li><a href="#_응답_19">6.2.2. 응답</a></li>
+<li><a href="#_요청_21">6.2.1. 요청</a></li>
+<li><a href="#_응답_21">6.2.2. 응답</a></li>
 </ul>
 </li>
 <li><a href="#_delete_apipostspostidlikes_좋아요_취소">6.3. DELETE /api/posts/{postId}/likes [좋아요 취소]</a>
 <ul class="sectlevel3">
-<li><a href="#_요청_20">6.3.1. 요청</a></li>
-<li><a href="#_응답_20">6.3.2. 응답</a></li>
+<li><a href="#_요청_22">6.3.1. 요청</a></li>
+<li><a href="#_응답_22">6.3.2. 응답</a></li>
 </ul>
 </li>
 </ul>
@@ -652,6 +664,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=ZWNmYWNkNmMtODFjOS00MmM2LThkYTctZjcwNDI1Mzc1ODRl; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 796
 
 {
@@ -661,8 +674,8 @@ Content-Length: 796
       "postId" : 7,
       "categoryName" : "게시판5",
       "writer" : "test5",
-      "createDate" : "2024-03-17T23:05:55.063676",
-      "modifyDate" : "2024-03-17T23:05:55.063676"
+      "createDate" : "2024-04-01T15:30:04.109018",
+      "modifyDate" : "2024-04-01T15:30:04.109018"
     } ],
     "pageable" : {
       "pageNumber" : 0,
@@ -673,8 +686,8 @@ Content-Length: 796
         "unsorted" : true
       },
       "offset" : 0,
-      "unpaged" : false,
-      "paged" : true
+      "paged" : true,
+      "unpaged" : false
     },
     "last" : true,
     "totalPages" : 1,
@@ -883,6 +896,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=MDRkOTA2OWYtY2Q5OC00NTY5LTg4Y2ItYzhjZDkzYWJlZGEz; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 352
 
 {
@@ -895,8 +909,8 @@ Content-Length: 352
     "writer" : "test",
     "filePaths" : [ ],
     "comments" : [ ],
-    "createDate" : "2024-03-17T23:05:55.545755",
-    "modifyDate" : "2024-03-17T23:05:55.545755"
+    "createDate" : "2024-04-01T15:30:04.855953",
+    "modifyDate" : "2024-04-01T15:30:04.855953"
   }
 }</code></pre>
 </div>
@@ -1040,6 +1054,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=YjJkNjVmYjMtZmUyNi00ZGFiLWE3ZmItZWZmNWVlMTJmNjBi; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1166,6 +1181,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=OWI0YzliYjktZWJiNi00OTFmLTllNzAtZWY5NzVlMWFiOTIy; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1248,6 +1264,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=YjVhNTY5YjQtMGJhMi00NTY1LTgzMGYtZGU3NTE1ZmM2NTMx; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1290,12 +1307,12 @@ Content-Length: 47
 <h2 id="_회원_api"><a class="anchor" href="#_회원_api"></a><a class="link" href="#_회원_api">2. 회원 API</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_post_apimembers_회원가입"><a class="anchor" href="#_post_apimembers_회원가입"></a><a class="link" href="#_post_apimembers_회원가입">2.1. POST /api/members [회원가입]</a></h3>
+<h3 id="_post_apimembersregister_회원가입"><a class="anchor" href="#_post_apimembersregister_회원가입"></a><a class="link" href="#_post_apimembersregister_회원가입">2.1. POST /api/members/register [회원가입]</a></h3>
 <div class="sect3">
 <h4 id="_요청_6"><a class="anchor" href="#_요청_6"></a><a class="link" href="#_요청_6">2.1.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/members HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/members/register HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Content-Length: 121
 Host: climbing.com:80
@@ -1367,6 +1384,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=MTIyNmMxZDYtYmE1OC00NzA5LWE0ZmUtNzM3N2FlMTQxNDc1; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1404,9 +1422,175 @@ Content-Length: 47
 </div>
 </div>
 <div class="sect2">
-<h3 id="_put_apimembersmemberid_회원정보_변경"><a class="anchor" href="#_put_apimembersmemberid_회원정보_변경"></a><a class="link" href="#_put_apimembersmemberid_회원정보_변경">2.2. PUT /api/members/{memberId} [회원정보 변경]</a></h3>
+<h3 id="_post_apimemberslogin_로그인"><a class="anchor" href="#_post_apimemberslogin_로그인"></a><a class="link" href="#_post_apimemberslogin_로그인">2.2. POST /api/members/login [로그인]</a></h3>
 <div class="sect3">
 <h4 id="_요청_7"><a class="anchor" href="#_요청_7"></a><a class="link" href="#_요청_7">2.2.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/members/login HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Content-Length: 64
+Host: climbing.com:80
+
+{
+  "email" : "test@example.com",
+  "password" : "test1234"
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Optional</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">email</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">이메일 아이디</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">password</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">비밀번호</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">N</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_응답_7"><a class="anchor" href="#_응답_7"></a><a class="link" href="#_응답_7">2.2.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Set-Cookie: SESSION=ZGM3NmRkZGEtODQxNS00Y2UzLWE5Y2MtNmY0YmY0M2U3OWJk; Path=/; Secure; HttpOnly; SameSite=Lax
+Content-Length: 47
+
+{
+  "message" : "success",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">결과 메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_post_apimemberslogout_로그아웃"><a class="anchor" href="#_post_apimemberslogout_로그아웃"></a><a class="link" href="#_post_apimemberslogout_로그아웃">2.3. POST /api/members/logout [로그아웃]</a></h3>
+<div class="sect3">
+<h4 id="_요청_8"><a class="anchor" href="#_요청_8"></a><a class="link" href="#_요청_8">2.3.1. 요청</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/members/logout HTTP/1.1
+Host: climbing.com:80
+Content-Type: application/x-www-form-urlencoded</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_응답_8"><a class="anchor" href="#_응답_8"></a><a class="link" href="#_응답_8">2.3.2. 응답</a></h4>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Strict-Transport-Security: max-age=31536000 ; includeSubDomains
+X-Frame-Options: DENY
+Set-Cookie: SESSION=Yjk5OTAxYTgtNWI2Yy00YWI4LWI5YWYtNjkwMzlmOTFlOGRi; Path=/; Secure; HttpOnly; SameSite=Lax
+Content-Length: 47
+
+{
+  "message" : "success",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Path</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>message</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">결과 메시지</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>data</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Null</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_put_apimembersmemberid_회원정보_변경"><a class="anchor" href="#_put_apimembersmemberid_회원정보_변경"></a><a class="link" href="#_put_apimembersmemberid_회원정보_변경">2.4. PUT /api/members/{memberId} [회원정보 변경]</a></h3>
+<div class="sect3">
+<h4 id="_요청_9"><a class="anchor" href="#_요청_9"></a><a class="link" href="#_요청_9">2.4.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/members/1 HTTP/1.1
@@ -1471,7 +1655,7 @@ Host: climbing.com:80
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_7"><a class="anchor" href="#_응답_7"></a><a class="link" href="#_응답_7">2.2.2. 응답</a></h4>
+<h4 id="_응답_9"><a class="anchor" href="#_응답_9"></a><a class="link" href="#_응답_9">2.4.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -1486,6 +1670,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=MGE0ZTkxMjMtZTQ0Yy00ODc0LTk5OTUtOTAwMDc0YzRiZGRk; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1530,7 +1715,7 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_get_apicategories_모든_게시판_조회"><a class="anchor" href="#_get_apicategories_모든_게시판_조회"></a><a class="link" href="#_get_apicategories_모든_게시판_조회">3.1. GET /api/categories [모든 게시판 조회]</a></h3>
 <div class="sect3">
-<h4 id="_요청_8"><a class="anchor" href="#_요청_8"></a><a class="link" href="#_요청_8">3.1.1. 요청</a></h4>
+<h4 id="_요청_10"><a class="anchor" href="#_요청_10"></a><a class="link" href="#_요청_10">3.1.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/categories HTTP/1.1
@@ -1540,7 +1725,7 @@ Host: climbing.com:80</code></pre>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_응답_8"><a class="anchor" href="#_응답_8"></a><a class="link" href="#_응답_8">3.1.2. 응답</a></h4>
+<h4 id="_응답_10"><a class="anchor" href="#_응답_10"></a><a class="link" href="#_응답_10">3.1.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -1555,6 +1740,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=YTFiM2NlNmQtZTUwYi00YWQ3LTk2YzYtMDY0MGVjZTVjYTJk; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 261
 
 {
@@ -1608,7 +1794,7 @@ Content-Length: 261
 <div class="sect2">
 <h3 id="_post_apicategories_게시판_생성"><a class="anchor" href="#_post_apicategories_게시판_생성"></a><a class="link" href="#_post_apicategories_게시판_생성">3.2. POST /api/categories [게시판 생성]</a></h3>
 <div class="sect3">
-<h4 id="_요청_9"><a class="anchor" href="#_요청_9"></a><a class="link" href="#_요청_9">3.2.1. 요청</a></h4>
+<h4 id="_요청_11"><a class="anchor" href="#_요청_11"></a><a class="link" href="#_요청_11">3.2.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/categories HTTP/1.1
@@ -1647,7 +1833,7 @@ Host: climbing.com:80
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_9"><a class="anchor" href="#_응답_9"></a><a class="link" href="#_응답_9">3.2.2. 응답</a></h4>
+<h4 id="_응답_11"><a class="anchor" href="#_응답_11"></a><a class="link" href="#_응답_11">3.2.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
@@ -1662,6 +1848,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=M2JmOTE5MzQtMTFiZi00Y2YwLWFiMmEtY2FkYmJmZThiZjk5; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1701,7 +1888,7 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_put_apicategoriescategoryid_게시판명_변경"><a class="anchor" href="#_put_apicategoriescategoryid_게시판명_변경"></a><a class="link" href="#_put_apicategoriescategoryid_게시판명_변경">3.3. PUT /api/categories/{categoryId} [게시판명 변경]</a></h3>
 <div class="sect3">
-<h4 id="_요청_10"><a class="anchor" href="#_요청_10"></a><a class="link" href="#_요청_10">3.3.1. 요청</a></h4>
+<h4 id="_요청_12"><a class="anchor" href="#_요청_12"></a><a class="link" href="#_요청_12">3.3.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/categories/1 HTTP/1.1
@@ -1759,7 +1946,7 @@ Host: climbing.com:80
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_10"><a class="anchor" href="#_응답_10"></a><a class="link" href="#_응답_10">3.3.2. 응답</a></h4>
+<h4 id="_응답_12"><a class="anchor" href="#_응답_12"></a><a class="link" href="#_응답_12">3.3.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -1774,6 +1961,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=NDhmYTMxYTgtM2UwNi00Yjk5LThlYjAtNmI0MTdiOWE4NzZl; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1813,7 +2001,7 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_delete_apicategoriescategoryid_게시판_삭제"><a class="anchor" href="#_delete_apicategoriescategoryid_게시판_삭제"></a><a class="link" href="#_delete_apicategoriescategoryid_게시판_삭제">3.4. DELETE /api/categories/{categoryId} [게시판 삭제]</a></h3>
 <div class="sect3">
-<h4 id="_요청_11"><a class="anchor" href="#_요청_11"></a><a class="link" href="#_요청_11">3.4.1. 요청</a></h4>
+<h4 id="_요청_13"><a class="anchor" href="#_요청_13"></a><a class="link" href="#_요청_13">3.4.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/categories/5 HTTP/1.1
@@ -1842,7 +2030,7 @@ Host: climbing.com:80</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_11"><a class="anchor" href="#_응답_11"></a><a class="link" href="#_응답_11">3.4.2. 응답</a></h4>
+<h4 id="_응답_13"><a class="anchor" href="#_응답_13"></a><a class="link" href="#_응답_13">3.4.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -1857,6 +2045,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=MWVhYmY3MDItZWM2Yy00OGQwLTkyYzEtODhlYzkzODQyZjQw; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -1901,10 +2090,10 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_get_apipostspostidfiles_게시물에_존재하는_모든_파일_url_조회"><a class="anchor" href="#_get_apipostspostidfiles_게시물에_존재하는_모든_파일_url_조회"></a><a class="link" href="#_get_apipostspostidfiles_게시물에_존재하는_모든_파일_url_조회">4.1. GET /api/posts/{postId}/files [게시물에 존재하는 모든 파일 URL 조회]</a></h3>
 <div class="sect3">
-<h4 id="_요청_12"><a class="anchor" href="#_요청_12"></a><a class="link" href="#_요청_12">4.1.1. 요청</a></h4>
+<h4 id="_요청_14"><a class="anchor" href="#_요청_14"></a><a class="link" href="#_요청_14">4.1.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/posts/1/files HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/posts/4/files HTTP/1.1
 Accept: application/json
 Host: climbing.com:80</code></pre>
 </div>
@@ -1930,7 +2119,7 @@ Host: climbing.com:80</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_12"><a class="anchor" href="#_응답_12"></a><a class="link" href="#_응답_12">4.1.2. 응답</a></h4>
+<h4 id="_응답_14"><a class="anchor" href="#_응답_14"></a><a class="link" href="#_응답_14">4.1.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -1945,11 +2134,12 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=YzQ5OWMyNTQtYzY0NC00NTg4LWFhOTQtZWRiOTBjMWIwYzkx; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 259
 
 {
   "message" : "success",
-  "data" : [ "https://peeerr-bucket.s3.ap-northeast-2.amazonaws.com/4d1d92f5-1324-41e8-be48-739f554d4577_example1.jpg", "https://peeerr-bucket.s3.ap-northeast-2.amazonaws.com/de9f34e2-8616-44f8-bc61-a0f77788c6b4_example2.jpg" ]
+  "data" : [ "https://peeerr-bucket.s3.ap-northeast-2.amazonaws.com/30c77c54-34d5-46a5-8fac-a30042944e03_example1.jpg", "https://peeerr-bucket.s3.ap-northeast-2.amazonaws.com/745c9820-6ed9-437d-8026-fc32e27b7084_example2.jpg" ]
 }</code></pre>
 </div>
 </div>
@@ -1984,10 +2174,10 @@ Content-Length: 259
 <div class="sect2">
 <h3 id="_post_apipostspostidfiles_파일_업로드"><a class="anchor" href="#_post_apipostspostidfiles_파일_업로드"></a><a class="link" href="#_post_apipostspostidfiles_파일_업로드">4.2. POST /api/posts/{postId}/files [파일 업로드]</a></h3>
 <div class="sect3">
-<h4 id="_요청_13"><a class="anchor" href="#_요청_13"></a><a class="link" href="#_요청_13">4.2.1. 요청</a></h4>
+<h4 id="_요청_15"><a class="anchor" href="#_요청_15"></a><a class="link" href="#_요청_15">4.2.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/posts/3/files HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/posts/6/files HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Host: climbing.com:80
 
@@ -2043,7 +2233,7 @@ image2
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_13"><a class="anchor" href="#_응답_13"></a><a class="link" href="#_응답_13">4.2.2. 응답</a></h4>
+<h4 id="_응답_15"><a class="anchor" href="#_응답_15"></a><a class="link" href="#_응답_15">4.2.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
@@ -2058,6 +2248,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=ZmU2YzdlMDgtNzhlMS00MDljLWE5MjUtZWI5MmNlNTdlMTQw; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -2097,10 +2288,10 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_delete_apipostspostidfilesfileid_파일_삭제_유저_권한"><a class="anchor" href="#_delete_apipostspostidfilesfileid_파일_삭제_유저_권한"></a><a class="link" href="#_delete_apipostspostidfilesfileid_파일_삭제_유저_권한">4.3. DELETE /api/posts/{postId}/files/{fileId} [파일 삭제 (유저 권한)]</a></h3>
 <div class="sect3">
-<h4 id="_요청_14"><a class="anchor" href="#_요청_14"></a><a class="link" href="#_요청_14">4.3.1. 요청</a></h4>
+<h4 id="_요청_16"><a class="anchor" href="#_요청_16"></a><a class="link" href="#_요청_16">4.3.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/posts/2/files/3 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/posts/5/files/3 HTTP/1.1
 Host: climbing.com:80</code></pre>
 </div>
 </div>
@@ -2129,7 +2320,7 @@ Host: climbing.com:80</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_14"><a class="anchor" href="#_응답_14"></a><a class="link" href="#_응답_14">4.3.2. 응답</a></h4>
+<h4 id="_응답_16"><a class="anchor" href="#_응답_16"></a><a class="link" href="#_응답_16">4.3.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -2144,6 +2335,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=ODE4MTA1ZmUtMTY3ZS00YzE4LTgzMzEtZWFiODJmOGE1N2Fk; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -2188,7 +2380,7 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_post_apipostspostidcomments_게시물에_댓글_등록"><a class="anchor" href="#_post_apipostspostidcomments_게시물에_댓글_등록"></a><a class="link" href="#_post_apipostspostidcomments_게시물에_댓글_등록">5.1. POST /api/posts/{postId}/comments [게시물에 댓글 등록]</a></h3>
 <div class="sect3">
-<h4 id="_요청_15"><a class="anchor" href="#_요청_15"></a><a class="link" href="#_요청_15">5.1.1. 요청</a></h4>
+<h4 id="_요청_17"><a class="anchor" href="#_요청_17"></a><a class="link" href="#_요청_17">5.1.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/posts/2/comments HTTP/1.1
@@ -2253,7 +2445,7 @@ Host: climbing.com:80
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_15"><a class="anchor" href="#_응답_15"></a><a class="link" href="#_응답_15">5.1.2. 응답</a></h4>
+<h4 id="_응답_17"><a class="anchor" href="#_응답_17"></a><a class="link" href="#_응답_17">5.1.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
@@ -2268,6 +2460,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=YjZlNjUzMTktZjZkMS00NGI1LWFhOGQtZTAxMmQwMTNhMzdi; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -2307,7 +2500,7 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_put_apipostspostidcommentscommentid_댓글_수정"><a class="anchor" href="#_put_apipostspostidcommentscommentid_댓글_수정"></a><a class="link" href="#_put_apipostspostidcommentscommentid_댓글_수정">5.2. PUT /api/posts/{postId}/comments/{commentId} [댓글 수정]</a></h3>
 <div class="sect3">
-<h4 id="_요청_16"><a class="anchor" href="#_요청_16"></a><a class="link" href="#_요청_16">5.2.1. 요청</a></h4>
+<h4 id="_요청_18"><a class="anchor" href="#_요청_18"></a><a class="link" href="#_요청_18">5.2.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">PUT /api/posts/3/comments/3 HTTP/1.1
@@ -2369,7 +2562,7 @@ Host: climbing.com:80
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_16"><a class="anchor" href="#_응답_16"></a><a class="link" href="#_응답_16">5.2.2. 응답</a></h4>
+<h4 id="_응답_18"><a class="anchor" href="#_응답_18"></a><a class="link" href="#_응답_18">5.2.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -2384,6 +2577,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=NDg3NTZkZmUtZjE1Zi00NzI3LTg3NzctYTUwN2I2NGY4Mzkw; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -2423,7 +2617,7 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_delete_apipostspostidcommentscommentid_댓글_삭제"><a class="anchor" href="#_delete_apipostspostidcommentscommentid_댓글_삭제"></a><a class="link" href="#_delete_apipostspostidcommentscommentid_댓글_삭제">5.3. DELETE /api/posts/{postId}/comments/{commentId} [댓글 삭제]</a></h3>
 <div class="sect3">
-<h4 id="_요청_17"><a class="anchor" href="#_요청_17"></a><a class="link" href="#_요청_17">5.3.1. 요청</a></h4>
+<h4 id="_요청_19"><a class="anchor" href="#_요청_19"></a><a class="link" href="#_요청_19">5.3.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/posts/1/comments/1 HTTP/1.1
@@ -2456,7 +2650,7 @@ Host: climbing.com:80</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_17"><a class="anchor" href="#_응답_17"></a><a class="link" href="#_응답_17">5.3.2. 응답</a></h4>
+<h4 id="_응답_19"><a class="anchor" href="#_응답_19"></a><a class="link" href="#_응답_19">5.3.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -2471,6 +2665,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=NjgzMTRkMzItMzNiYi00MjZhLWI2ZjctNzAxZmU5MTExN2Ux; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -2515,10 +2710,10 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_get_apipostspostidlikescount_게시물에_달린_좋아요_개수_조회"><a class="anchor" href="#_get_apipostspostidlikescount_게시물에_달린_좋아요_개수_조회"></a><a class="link" href="#_get_apipostspostidlikescount_게시물에_달린_좋아요_개수_조회">6.1. GET /api/posts/{postId}/likes/count [게시물에 달린 좋아요 개수 조회]</a></h3>
 <div class="sect3">
-<h4 id="_요청_18"><a class="anchor" href="#_요청_18"></a><a class="link" href="#_요청_18">6.1.1. 요청</a></h4>
+<h4 id="_요청_20"><a class="anchor" href="#_요청_20"></a><a class="link" href="#_요청_20">6.1.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/posts/5/likes/count HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">GET /api/posts/8/likes/count HTTP/1.1
 Accept: application/json
 Host: climbing.com:80</code></pre>
 </div>
@@ -2544,7 +2739,7 @@ Host: climbing.com:80</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_18"><a class="anchor" href="#_응답_18"></a><a class="link" href="#_응답_18">6.1.2. 응답</a></h4>
+<h4 id="_응답_20"><a class="anchor" href="#_응답_20"></a><a class="link" href="#_응답_20">6.1.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -2559,6 +2754,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=OWFhOTIwYTYtNjg4ZS00MzY3LWIxZWEtODc3YmY4MWIxYzFk; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 44
 
 {
@@ -2598,10 +2794,10 @@ Content-Length: 44
 <div class="sect2">
 <h3 id="_post_apipostspostidlikes_게시물에_좋아요_달기"><a class="anchor" href="#_post_apipostspostidlikes_게시물에_좋아요_달기"></a><a class="link" href="#_post_apipostspostidlikes_게시물에_좋아요_달기">6.2. POST /api/posts/{postId}/likes [게시물에 좋아요 달기]</a></h3>
 <div class="sect3">
-<h4 id="_요청_19"><a class="anchor" href="#_요청_19"></a><a class="link" href="#_요청_19">6.2.1. 요청</a></h4>
+<h4 id="_요청_21"><a class="anchor" href="#_요청_21"></a><a class="link" href="#_요청_21">6.2.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/posts/6/likes HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">POST /api/posts/9/likes HTTP/1.1
 Host: climbing.com:80
 Content-Type: application/x-www-form-urlencoded</code></pre>
 </div>
@@ -2627,7 +2823,7 @@ Content-Type: application/x-www-form-urlencoded</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_19"><a class="anchor" href="#_응답_19"></a><a class="link" href="#_응답_19">6.2.2. 응답</a></h4>
+<h4 id="_응답_21"><a class="anchor" href="#_응답_21"></a><a class="link" href="#_응답_21">6.2.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 201 Created
@@ -2642,6 +2838,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=YTQwZjIyMjAtZTdlOC00ZWY5LThmYzYtZjUwMTkwMGZjYTE1; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -2681,10 +2878,10 @@ Content-Length: 47
 <div class="sect2">
 <h3 id="_delete_apipostspostidlikes_좋아요_취소"><a class="anchor" href="#_delete_apipostspostidlikes_좋아요_취소"></a><a class="link" href="#_delete_apipostspostidlikes_좋아요_취소">6.3. DELETE /api/posts/{postId}/likes [좋아요 취소]</a></h3>
 <div class="sect3">
-<h4 id="_요청_20"><a class="anchor" href="#_요청_20"></a><a class="link" href="#_요청_20">6.3.1. 요청</a></h4>
+<h4 id="_요청_22"><a class="anchor" href="#_요청_22"></a><a class="link" href="#_요청_22">6.3.1. 요청</a></h4>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/posts/4/likes HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">DELETE /api/posts/7/likes HTTP/1.1
 Host: climbing.com:80</code></pre>
 </div>
 </div>
@@ -2709,7 +2906,7 @@ Host: climbing.com:80</code></pre>
 </table>
 </div>
 <div class="sect3">
-<h4 id="_응답_20"><a class="anchor" href="#_응답_20"></a><a class="link" href="#_응답_20">6.3.2. 응답</a></h4>
+<h4 id="_응답_22"><a class="anchor" href="#_응답_22"></a><a class="link" href="#_응답_22">6.3.2. 응답</a></h4>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code class="language-http hljs" data-lang="http">HTTP/1.1 200 OK
@@ -2724,6 +2921,7 @@ Pragma: no-cache
 Expires: 0
 Strict-Transport-Security: max-age=31536000 ; includeSubDomains
 X-Frame-Options: DENY
+Set-Cookie: SESSION=OWRiMWZiNDYtM2IwYy00Nzg0LTkzZTQtYWZjMTRiYzljZWY2; Path=/; Secure; HttpOnly; SameSite=Lax
 Content-Length: 47
 
 {
@@ -2766,7 +2964,7 @@ Content-Length: 47
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2024-03-17 22:57:25 +0900
+Last updated 2024-04-01 15:27:11 +0900
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.3/highlight.min.js"></script>

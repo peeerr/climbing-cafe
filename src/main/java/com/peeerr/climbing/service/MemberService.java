@@ -1,19 +1,18 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.domain.user.Member;
-import com.peeerr.climbing.dto.member.MemberLoginRequest;
 import com.peeerr.climbing.domain.user.MemberRepository;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.dto.member.MemberLoginRequest;
 import com.peeerr.climbing.exception.DuplicationException;
 import com.peeerr.climbing.exception.EntityNotFoundException;
 import com.peeerr.climbing.exception.UnauthorizedAccessException;
 import com.peeerr.climbing.exception.ValidationException;
+import com.peeerr.climbing.security.CustomUserDetails;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

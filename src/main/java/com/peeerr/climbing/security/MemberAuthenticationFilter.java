@@ -18,7 +18,7 @@ public class MemberAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        CustomUserDetails userDetails = (CustomUserDetails) request.getSession(false).getAttribute("MEMBER");
+        CustomUserDetails userDetails = (CustomUserDetails) request.getSession().getAttribute("MEMBER");
 
         if (userDetails != null) {
             SecurityContextHolder.getContext().setAuthentication(

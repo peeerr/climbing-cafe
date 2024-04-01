@@ -1,11 +1,13 @@
 package com.peeerr.climbing.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
+import com.peeerr.climbing.dto.member.MemberLoginRequest;
+import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.service.MemberService;
+import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,38 @@ class MemberControllerTest {
     @MockBean
     private MemberService memberService;
 
+    @DisplayName("회원 로그인 한다.")
+    @Test
+    void login() throws Exception {
+        //given
+        MemberLoginRequest request = MemberLoginRequest.of("test@example.com", "test1234");
+
+        willDoNothing().given(memberService).login(any(MemberLoginRequest.class), any(HttpSession.class));
+
+        //when
+        mvc.perform(post("/api/members/login")
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
+
+        //then
+        then(memberService).should().login(any(MemberLoginRequest.class), any(HttpSession.class));
+    }
+
+    @DisplayName("회원 로그아웃 한다.")
+    @Test
+    void logout() throws Exception {
+        //given
+        willDoNothing().given(memberService).logout(any(HttpSession.class));
+
+        //when
+        mvc.perform(post("/api/members/logout")
+                .with(csrf()));
+
+        //then
+        then(memberService).should().logout(any(HttpSession.class));
+    }
+
     @DisplayName("회원 한 명을 추가한다.")
     @Test
     void memberAdd() throws Exception {
@@ -43,7 +77,7 @@ class MemberControllerTest {
         willDoNothing().given(memberService).addMember(request);
 
         //when
-        ResultActions result = mvc.perform(post("/api/members")
+        ResultActions result = mvc.perform(post("/api/members/register")
                 .with(csrf())
                 .content(mapper.writeValueAsString(request))
                 .contentType(MediaType.APPLICATION_JSON_VALUE));
