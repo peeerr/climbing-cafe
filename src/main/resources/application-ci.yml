@@ -29,7 +29,7 @@ spring:
     store-type: redis
   data:
     redis:
-      host: ${REDIS_HOSTNAME}
+      host: localhost
       port: 6379
 
 logging:
