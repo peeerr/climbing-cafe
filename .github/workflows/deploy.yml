@@ -1,4 +1,4 @@
-name: climb
+name: climbing
 on:
   push:
     branches:
@@ -24,6 +24,7 @@ jobs:
         with:
           files: ./src/main/resources/application-ci.yml, ./src/main/resources/application-prod.yml
         env:
+          spring.data.redis.host: ${{ secrets.REDIS_HOSTNAME }}
           aws.s3.bucket: ${{ secrets.AWS_S3_BUCKET }}
           aws.s3.accessKey: ${{ secrets.AWS_S3_ACCESS_KEY }}
           aws.s3.secretKey: ${{ secrets.AWS_S3_SECRET_KEY }}
@@ -41,16 +42,8 @@ jobs:
           format: YYYY-MM-DDTHH-mm-ss
           utfOffset: "+09:00"
 
-      - name: Show Current Time
-        run: echo "${{steps.current-time.outputs.formattedTime}}"
-
-      - name: Create deployment zip file
-        run: |
-          mkdir -p deploy
-          cp build/libs/*.jar deploy/application.jar
-          cp Procfile deploy/Procfile
-          cp -r .ebextensions deploy/.ebextensions
-          cd deploy && zip -r deploy.zip .
+      - name: Generate deployment package
+        run: zip -r deploy.zip .
 
       # EB에 배포
       - name: Deploy to EB
@@ -62,4 +55,4 @@ jobs:
           environment_name: Climbing-env
           version_label: climbing-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
-          deployment_package: deploy/deploy.zip
+          deployment_package: deploy.zip
