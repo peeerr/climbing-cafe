@@ -1,12 +1,12 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.config.auth.CustomUserDetails;
-import com.peeerr.climbing.dto.common.ApiResponse;
-import com.peeerr.climbing.dto.post.request.PostCreateRequest;
-import com.peeerr.climbing.dto.post.request.PostEditRequest;
-import com.peeerr.climbing.dto.post.request.PostSearchCondition;
-import com.peeerr.climbing.dto.post.response.PostDetailResponse;
-import com.peeerr.climbing.dto.post.response.PostResponse;
+import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.dto.post.PostCreateRequest;
+import com.peeerr.climbing.dto.post.PostEditRequest;
+import com.peeerr.climbing.dto.post.PostSearchCondition;
+import com.peeerr.climbing.dto.post.PostDetailResponse;
+import com.peeerr.climbing.dto.post.PostResponse;
 import com.peeerr.climbing.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

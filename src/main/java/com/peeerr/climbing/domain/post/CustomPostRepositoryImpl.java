@@ -1,8 +1,8 @@
 package com.peeerr.climbing.domain.post;
 
-import com.peeerr.climbing.dto.post.request.PostSearchCondition;
-import com.peeerr.climbing.dto.post.response.PostResponse;
-import com.peeerr.climbing.dto.post.response.QPostResponse;
+import com.peeerr.climbing.dto.post.PostSearchCondition;
+import com.peeerr.climbing.dto.post.PostResponse;
+import com.peeerr.climbing.dto.post.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQuery;

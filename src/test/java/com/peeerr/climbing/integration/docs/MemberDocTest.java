@@ -1,7 +1,6 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.config.auth.CustomUserDetails;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.CommentRepository;
 import com.peeerr.climbing.domain.file.FileRepository;
@@ -9,8 +8,11 @@ import com.peeerr.climbing.domain.like.LikeRepository;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.dto.member.request.MemberCreateRequest;
-import com.peeerr.climbing.dto.member.request.MemberEditRequest;
+import com.peeerr.climbing.dto.member.MemberCreateRequest;
+import com.peeerr.climbing.dto.member.MemberEditRequest;
+import com.peeerr.climbing.dto.member.MemberLoginRequest;
+import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,11 +22,13 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -50,6 +54,7 @@ public class MemberDocTest {
     @Autowired private CommentRepository commentRepository;
     @Autowired private LikeRepository likeRepository;
 
+    @Autowired private MemberService memberService;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private ObjectMapper mapper;
     @Autowired private MockMvc mockMvc;
@@ -64,6 +69,75 @@ public class MemberDocTest {
         categoryRepository.deleteAll();
     }
 
+    @DisplayName("[통합 테스트/API 문서화] - 로그인")
+    @Test
+    void login() throws Exception {
+        //given
+        String rawPassword = "test1234";
+
+        Member member = memberRepository.save(
+                Member.builder()
+                        .username("test")
+                        .password(passwordEncoder.encode(rawPassword))
+                        .email("test@example.com")
+                        .build()
+        );
+
+        MemberLoginRequest request = MemberLoginRequest.of(member.getEmail(), rawPassword);
+
+        //when
+        ResultActions result = mockMvc.perform(post("/api/members/login")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
+
+        //then
+        result
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("success"))
+                .andDo(document("member-login",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("email").description("이메일 아이디"),
+                                fieldWithPath("password").description("비밀번호")
+                        ),
+                        responseFields(
+                                fieldWithPath("message").description("결과 메시지"),
+                                fieldWithPath("data").description("")
+                        )
+                ));
+    }
+
+    @DisplayName("[통합 테스트/API 문서화] - 로그아웃")
+    @Test
+    void logout() throws Exception {
+        //given
+        MockHttpSession session = new MockHttpSession();
+        session.setAttribute("MEMBER", "test");
+
+        //when
+        ResultActions result = mockMvc.perform(post("/api/members/logout")
+                .session(session));
+        memberService.logout(session);
+
+        //then
+        result
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("success"))
+                .andDo(document("member-logout",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        responseFields(
+                                fieldWithPath("message").description("결과 메시지"),
+                                fieldWithPath("data").description("")
+                        )
+                ));
+
+        assertThat(session.getAttribute("MEMBER")).isNull();
+    }
+
     @DisplayName("[통합 테스트/API 문서화] - 회원가입")
     @Test
     void memberAdd() throws Exception {
@@ -71,7 +145,7 @@ public class MemberDocTest {
         MemberCreateRequest request = MemberCreateRequest.of("test", "test1234", "test1234", "test@example.com");
 
         //when
-        ResultActions result = mockMvc.perform(post("/api/members")
+        ResultActions result = mockMvc.perform(post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(mapper.writeValueAsString(request)));
 

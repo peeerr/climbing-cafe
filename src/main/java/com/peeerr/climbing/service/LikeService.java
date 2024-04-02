@@ -6,9 +6,9 @@ import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.exception.constant.ErrorMessage;
-import com.peeerr.climbing.exception.ex.AlreadyExistsException;
-import com.peeerr.climbing.exception.ex.EntityNotFoundException;
+import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.AlreadyExistsException;
+import com.peeerr.climbing.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +23,10 @@ public class LikeService {
 
     @Transactional(readOnly = true)
     public Long getLikeCount(Long postId) {
-        return likeRepository.countLikeByPostId(postId);
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
+
+        return likeRepository.countLikeByPost(post);
     }
 
     @Transactional

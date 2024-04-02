@@ -1,7 +1,7 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.config.auth.CustomUserDetails;
+import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.Comment;
@@ -12,8 +12,8 @@ import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.dto.comment.request.CommentCreateRequest;
-import com.peeerr.climbing.dto.comment.request.CommentEditRequest;
+import com.peeerr.climbing.dto.comment.CommentCreateRequest;
+import com.peeerr.climbing.dto.comment.CommentEditRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

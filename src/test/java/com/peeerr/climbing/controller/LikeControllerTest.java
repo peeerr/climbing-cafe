@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.config.auth.CustomUserDetails;
+import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.service.LikeService;
 import org.junit.jupiter.api.DisplayName;

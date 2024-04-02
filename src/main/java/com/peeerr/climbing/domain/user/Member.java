@@ -8,13 +8,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
 
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

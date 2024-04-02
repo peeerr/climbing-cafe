@@ -1,7 +1,6 @@
 package com.peeerr.climbing.integration.docs;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.config.auth.CustomUserDetails;
+import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.CommentRepository;

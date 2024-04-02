@@ -1,7 +1,7 @@
 package com.peeerr.climbing.aop;
 
-import com.peeerr.climbing.exception.constant.ErrorMessage;
-import com.peeerr.climbing.exception.ex.ValidationException;
+import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ValidationException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

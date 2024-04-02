@@ -2,11 +2,11 @@ package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
-import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
-import com.peeerr.climbing.dto.category.response.CategoryResponse;
-import com.peeerr.climbing.exception.ex.DuplicationException;
-import com.peeerr.climbing.exception.ex.EntityNotFoundException;
+import com.peeerr.climbing.dto.category.CategoryCreateRequest;
+import com.peeerr.climbing.dto.category.CategoryEditRequest;
+import com.peeerr.climbing.dto.category.CategoryResponse;
+import com.peeerr.climbing.exception.DuplicationException;
+import com.peeerr.climbing.exception.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

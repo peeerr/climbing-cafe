@@ -6,8 +6,8 @@ import com.peeerr.climbing.domain.post.Post;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.exception.ex.AlreadyExistsException;
-import com.peeerr.climbing.exception.ex.EntityNotFoundException;
+import com.peeerr.climbing.exception.AlreadyExistsException;
+import com.peeerr.climbing.exception.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +37,9 @@ class LikeServiceTest {
     void getLikeCount() throws Exception {
         //given
         Long postId = 1L;
-        given(likeRepository.countLikeByPostId(postId)).willReturn(5L);
+        Post post = Post.builder().build();
+        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(likeRepository.countLikeByPost(post)).willReturn(5L);
 
         //when
         Long likeCount = likeService.getLikeCount(postId);
@@ -45,7 +47,8 @@ class LikeServiceTest {
         //then
         assertThat(likeCount).isEqualTo(5L);
 
-        then(likeRepository).should().countLikeByPostId(postId);
+        then(postRepository).should().findById(postId);
+        then(likeRepository).should().countLikeByPost(post);
     }
 
     @DisplayName("게시물 ID가 주어지면, 해당 게시물에 좋아요를 추가한다.")

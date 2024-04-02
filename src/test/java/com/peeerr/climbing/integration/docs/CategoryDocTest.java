@@ -8,8 +8,8 @@ import com.peeerr.climbing.domain.file.FileRepository;
 import com.peeerr.climbing.domain.like.LikeRepository;
 import com.peeerr.climbing.domain.post.PostRepository;
 import com.peeerr.climbing.domain.user.MemberRepository;
-import com.peeerr.climbing.dto.category.request.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.request.CategoryEditRequest;
+import com.peeerr.climbing.dto.category.CategoryCreateRequest;
+import com.peeerr.climbing.dto.category.CategoryEditRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
