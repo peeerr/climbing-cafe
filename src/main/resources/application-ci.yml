@@ -27,10 +27,10 @@ spring:
 
   session:
     store-type: redis
-  data:
-    redis:
-      host: localhost
-      port: 6379
+
+redis:
+  host: localhost
+  port: 6379
 
 logging:
   level:
