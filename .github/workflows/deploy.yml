@@ -43,12 +43,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-      - name: Get current time
-        uses: 1466587594/get-current-time@v2
-        id: current-time  # 현재 시간(+9)이 id에 담김
-        with:
-          format: YYYY-MM-DDTHH-mm-ss
-          utfOffset: "+09:00"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -76,6 +70,13 @@ jobs:
           mkdir -p deploy
           cp Dockerrun.aws.json deploy/Dockerrun.aws.json
           cd deploy && zip -r deploy.zip .
+
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time  # 현재 시간(+9)이 id에 담김
+        with:
+          format: YYYY-MM-DDTHH-mm-ss
+          utfOffset: "+09:00"
 
       # EB에 배포
       - name: Deploy to EB
