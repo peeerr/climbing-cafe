@@ -1,15 +1,8 @@
 FROM openjdk:17-alpine
 
-WORKDIR /app
+ARG JAR_FILE=build/libs/*.jar
+COPY ${JAR_FILE} app.jar
 
-COPY . .
-
-RUN sed -i 's/\r$//' gradlew
-
-RUN chmod +x ./gradlew
-RUN ./gradlew clean build
-
-ENV JAR_PATH=/app/build/libs
-RUN mv ${JAR_PATH}/*.jar /app/app.jar
+EXPOSE 5000
 
 ENTRYPOINT ["java", "-jar", "-Dspring.profiles.active=prod", "app.jar"]
