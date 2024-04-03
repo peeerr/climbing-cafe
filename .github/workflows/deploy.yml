@@ -74,6 +74,12 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      - name: Generate deployment package
+        run: |
+          mkdir -p deploy
+          cp Dockerrun.aws.json deploy/Dockerrun.aws.json
+          cd deploy && zip -r deploy.zip .
+
       - name: Get current time
         uses: 1466587594/get-current-time@v2
         id: current-time  # 현재 시간이 id에 담김
@@ -91,4 +97,4 @@ jobs:
           environment_name: Climbing-api-env
           version_label: climbing-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
-          deployment_package: docker-compose.yml
+          deployment_package: deploy/deploy.zip
