@@ -72,7 +72,7 @@ jobs:
 
       - name: Get current time
         uses: 1466587594/get-current-time@v2
-        id: current-time  # 현재 시간(+9)이 id에 담김
+        id: current-time  # 현재 시간이 id에 담김
         with:
           format: YYYY-MM-DDTHH-mm-ss
           utfOffset: "+09:00"
