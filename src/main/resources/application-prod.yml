@@ -28,10 +28,10 @@ spring:
 
   session:
     store-type: redis
-
-redis:
-  host: ${REDIS_HOSTNAME}
-  port: 6379
+  data:
+    redis:
+      host: ${REDIS_HOSTNAME}
+      port: 6379
 
 logging:
   level:
