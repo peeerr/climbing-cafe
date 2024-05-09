@@ -6,7 +6,6 @@
 
 ## API Documentaton
 
-Spring REST Docs로 API 문서화 <br>
+Spring REST Docs로 API 문서화 (비용 문제로 중단) <br>
 http://climbing-api-env.eba-pmskmvpv.ap-northeast-2.elasticbeanstalk.com/docs/index.html
 <br> 
-* 향후 OSA로 디자인 개선 고려
