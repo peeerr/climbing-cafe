@@ -1,6 +1,6 @@
 package com.peeerr.climbing.integration.docs;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.CommentRepository;
@@ -94,7 +94,7 @@ public class FileDocTest {
         MockMultipartFile file1 = new MockMultipartFile("files", "example1.jpg", "image/jpeg", "image1".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("files", "example2.jpg", "image/jpeg", "image2".getBytes());
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         Long postId = post.getId();
 
         mockMvc.perform(multipart("/api/posts/{postId}/files", postId)
@@ -153,7 +153,7 @@ public class FileDocTest {
         MockMultipartFile file1 = new MockMultipartFile("files", "example1.jpg", "image/jpeg", "image1".getBytes());
         MockMultipartFile file2 = new MockMultipartFile("files", "example2.jpg", "image/jpeg", "image2".getBytes());
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         Long postId = post.getId();
 
         //when
@@ -218,7 +218,7 @@ public class FileDocTest {
                         .build()
         );
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
 
         Long postId = post.getId();
         Long fileId = file.getId();

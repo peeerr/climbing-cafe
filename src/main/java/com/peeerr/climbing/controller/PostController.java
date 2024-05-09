@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.dto.post.PostCreateRequest;
 import com.peeerr.climbing.dto.post.PostEditRequest;
@@ -52,7 +52,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<ApiResponse> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,
                                                BindingResult bindingResult,
-                                               @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                               @AuthenticationPrincipal MemberPrincipal userDetails) {
         postService.addPost(postCreateRequest, userDetails.getMember());
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -63,7 +63,7 @@ public class PostController {
     public ResponseEntity<ApiResponse> postEdit(@PathVariable Long postId,
                                                 @RequestBody @Valid PostEditRequest postEditRequest,
                                                 BindingResult bindingResult,
-                                                @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         postService.editPost(postId, postEditRequest, loginId);
 
@@ -73,7 +73,7 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<ApiResponse> postRemove(@PathVariable Long postId,
-                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         postService.removePost(postId, loginId);
 

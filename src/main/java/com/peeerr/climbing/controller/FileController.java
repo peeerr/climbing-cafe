@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ValidationException;
@@ -33,7 +33,7 @@ public class FileController {
     @PostMapping
     public ResponseEntity<ApiResponse> fileUpload(@PathVariable Long postId,
                                                   @RequestParam List<MultipartFile> files,
-                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
         if (files == null) {
             throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
         } else {
@@ -54,7 +54,7 @@ public class FileController {
     @DeleteMapping("/{fileId}")
     public ResponseEntity<ApiResponse> fileUpdateDeleteFlag(@PathVariable String postId,
                                                             @PathVariable Long fileId,
-                                                            @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                            @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         fileService.updateDeleteFlag(loginId, fileId);
 

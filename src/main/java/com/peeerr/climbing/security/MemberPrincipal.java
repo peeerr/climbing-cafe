@@ -12,11 +12,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
-public class CustomUserDetails implements UserDetails, Serializable {
+public class MemberPrincipal implements UserDetails, Serializable {
 
     private final Member member;
 
-    public CustomUserDetails(Member member) {
+    public MemberPrincipal(Member member) {
         this.member = member;
     }
 

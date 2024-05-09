@@ -1,7 +1,7 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.Comment;
@@ -93,7 +93,7 @@ public class CommentDocTest {
                         .build()
         );
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         CommentCreateRequest request = CommentCreateRequest.of(null, "댓글 테스트");
         Long postId = post.getId();
 
@@ -157,7 +157,7 @@ public class CommentDocTest {
                         .build()
         );
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         CommentEditRequest request = CommentEditRequest.of("댓글 수정 테스트");
         Long postId = post.getId();
         Long commentId = comment.getId();
@@ -222,7 +222,7 @@ public class CommentDocTest {
                         .build()
         );
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         Long postId = post.getId();
         Long commentId = comment.getId();
 

@@ -1,5 +1,21 @@
 package com.peeerr.climbing.integration.docs;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.CommentRepository;
@@ -11,7 +27,7 @@ import com.peeerr.climbing.domain.user.MemberRepository;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
 import com.peeerr.climbing.dto.member.MemberLoginRequest;
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,24 +38,10 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -112,14 +114,8 @@ public class MemberDocTest {
     @DisplayName("[통합 테스트/API 문서화] - 로그아웃")
     @Test
     void logout() throws Exception {
-        //given
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("MEMBER", "test");
-
         //when
-        ResultActions result = mockMvc.perform(post("/api/members/logout")
-                .session(session));
-        memberService.logout(session);
+        ResultActions result = mockMvc.perform(post("/api/members/logout"));
 
         //then
         result
@@ -134,8 +130,6 @@ public class MemberDocTest {
                                 fieldWithPath("data").description("")
                         )
                 ));
-
-        assertThat(session.getAttribute("MEMBER")).isNull();
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 회원가입")
@@ -182,7 +176,7 @@ public class MemberDocTest {
                         .build()
         );
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
 
         MemberEditRequest request = MemberEditRequest.of("editTest", "editTest@example.com");
 

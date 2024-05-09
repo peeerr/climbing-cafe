@@ -1,7 +1,7 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.CommentRepository;
@@ -225,7 +225,7 @@ public class PostDocTest {
                         .build()
         );
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
 
         Long categoryId = category.getId();
         PostCreateRequest request = PostCreateRequest.of("제목 작성 테스트", "본문 작성 테스트", categoryId);
@@ -281,7 +281,7 @@ public class PostDocTest {
                         .build()
         ).getId();
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         Category editCategory = categoryRepository.save(
                 Category.builder()
                         .categoryName("후기 게시판")
@@ -345,7 +345,7 @@ public class PostDocTest {
                         .build()
         ).getId();
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
 
         //when
         ResultActions result = mockMvc.perform(delete("/api/posts/{postId}", postId)

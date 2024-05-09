@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.dto.comment.CommentCreateRequest;
 import com.peeerr.climbing.dto.comment.CommentEditRequest;
 import com.peeerr.climbing.dto.ApiResponse;
@@ -24,7 +24,7 @@ public class CommentController {
     public ResponseEntity<ApiResponse> commentAdd(@PathVariable Long postId,
                                                   @RequestBody @Valid CommentCreateRequest request,
                                                   BindingResult bindingResult,
-                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
         commentService.addComment(postId, request, userDetails.getMember());
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -36,7 +36,7 @@ public class CommentController {
                                                    @PathVariable Long commentId,
                                                    @RequestBody @Valid CommentEditRequest request,
                                                    BindingResult bindingResult,
-                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                   @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         commentService.editComment(commentId, request, loginId);
 
@@ -47,7 +47,7 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<ApiResponse> commentRemove(@PathVariable Long postId,
                                                      @PathVariable Long commentId,
-                                                     @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                     @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         commentService.removeComment(commentId, loginId);
 

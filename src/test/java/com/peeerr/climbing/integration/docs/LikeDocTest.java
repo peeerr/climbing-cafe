@@ -1,6 +1,6 @@
 package com.peeerr.climbing.integration.docs;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.category.Category;
 import com.peeerr.climbing.domain.category.CategoryRepository;
 import com.peeerr.climbing.domain.comment.CommentRepository;
@@ -164,7 +164,7 @@ public class LikeDocTest {
                         .build()
         );
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         Long postId = post.getId();
 
         //when
@@ -222,7 +222,7 @@ public class LikeDocTest {
 
         long savedCount = likeRepository.count();
 
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
         Long postId = post.getId();
 
         //when

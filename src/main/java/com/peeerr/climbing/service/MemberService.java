@@ -10,7 +10,7 @@ import com.peeerr.climbing.exception.DuplicationException;
 import com.peeerr.climbing.exception.EntityNotFoundException;
 import com.peeerr.climbing.exception.UnauthorizedAccessException;
 import com.peeerr.climbing.exception.ValidationException;
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,24 +26,24 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional(readOnly = true)
-    public void login(MemberLoginRequest request, HttpSession session) {
-        Member member = memberRepository.findMemberByEmail(request.getEmail())
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+//    @Transactional(readOnly = true)
+//    public void login(MemberLoginRequest request, HttpSession session) {
+//        Member member = memberRepository.findMemberByEmail(request.getEmail())
+//                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+//
+//        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
+//            throw new ValidationException(ErrorMessage.INVALID_PASSWORD);
+//        }
+//
+//        MemberPrincipal userDetails = new MemberPrincipal(member);
+//
+//        session.setAttribute("MEMBER", userDetails);
+//        session.setMaxInactiveInterval(1800);
+//    }
 
-        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-            throw new ValidationException(ErrorMessage.INVALID_PASSWORD);
-        }
-
-        CustomUserDetails userDetails = new CustomUserDetails(member);
-
-        session.setAttribute("MEMBER", userDetails);
-        session.setMaxInactiveInterval(1800);
-    }
-
-    public void logout(HttpSession session) {
-        session.removeAttribute("MEMBER");
-    }
+//    public void logout(HttpSession session) {
+//        session.removeAttribute("MEMBER");
+//    }
 
     @Transactional
     public void addMember(MemberCreateRequest request) {

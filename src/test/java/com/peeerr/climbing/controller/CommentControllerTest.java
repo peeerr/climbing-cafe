@@ -1,31 +1,35 @@
 package com.peeerr.climbing.controller;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.comment.CommentCreateRequest;
 import com.peeerr.climbing.dto.comment.CommentEditRequest;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.CommentService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@WithMockUser
-@WebMvcTest(controllers = CommentController.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class CommentControllerTest {
 
     @Autowired private MockMvc mvc;
@@ -42,7 +46,7 @@ class CommentControllerTest {
 
         willDoNothing().given(commentService).addComment(anyLong(), any(CommentCreateRequest.class), any(Member.class));
 
-        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().build());
+        MemberPrincipal userDetails = new MemberPrincipal(Member.builder().build());
 
         //when
         ResultActions result = mvc.perform(post("/api/posts/{postId}/comments", 1L)
@@ -68,7 +72,7 @@ class CommentControllerTest {
         CommentEditRequest request = CommentEditRequest.of("댓글 수정 테스트");
         Long loginId = 1L;
 
-        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(loginId).build());
+        MemberPrincipal userDetails = new MemberPrincipal(Member.builder().id(loginId).build());
 
         willDoNothing().given(commentService).editComment(anyLong(), any(CommentEditRequest.class), anyLong());
 
@@ -95,7 +99,7 @@ class CommentControllerTest {
         Long commentId = 1L;
         Long loginId = 1L;
 
-        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(loginId).build());
+        MemberPrincipal userDetails = new MemberPrincipal(Member.builder().id(loginId).build());
 
         willDoNothing().given(commentService).removeComment(anyLong(), anyLong());
 

@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
@@ -22,22 +22,22 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody @Valid MemberLoginRequest memberLoginRequest,
-                                             HttpSession session) {
-        memberService.login(memberLoginRequest, session);
+//    @PostMapping("/login")
+//    public ResponseEntity<ApiResponse> login(@RequestBody @Valid MemberLoginRequest memberLoginRequest,
+//                                             HttpSession session) {
+//        memberService.login(memberLoginRequest, session);
+//
+//        return ResponseEntity.ok()
+//                .body(ApiResponse.success());
+//    }
 
-        return ResponseEntity.ok()
-                .body(ApiResponse.success());
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<ApiResponse> logout(HttpSession session) {
-        memberService.logout(session);
-
-        return ResponseEntity.ok()
-                .body(ApiResponse.success());
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity<ApiResponse> logout(HttpSession session) {
+//        memberService.logout(session);
+//
+//        return ResponseEntity.ok()
+//                .body(ApiResponse.success());
+//    }
 
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> memberAdd(@RequestBody @Valid MemberCreateRequest memberCreateRequest,
@@ -52,7 +52,7 @@ public class MemberController {
     public ResponseEntity<ApiResponse> memberEdit(@PathVariable Long memberId,
                                                   @RequestBody @Valid MemberEditRequest memberEditRequest,
                                                   BindingResult bindingResult,
-                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         memberService.editMember(memberId, memberEditRequest, loginId);
 

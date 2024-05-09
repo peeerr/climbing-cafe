@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.security.CustomUserDetails;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.service.LikeService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class LikeController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> likeAdd(@PathVariable Long postId,
-                                               @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                               @AuthenticationPrincipal MemberPrincipal userDetails) {
         likeService.like(userDetails.getMember().getId(), postId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -35,7 +35,7 @@ public class LikeController {
 
     @DeleteMapping
     public ResponseEntity<ApiResponse> likeRemove(@PathVariable Long postId,
-                                                  @AuthenticationPrincipal CustomUserDetails userDetails) {
+                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
         likeService.unlike(userDetails.getMember().getId(), postId);
 
         return ResponseEntity.ok()

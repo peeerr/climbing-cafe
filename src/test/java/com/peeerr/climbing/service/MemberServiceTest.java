@@ -1,28 +1,26 @@
 package com.peeerr.climbing.service;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.domain.user.MemberRepository;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
-import com.peeerr.climbing.dto.member.MemberLoginRequest;
 import com.peeerr.climbing.exception.DuplicationException;
 import com.peeerr.climbing.exception.EntityNotFoundException;
 import com.peeerr.climbing.exception.UnauthorizedAccessException;
 import com.peeerr.climbing.exception.ValidationException;
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -35,91 +33,6 @@ class MemberServiceTest {
 
     @InjectMocks
     private MemberService memberService;
-
-    @DisplayName("회원 로그인 한다.")
-    @Test
-    void login() throws Exception {
-        //given
-        String email = "test@example.com";
-        String password = "test1234";
-
-        MemberLoginRequest request = MemberLoginRequest.of(email, password);
-        Member member = Member.builder()
-                .email(email)
-                .password(password)
-                .build();
-
-        MockHttpSession session = new MockHttpSession();
-
-        given(memberRepository.findMemberByEmail(email)).willReturn(Optional.of(member));
-        given(passwordEncoder.matches(anyString(), anyString())).willReturn(true);
-
-        //when
-        memberService.login(request, session);
-
-        //then
-        then(memberRepository).should().findMemberByEmail(email);
-        then(passwordEncoder).should().matches(anyString(), anyString());
-    }
-
-    @DisplayName("회원 로그인을 하는데, 존재하지 않는 아이디면 예외를 던진다.")
-    @Test
-    void loginWithNonExistingMember() throws Exception {
-        //given
-        String email = "test@example.com";
-        String password = "test1234";
-
-        MemberLoginRequest request = MemberLoginRequest.of(email, password);
-        MockHttpSession session = new MockHttpSession();
-
-        given(memberRepository.findMemberByEmail(email)).willReturn(Optional.empty());
-
-        //when & then
-        assertThrows(EntityNotFoundException.class,
-                () -> memberService.login(request, session));
-
-        then(memberRepository).should().findMemberByEmail(email);
-    }
-
-    @DisplayName("회원 로그인을 하는데, 비밀번호가 일치하지 않으면 예외를 던진다.")
-    @Test
-    void loginWithInvalidPassword() throws Exception {
-        //given
-        String email = "test@example.com";
-
-        MemberLoginRequest request = MemberLoginRequest.of(email, "test1234");
-        Member member = Member.builder()
-                .email(email)
-                .password("good123")
-                .build();
-
-        MockHttpSession session = new MockHttpSession();
-
-        given(memberRepository.findMemberByEmail(email)).willReturn(Optional.of(member));
-        given(passwordEncoder.matches(anyString(), anyString())).willReturn(false);
-
-        //when & then
-        assertThrows(ValidationException.class,
-                () -> memberService.login(request, session));
-
-        //then
-        then(memberRepository).should().findMemberByEmail(email);
-        then(passwordEncoder).should().matches(anyString(), anyString());
-    }
-
-    @DisplayName("회원 로그아웃 한다.")
-    @Test
-    void logout() throws Exception {
-        //given
-        MockHttpSession session = new MockHttpSession();
-        session.setAttribute("MEMBER", "test");
-
-        //when
-        memberService.logout(session);
-
-        //then
-        assertThat(session.getAttribute("MEMBER")).isNull();
-    }
 
     @DisplayName("회원 한 명을 추가한다.")
     @Test

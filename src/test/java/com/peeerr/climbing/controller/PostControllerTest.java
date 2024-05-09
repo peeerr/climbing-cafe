@@ -1,41 +1,45 @@
 package com.peeerr.climbing.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.security.CustomUserDetails;
 import com.peeerr.climbing.domain.user.Member;
 import com.peeerr.climbing.dto.post.PostCreateRequest;
-import com.peeerr.climbing.dto.post.PostEditRequest;
-import com.peeerr.climbing.dto.post.PostSearchCondition;
 import com.peeerr.climbing.dto.post.PostDetailResponse;
+import com.peeerr.climbing.dto.post.PostEditRequest;
 import com.peeerr.climbing.dto.post.PostResponse;
+import com.peeerr.climbing.dto.post.PostSearchCondition;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.PostService;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@WithMockUser
-@WebMvcTest(controllers = PostController.class)
+@AutoConfigureMockMvc
+@SpringBootTest
 class PostControllerTest {
 
     @Autowired
@@ -95,7 +99,7 @@ class PostControllerTest {
         PostCreateRequest request = PostCreateRequest.of("제목 테스트", "본문 테스트", 1L);
 
         Member member = Member.builder().username("test").build();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
 
         willDoNothing().given(postService).addPost(any(PostCreateRequest.class), any(Member.class));
 
@@ -125,7 +129,7 @@ class PostControllerTest {
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
         Member member = Member.builder().id(loginId).username("test").build();
-        CustomUserDetails userDetails = new CustomUserDetails(member);
+        MemberPrincipal userDetails = new MemberPrincipal(member);
 
         willDoNothing().given(postService).editPost(anyLong(), any(PostEditRequest.class), anyLong());
 
@@ -152,7 +156,7 @@ class PostControllerTest {
         Long postId = 1L;
         Long loginId = 1L;
 
-        CustomUserDetails userDetails = new CustomUserDetails(Member.builder().id(loginId).build());
+        MemberPrincipal userDetails = new MemberPrincipal(Member.builder().id(loginId).build());
 
         willDoNothing().given(postService).removePost(postId, loginId);
 
