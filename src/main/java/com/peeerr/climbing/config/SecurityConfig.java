@@ -1,7 +1,7 @@
 package com.peeerr.climbing.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.domain.user.MemberRepository;
+import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.security.MemberUserDetailsService;
 import com.peeerr.climbing.security.filter.MemberAuthenticationFilter;
 import com.peeerr.climbing.security.handler.Http401Handler;

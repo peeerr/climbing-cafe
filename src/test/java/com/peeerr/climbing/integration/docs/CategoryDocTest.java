@@ -1,13 +1,14 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.domain.category.CategoryRepository;
-import com.peeerr.climbing.domain.comment.CommentRepository;
-import com.peeerr.climbing.domain.file.FileRepository;
-import com.peeerr.climbing.domain.like.LikeRepository;
-import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.domain.user.MemberRepository;
+import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.repository.CategoryRepository;
+import com.peeerr.climbing.repository.CommentRepository;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.repository.LikeRepository;
+import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.category.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.CategoryEditRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -136,6 +138,32 @@ public class CategoryDocTest {
                                 fieldWithPath("data").description("")
                         )
                 ));
+    }
+
+    @DisplayName("[통합 테스트] - 게시판을 생성하는데, 중복된 이름이면 예외를 던진다.")
+    @Test
+    void categoryAddWithDuplicationCategoryName() throws Exception {
+        //given
+        String duplicatedCategory = "자유 게시판";
+
+        categoryRepository.save(
+            Category.builder()
+                .categoryName(duplicatedCategory)
+                .build()
+        );
+
+        CategoryCreateRequest request = CategoryCreateRequest.of(duplicatedCategory);
+
+        //when
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(mapper.writeValueAsString(request)));
+
+        //then
+        result
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("message").value(ErrorMessage.CATEGORY_DUPLICATED));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시판 이름 변경")

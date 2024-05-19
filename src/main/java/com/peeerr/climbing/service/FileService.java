@@ -1,14 +1,15 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.domain.file.File;
-import com.peeerr.climbing.domain.file.FileRepository;
-import com.peeerr.climbing.domain.post.Post;
-import com.peeerr.climbing.domain.post.PostRepository;
+import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.dto.file.FileStoreDto;
 import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.exception.EntityNotFoundException;
 import com.peeerr.climbing.exception.FileAlreadyDeletedException;
 import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.util.S3FileUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

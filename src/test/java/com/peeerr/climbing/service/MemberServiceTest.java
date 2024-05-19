@@ -5,8 +5,8 @@ import static org.mockito.BDDMockito.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import com.peeerr.climbing.domain.user.Member;
-import com.peeerr.climbing.domain.user.MemberRepository;
+import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
 import com.peeerr.climbing.exception.DuplicationException;

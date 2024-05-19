@@ -1,10 +1,10 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.domain.comment.Comment;
-import com.peeerr.climbing.domain.comment.CommentRepository;
-import com.peeerr.climbing.domain.post.Post;
-import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.entity.Comment;
+import com.peeerr.climbing.repository.CommentRepository;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.dto.comment.CommentCreateRequest;
 import com.peeerr.climbing.dto.comment.CommentEditRequest;
 import com.peeerr.climbing.constant.ErrorMessage;

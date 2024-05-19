@@ -1,18 +1,39 @@
 package com.peeerr.climbing.integration.docs;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.domain.category.CategoryRepository;
-import com.peeerr.climbing.domain.comment.CommentRepository;
-import com.peeerr.climbing.domain.file.FileRepository;
-import com.peeerr.climbing.domain.like.LikeRepository;
-import com.peeerr.climbing.domain.post.Post;
-import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.domain.user.Member;
-import com.peeerr.climbing.domain.user.MemberRepository;
+import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.dto.post.PostCreateRequest;
 import com.peeerr.climbing.dto.post.PostEditRequest;
+import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.repository.CategoryRepository;
+import com.peeerr.climbing.repository.CommentRepository;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.repository.LikeRepository;
+import com.peeerr.climbing.repository.MemberRepository;
+import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.security.MemberPrincipal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,22 +45,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@WithMockUser
 @AutoConfigureMockMvc
 @SpringBootTest
 @AutoConfigureRestDocs(uriScheme = "https", uriHost = "climbing.com", uriPort = 80)
@@ -256,6 +265,40 @@ public class PostDocTest {
                 ));
     }
 
+    @DisplayName("[통합 테스트] - 게시물을 등록하는데, 유효성 검사에 실패하면 예외를 던진다.")
+    @Test
+    void postAddWithInvalidData() throws Exception {
+        //given
+        Member member = memberRepository.save(
+            Member.builder()
+                .username("test")
+                .password(passwordEncoder.encode("test1234"))
+                .email("test@example.com")
+                .build()
+        );
+        Category category = categoryRepository.save(
+            Category.builder()
+                .categoryName("자유 게시판")
+                .build()
+        );
+
+        MemberPrincipal userDetails = new MemberPrincipal(member);
+
+        Long categoryId = category.getId();
+        PostCreateRequest request = PostCreateRequest.of("", "", categoryId);
+
+        //when
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/posts")
+            .with(user(userDetails))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(mapper.writeValueAsString(request)));
+
+        //then
+        result
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR));
+    }
+
     @DisplayName("[통합 테스트/API 문서화] - 게시물 수정")
     @Test
     void postEdit() throws Exception {
@@ -318,6 +361,61 @@ public class PostDocTest {
                                 fieldWithPath("data").description("")
                         )
                 ));
+    }
+
+    @DisplayName("[통합 테스트] - 게시물을 수정하는데, 작성자와 로그인한 유저가 일치하지 않으면 예외를 던진다.")
+    @Test
+    void postEditWithOutPermission() throws Exception {
+        //given
+        Member loginMember = memberRepository.save(
+            Member.builder()
+                .username("test1")
+                .password(passwordEncoder.encode("test1234"))
+                .email("test1@example.com")
+                .build()
+        );
+        Member postOwner = memberRepository.save(
+            Member.builder()
+                .username("test2")
+                .password(passwordEncoder.encode("test1234"))
+                .email("test2@example.com")
+                .build()
+        );
+        Category category = categoryRepository.save(
+            Category.builder()
+                .categoryName("자유 게시판")
+                .build()
+        );
+        Long postId = postRepository.save(
+            Post.builder()
+                .category(category)
+                .member(postOwner)
+                .title("제목 테스트")
+                .content("본문 테스트")
+                .build()
+        ).getId();
+
+        MemberPrincipal userDetails = new MemberPrincipal(loginMember);
+        Category editCategory = categoryRepository.save(
+            Category.builder()
+                .categoryName("후기 게시판")
+                .build()
+        );
+
+        Long categoryId = editCategory.getId();
+        PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
+
+        //when
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/{postId}", postId)
+            .with(user(userDetails))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(mapper.writeValueAsString(request)));
+
+        //then
+        result
+            .andDo(print())
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.message").value(ErrorMessage.NO_ACCESS_PERMISSION));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시물 삭제")

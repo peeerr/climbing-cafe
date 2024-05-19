@@ -1,6 +1,6 @@
 package com.peeerr.climbing.dto.category;
 
-import com.peeerr.climbing.domain.category.Category;
+import com.peeerr.climbing.entity.Category;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

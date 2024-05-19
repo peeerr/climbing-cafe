@@ -1,7 +1,7 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.domain.category.CategoryRepository;
+import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.dto.category.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.CategoryEditRequest;
 import com.peeerr.climbing.dto.category.CategoryResponse;

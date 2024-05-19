@@ -1,6 +1,7 @@
 package com.peeerr.climbing.security;
 
-import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.entity.Member;
+import lombok.Generated;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Generated
 @Getter
 public class MemberPrincipal implements UserDetails, Serializable {
 

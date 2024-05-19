@@ -1,17 +1,18 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.domain.category.CategoryRepository;
-import com.peeerr.climbing.domain.comment.Comment;
-import com.peeerr.climbing.domain.comment.CommentRepository;
-import com.peeerr.climbing.domain.file.FileRepository;
-import com.peeerr.climbing.domain.like.LikeRepository;
-import com.peeerr.climbing.domain.post.Post;
-import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.domain.user.Member;
-import com.peeerr.climbing.domain.user.MemberRepository;
+import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.repository.CategoryRepository;
+import com.peeerr.climbing.entity.Comment;
+import com.peeerr.climbing.repository.CommentRepository;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.repository.LikeRepository;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.comment.CommentCreateRequest;
 import com.peeerr.climbing.dto.comment.CommentEditRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +29,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -188,6 +190,49 @@ public class CommentDocTest {
                                 fieldWithPath("data").description("")
                         )
                 ));
+    }
+
+    @DisplayName("[통합 테스트] - 댓글을 수정하는데, 수정할 댓글이 존재하지 않으면 예외를 던진다.")
+    @Test
+    void commentEditWithNonExistingComment() throws Exception {
+        //given
+        Member member = memberRepository.save(
+            Member.builder()
+                .username("test")
+                .password(passwordEncoder.encode("test1234"))
+                .email("test@example.com")
+                .build()
+        );
+        Category category = categoryRepository.save(
+            Category.builder()
+                .categoryName("자유 게시판")
+                .build()
+        );
+        Post post = postRepository.save(
+            Post.builder()
+                .category(category)
+                .member(member)
+                .title("제목 테스트")
+                .content("본문 테스트")
+                .build()
+        );
+
+        MemberPrincipal userDetails = new MemberPrincipal(member);
+        CommentEditRequest request = CommentEditRequest.of("댓글 수정 테스트");
+        Long postId = post.getId();
+        Long commentId = 1L;
+
+        //when
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/{postId}/comments/{commentId}", postId, commentId)
+            .with(user(userDetails))
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .content(mapper.writeValueAsString(request)));
+
+        //then
+        result
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.message").value(ErrorMessage.COMMENT_NOT_FOUND));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 댓글 삭제")

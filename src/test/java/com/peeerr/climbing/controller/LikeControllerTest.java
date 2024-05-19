@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.LikeService;
 import org.junit.jupiter.api.DisplayName;

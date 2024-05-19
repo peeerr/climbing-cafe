@@ -1,11 +1,11 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.domain.like.Like;
-import com.peeerr.climbing.domain.like.LikeRepository;
-import com.peeerr.climbing.domain.post.Post;
-import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.domain.user.Member;
-import com.peeerr.climbing.domain.user.MemberRepository;
+import com.peeerr.climbing.entity.Like;
+import com.peeerr.climbing.repository.LikeRepository;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.exception.AlreadyExistsException;
 import com.peeerr.climbing.exception.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;

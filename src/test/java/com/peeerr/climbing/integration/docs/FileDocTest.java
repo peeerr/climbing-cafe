@@ -1,16 +1,17 @@
 package com.peeerr.climbing.integration.docs;
 
+import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.domain.category.Category;
-import com.peeerr.climbing.domain.category.CategoryRepository;
-import com.peeerr.climbing.domain.comment.CommentRepository;
-import com.peeerr.climbing.domain.file.File;
-import com.peeerr.climbing.domain.file.FileRepository;
-import com.peeerr.climbing.domain.like.LikeRepository;
-import com.peeerr.climbing.domain.post.Post;
-import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.domain.user.Member;
-import com.peeerr.climbing.domain.user.MemberRepository;
+import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.repository.CategoryRepository;
+import com.peeerr.climbing.repository.CommentRepository;
+import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.repository.LikeRepository;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -151,7 +153,8 @@ public class FileDocTest {
         );
 
         MockMultipartFile file1 = new MockMultipartFile("files", "example1.jpg", "image/jpeg", "image1".getBytes());
-        MockMultipartFile file2 = new MockMultipartFile("files", "example2.jpg", "image/jpeg", "image2".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("files", "example2.jpg", "image/png", "image2".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("files", "example2.jpg", "image/gif", "image3".getBytes());
 
         MemberPrincipal userDetails = new MemberPrincipal(member);
         Long postId = post.getId();
@@ -160,6 +163,7 @@ public class FileDocTest {
         ResultActions result = mockMvc.perform(multipart("/api/posts/{postId}/files", postId)
                 .file(file1)
                 .file(file2)
+                .file(file3)
                 .with(user(userDetails))
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
@@ -182,6 +186,53 @@ public class FileDocTest {
                                 fieldWithPath("data").description("")
                         )
                 ));
+    }
+
+    @DisplayName("[통합 테스트] - 파일을 업로드하는데, 이미지 파일이 아니면 예외를 던진다.")
+    @Test
+    void fileUploadWithInvalidFileType() throws Exception {
+        //given
+        Member member = memberRepository.save(
+            Member.builder()
+                .username("test")
+                .password(passwordEncoder.encode("test1234"))
+                .email("test@example.com")
+                .build()
+        );
+        Category category = categoryRepository.save(
+            Category.builder()
+                .categoryName("자유 게시판")
+                .build()
+        );
+        Post post = postRepository.save(
+            Post.builder()
+                .category(category)
+                .member(member)
+                .title("제목 테스트")
+                .content("본문 테스트")
+                .build()
+        );
+
+        MockMultipartFile file1 = new MockMultipartFile("files", "example1.mp4", "image/mp4", "image1".getBytes());
+        MockMultipartFile file2 = new MockMultipartFile("files", "example2.mp4", "image/mp4", "image2".getBytes());
+        MockMultipartFile file3 = new MockMultipartFile("files", "example2.mp4", "image/mp4", "image3".getBytes());
+
+        MemberPrincipal userDetails = new MemberPrincipal(member);
+        Long postId = post.getId();
+
+        //when
+        ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/posts/{postId}/files", postId)
+            .file(file1)
+            .file(file2)
+            .file(file3)
+            .with(user(userDetails))
+            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+
+        //then
+        result
+            .andDo(print())
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("message").value(ErrorMessage.INVALID_FILE_TYPE));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 파일 삭제 (유저 권한)")

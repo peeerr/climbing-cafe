@@ -11,13 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
-import com.peeerr.climbing.dto.member.MemberLoginRequest;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.MemberService;
-import jakarta.servlet.http.HttpSession;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

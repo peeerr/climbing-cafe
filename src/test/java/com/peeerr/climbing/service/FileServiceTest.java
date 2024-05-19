@@ -1,12 +1,13 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.domain.file.File;
-import com.peeerr.climbing.domain.file.FileRepository;
-import com.peeerr.climbing.domain.post.Post;
-import com.peeerr.climbing.domain.post.PostRepository;
-import com.peeerr.climbing.domain.user.Member;
+import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.exception.EntityNotFoundException;
 import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.util.S3FileUploader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
