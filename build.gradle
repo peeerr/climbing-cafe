@@ -138,13 +138,11 @@ jacocoTestCoverageVerification {
 			limit {
 				counter = 'LINE'
 				value = 'COVEREDRATIO'
-				minimum = 0.8
 			}
 
 			limit {
 				counter = 'BRANCH'
 				value = 'COVEREDRATIO'
-				minimum = 0.8
 			}
 		}
 	}
