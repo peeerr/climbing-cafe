@@ -2,9 +2,7 @@
 
 ## 서버 구조도
 
-![architecture (6)](https://github.com/peeerr/climbing-cafe/assets/103200144/591aa21f-5458-47e8-85da-9548c21f393d)
-
-![architecture (5)](https://github.com/peeerr/climbing-cafe/assets/103200144/7f97f8a2-1f3b-481e-a172-46c881361c47)
+![architecture](https://github.com/peeerr/climbing-cafe/assets/103200144/726f805e-66c5-4af1-a9dd-b9e044080f36)
 
 ## ER 다이어그램
 
