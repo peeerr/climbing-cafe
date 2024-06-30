@@ -22,23 +22,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-//    @PostMapping("/login")
-//    public ResponseEntity<ApiResponse> login(@RequestBody @Valid MemberLoginRequest memberLoginRequest,
-//                                             HttpSession session) {
-//        memberService.login(memberLoginRequest, session);
-//
-//        return ResponseEntity.ok()
-//                .body(ApiResponse.success());
-//    }
-
-//    @PostMapping("/logout")
-//    public ResponseEntity<ApiResponse> logout(HttpSession session) {
-//        memberService.logout(session);
-//
-//        return ResponseEntity.ok()
-//                .body(ApiResponse.success());
-//    }
-
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> memberAdd(@RequestBody @Valid MemberCreateRequest memberCreateRequest,
                                                  BindingResult bindingResult) {

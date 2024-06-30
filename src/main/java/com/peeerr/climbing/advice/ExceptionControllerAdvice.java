@@ -3,6 +3,7 @@ package com.peeerr.climbing.advice;
 import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.exception.*;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,25 +14,25 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 public class ExceptionControllerAdvice {
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> entityNotFound(EntityNotFoundException e) {
+    public ResponseEntity<ApiResponse> entityNotFound(EntityNotFoundException e) {
         return ResponseEntity.badRequest()
                 .body(ApiResponse.of(e.getMessage()));
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<?> validation(ValidationException e) {
+    public ResponseEntity<ApiResponse<Map<String, String>>> validation(ValidationException e) {
         return ResponseEntity.badRequest()
                 .body(ApiResponse.of(e.getMessage(), e.getErrorMap()));
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<?> fileMaxSize(MaxUploadSizeExceededException e) {
+    public ResponseEntity<ApiResponse> fileMaxSize(MaxUploadSizeExceededException e) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
                 .body(ApiResponse.of(ErrorMessage.FILE_SIZE_EXCEEDED));
     }
 
     @ExceptionHandler(DirectoryCreateException.class)
-    public ResponseEntity<?> createDirectory(DirectoryCreateException e) {
+    public ResponseEntity<ApiResponse> createDirectory(DirectoryCreateException e) {
         return ResponseEntity.internalServerError()
                 .body(ApiResponse.of(e.getMessage()));
     }
