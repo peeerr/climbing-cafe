@@ -8,7 +8,7 @@ import com.peeerr.climbing.exception.notfound.FileNotFoundException;
 import com.peeerr.climbing.exception.notfound.PostNotFoundException;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.util.S3FileUploader;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

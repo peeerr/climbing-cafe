@@ -7,7 +7,6 @@ import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.exception.AccessDeniedException;
-import com.peeerr.climbing.util.S3FileUploader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

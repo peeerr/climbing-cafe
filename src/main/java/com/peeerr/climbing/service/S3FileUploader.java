@@ -1,4 +1,4 @@
-package com.peeerr.climbing.util;
+package com.peeerr.climbing.service;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -12,15 +12,16 @@ import com.peeerr.climbing.dto.FileStoreDto;
 import com.peeerr.climbing.exception.FileStoreException;
 import com.peeerr.climbing.exception.InvalidFileTypeException;
 import jakarta.annotation.PostConstruct;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
