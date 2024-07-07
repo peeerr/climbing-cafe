@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.category;
+package com.peeerr.climbing.dto.response;
 
 import com.peeerr.climbing.entity.Category;
 import lombok.AccessLevel;

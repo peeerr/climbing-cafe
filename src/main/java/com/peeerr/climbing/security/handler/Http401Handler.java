@@ -4,7 +4,7 @@ import static jakarta.servlet.http.HttpServletResponse.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.dto.common.ApiResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

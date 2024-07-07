@@ -1,7 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.exception.ValidationException;
 import com.peeerr.climbing.service.FileService;

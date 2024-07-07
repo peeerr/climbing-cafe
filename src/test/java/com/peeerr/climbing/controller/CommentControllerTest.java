@@ -13,8 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.dto.comment.CommentCreateRequest;
-import com.peeerr.climbing.dto.comment.CommentEditRequest;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.CommentService;
 import org.junit.jupiter.api.DisplayName;

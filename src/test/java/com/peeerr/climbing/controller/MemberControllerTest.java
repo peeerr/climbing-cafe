@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.dto.member.MemberCreateRequest;
-import com.peeerr.climbing.dto.member.MemberEditRequest;
+import com.peeerr.climbing.dto.request.MemberCreateRequest;
+import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.MemberService;
 import org.junit.jupiter.api.DisplayName;

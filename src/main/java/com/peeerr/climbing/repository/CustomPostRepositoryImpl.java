@@ -5,8 +5,8 @@ import static com.peeerr.climbing.entity.QMember.member;
 import static com.peeerr.climbing.entity.QPost.post;
 
 import com.peeerr.climbing.entity.QPost;
-import com.peeerr.climbing.dto.post.PostResponse;
-import com.peeerr.climbing.dto.post.PostSearchCondition;
+import com.peeerr.climbing.dto.response.PostResponse;
+import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.post.QPostResponse;
 import com.peeerr.climbing.entity.Post;
 import com.querydsl.core.types.dsl.BooleanExpression;

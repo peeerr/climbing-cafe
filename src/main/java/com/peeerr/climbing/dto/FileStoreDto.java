@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.file;
+package com.peeerr.climbing.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,8 +1,8 @@
 package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.dto.member.MemberCreateRequest;
-import com.peeerr.climbing.dto.member.MemberEditRequest;
+import com.peeerr.climbing.dto.request.MemberCreateRequest;
+import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.ValidationException;

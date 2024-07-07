@@ -1,9 +1,8 @@
-package com.peeerr.climbing.dto.post;
+package com.peeerr.climbing.dto.response;
 
 import com.peeerr.climbing.entity.Comment;
 import com.peeerr.climbing.entity.File;
 import com.peeerr.climbing.entity.Post;
-import com.peeerr.climbing.dto.comment.CommentResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

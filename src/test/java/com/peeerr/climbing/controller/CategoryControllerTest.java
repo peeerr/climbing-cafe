@@ -16,9 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.entity.Category;
-import com.peeerr.climbing.dto.category.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.CategoryEditRequest;
-import com.peeerr.climbing.dto.category.CategoryResponse;
+import com.peeerr.climbing.dto.request.CategoryCreateRequest;
+import com.peeerr.climbing.dto.request.CategoryEditRequest;
+import com.peeerr.climbing.dto.response.CategoryResponse;
 import com.peeerr.climbing.service.CategoryService;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

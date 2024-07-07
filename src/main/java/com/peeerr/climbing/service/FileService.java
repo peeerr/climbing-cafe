@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.dto.file.FileStoreDto;
+import com.peeerr.climbing.dto.FileStoreDto;
 import com.peeerr.climbing.entity.File;
 import com.peeerr.climbing.entity.Post;
 import com.peeerr.climbing.exception.AccessDeniedException;

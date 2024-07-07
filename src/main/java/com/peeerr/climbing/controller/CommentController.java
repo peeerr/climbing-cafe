@@ -1,8 +1,8 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.ApiResponse;
-import com.peeerr.climbing.dto.comment.CommentCreateRequest;
-import com.peeerr.climbing.dto.comment.CommentEditRequest;
+import com.peeerr.climbing.dto.common.ApiResponse;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.CommentService;
 import jakarta.validation.Valid;

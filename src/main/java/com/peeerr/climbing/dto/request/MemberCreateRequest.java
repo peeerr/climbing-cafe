@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.member;
+package com.peeerr.climbing.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

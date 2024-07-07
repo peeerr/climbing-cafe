@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.post;
+package com.peeerr.climbing.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;

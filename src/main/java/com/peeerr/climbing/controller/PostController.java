@@ -1,7 +1,11 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.ApiResponse;
-import com.peeerr.climbing.dto.post.*;
+import com.peeerr.climbing.dto.common.ApiResponse;
+import com.peeerr.climbing.dto.request.PostCreateRequest;
+import com.peeerr.climbing.dto.request.PostEditRequest;
+import com.peeerr.climbing.dto.request.PostSearchCondition;
+import com.peeerr.climbing.dto.response.PostDetailResponse;
+import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.PostService;
 import jakarta.validation.Valid;
@@ -20,9 +24,6 @@ public class PostController {
 
     private final PostService postService;
 
-    /*
-     * 게시판, 검색어로 필터링된 모든 게시물 조회
-     */
     @GetMapping
     public ResponseEntity<ApiResponse> postListFilteredByCategoryIdAndSearchWord(@RequestParam(required = false) final Long categoryId,
                                                                                  @ModelAttribute PostSearchCondition condition,
@@ -33,9 +34,6 @@ public class PostController {
                 .body(ApiResponse.success(posts));
     }
 
-    /*
-     * 게시물 상세조회
-     */
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse> postDetail(@PathVariable Long postId) {
         PostDetailResponse post = postService.getPostWithComments(postId);

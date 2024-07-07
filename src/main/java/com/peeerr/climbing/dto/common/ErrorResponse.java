@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto;
+package com.peeerr.climbing.dto.common;
 
 import java.util.HashMap;
 import java.util.Map;

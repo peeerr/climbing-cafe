@@ -1,7 +1,7 @@
 package com.peeerr.climbing.advice;
 
 import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.dto.ErrorResponse;
+import com.peeerr.climbing.dto.common.ErrorResponse;
 import com.peeerr.climbing.exception.ClimbingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

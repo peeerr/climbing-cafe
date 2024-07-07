@@ -16,11 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.dto.post.PostCreateRequest;
-import com.peeerr.climbing.dto.post.PostDetailResponse;
-import com.peeerr.climbing.dto.post.PostEditRequest;
-import com.peeerr.climbing.dto.post.PostResponse;
-import com.peeerr.climbing.dto.post.PostSearchCondition;
+import com.peeerr.climbing.dto.request.PostCreateRequest;
+import com.peeerr.climbing.dto.response.PostDetailResponse;
+import com.peeerr.climbing.dto.request.PostEditRequest;
+import com.peeerr.climbing.dto.response.PostResponse;
+import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.PostService;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.comment;
+package com.peeerr.climbing.dto.response;
 
 import com.peeerr.climbing.entity.Comment;
 import lombok.AccessLevel;

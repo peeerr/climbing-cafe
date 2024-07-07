@@ -1,7 +1,7 @@
 package com.peeerr.climbing.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.dto.member.MemberLoginRequest;
+import com.peeerr.climbing.dto.request.MemberLoginRequest;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,7 +1,7 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.dto.comment.CommentCreateRequest;
-import com.peeerr.climbing.dto.comment.CommentEditRequest;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.entity.Comment;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.entity.Post;

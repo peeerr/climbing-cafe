@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.peeerr.climbing.dto.file.FileStoreDto;
+import com.peeerr.climbing.dto.FileStoreDto;
 import com.peeerr.climbing.exception.FileStoreException;
 import com.peeerr.climbing.exception.InvalidFileTypeException;
 import jakarta.annotation.PostConstruct;

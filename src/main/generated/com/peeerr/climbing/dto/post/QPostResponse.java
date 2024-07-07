@@ -1,6 +1,6 @@
 package com.peeerr.climbing.dto.post;
 
-import com.querydsl.core.types.dsl.*;
+import com.peeerr.climbing.dto.response.PostResponse;
 
 import com.querydsl.core.types.ConstructorExpression;
 import javax.annotation.processing.Generated;

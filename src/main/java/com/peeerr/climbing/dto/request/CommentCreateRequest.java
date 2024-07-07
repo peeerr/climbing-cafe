@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.comment;
+package com.peeerr.climbing.dto.request;
 
 import com.peeerr.climbing.entity.Comment;
 import com.peeerr.climbing.entity.Post;
