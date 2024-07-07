@@ -6,8 +6,8 @@ import com.peeerr.climbing.entity.Post;
 import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.repository.MemberRepository;
-import com.peeerr.climbing.exception.AlreadyExistsException;
-import com.peeerr.climbing.exception.EntityNotFoundException;
+import com.peeerr.climbing.exception.already.AlreadyExistsLikeException;
+import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -87,7 +87,7 @@ class LikeServiceTest {
         given(likeRepository.existsLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(true);
 
         //when & then
-        assertThrows(AlreadyExistsException.class, () -> likeService.like(1L, 1L));
+        assertThrows(AlreadyExistsLikeException.class, () -> likeService.like(1L, 1L));
 
         then(likeRepository.existsLikeByMemberIdAndPostId(anyLong(), anyLong()));
     }
@@ -118,7 +118,7 @@ class LikeServiceTest {
         given(likeRepository.findLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class, () -> likeService.unlike(1L, 1L));
+        assertThrows(CategoryNotFoundException.class, () -> likeService.unlike(1L, 1L));
 
         then(likeRepository).should().findLikeByMemberIdAndPostId(anyLong(), anyLong());
     }

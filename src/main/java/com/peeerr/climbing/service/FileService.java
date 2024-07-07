@@ -1,22 +1,20 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.File;
-import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.entity.Post;
-import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.dto.file.FileStoreDto;
-import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.FileAlreadyDeletedException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.exception.AccessDeniedException;
+import com.peeerr.climbing.exception.notfound.FileNotFoundException;
+import com.peeerr.climbing.exception.notfound.PostNotFoundException;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.util.S3FileUploader;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -29,7 +27,7 @@ public class FileService {
     @Transactional
     public List<String> getFilesByPostId(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new PostNotFoundException());
 
         List<String> filenames = new ArrayList<>();
         for (File file : post.getFiles()) {
@@ -42,10 +40,10 @@ public class FileService {
     @Transactional
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new PostNotFoundException());
 
         if (!post.getMember().getId().equals(loginId)) {
-            throw new UnauthorizedAccessException(ErrorMessage.NO_ACCESS_PERMISSION);
+            throw new AccessDeniedException();
         }
 
         List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
@@ -68,14 +66,14 @@ public class FileService {
     @Transactional
     public void updateDeleteFlag(Long loginId, Long fileId) {
         File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.FILE_NOT_FOUND));
+                .orElseThrow(() -> new FileNotFoundException());
 
         if (!file.getPost().getMember().getId().equals(loginId)) {
-            throw new UnauthorizedAccessException(ErrorMessage.NO_ACCESS_PERMISSION);
+            throw new AccessDeniedException();
         }
 
         if (file.isDeleted()) {
-            throw new FileAlreadyDeletedException(ErrorMessage.FILE_ALREADY_DELETED);
+            throw new FileNotFoundException();
         }
 
         file.changeDeleted(true);

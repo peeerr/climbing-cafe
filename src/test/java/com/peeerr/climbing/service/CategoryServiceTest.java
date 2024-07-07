@@ -5,8 +5,8 @@ import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.dto.category.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.CategoryEditRequest;
 import com.peeerr.climbing.dto.category.CategoryResponse;
-import com.peeerr.climbing.exception.DuplicationException;
-import com.peeerr.climbing.exception.EntityNotFoundException;
+import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
+import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,7 +71,7 @@ class CategoryServiceTest {
         given(categoryRepository.findCategoryByCategoryName(request.getCategoryName())).willReturn(Optional.of(category));
 
         //when & then
-        assertThrows(DuplicationException.class,
+        assertThrows(AlreadyExistsCategoryException.class,
                 () -> categoryService.addCategory(request));
 
         then(categoryRepository).should().findCategoryByCategoryName(request.getCategoryName());
@@ -107,7 +107,7 @@ class CategoryServiceTest {
         given(categoryRepository.findCategoryByCategoryName(request.getCategoryName())).willReturn(Optional.of(category));
 
         //when & then
-        assertThrows(DuplicationException.class,
+        assertThrows(AlreadyExistsCategoryException.class,
                 () -> categoryService.editCategory(categoryId, request));
 
         then(categoryRepository).should().findCategoryByCategoryName(request.getCategoryName());
@@ -123,7 +123,7 @@ class CategoryServiceTest {
         given(categoryRepository.findById(categoryId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.editCategory(categoryId, request));
 
         then(categoryRepository).should().findById(categoryId);
@@ -156,7 +156,7 @@ class CategoryServiceTest {
         given(categoryRepository.findById(categoryId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
                 () -> categoryService.removeCategory(categoryId));
 
         then(categoryRepository).should().findById(categoryId);

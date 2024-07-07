@@ -1,20 +1,18 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.Category;
-import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.dto.category.CategoryCreateRequest;
 import com.peeerr.climbing.dto.category.CategoryEditRequest;
 import com.peeerr.climbing.dto.category.CategoryResponse;
-import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.exception.DuplicationException;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
+import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.repository.CategoryRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -45,7 +43,7 @@ public class CategoryService {
         validateDuplicateCategory(request.getCategoryName());
 
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new CategoryNotFoundException());
 
         category.changeCategoryName(request.getCategoryName());
     }
@@ -53,7 +51,7 @@ public class CategoryService {
     @Transactional
     public void removeCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new CategoryNotFoundException());
 
         categoryRepository.delete(category);
     }
@@ -62,7 +60,7 @@ public class CategoryService {
         Optional<Category> category = categoryRepository.findCategoryByCategoryName(categoryName);
 
         category.ifPresent(foundCategory -> {
-            throw new DuplicationException(ErrorMessage.CATEGORY_DUPLICATED);
+            throw new AlreadyExistsCategoryException();
         });
     }
 

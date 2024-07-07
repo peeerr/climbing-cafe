@@ -1,20 +1,21 @@
 package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
-import com.peeerr.climbing.exception.DuplicationException;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.ValidationException;
+import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
+import com.peeerr.climbing.exception.already.AlreadyExistsEmailException;
+import com.peeerr.climbing.exception.already.AlreadyExistsUsernameException;
+import com.peeerr.climbing.exception.notfound.MemberNotFoundException;
+import com.peeerr.climbing.repository.MemberRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -22,25 +23,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
-
-//    @Transactional(readOnly = true)
-//    public void login(MemberLoginRequest request, HttpSession session) {
-//        Member member = memberRepository.findMemberByEmail(request.getEmail())
-//                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
-//
-//        if (!passwordEncoder.matches(request.getPassword(), member.getPassword())) {
-//            throw new ValidationException(ErrorMessage.INVALID_PASSWORD);
-//        }
-//
-//        MemberPrincipal userDetails = new MemberPrincipal(member);
-//
-//        session.setAttribute("MEMBER", userDetails);
-//        session.setMaxInactiveInterval(1800);
-//    }
-
-//    public void logout(HttpSession session) {
-//        session.removeAttribute("MEMBER");
-//    }
 
     @Transactional
     public void addMember(MemberCreateRequest request) {
@@ -62,10 +44,10 @@ public class MemberService {
     @Transactional
     public void editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new MemberNotFoundException());
 
         if (!member.getId().equals(loginId)) {
-            throw new UnauthorizedAccessException(ErrorMessage.NO_ACCESS_PERMISSION);
+            throw new AccessDeniedException();
         }
 
         if (!member.getUsername().equals(request.getUsername())) {
@@ -84,10 +66,10 @@ public class MemberService {
         Optional<Member> existingEmail = memberRepository.findMemberByEmail(email);
 
         existingUsername.ifPresent(foundMember -> {
-            throw new DuplicationException(ErrorMessage.USERNAME_DUPLICATED);
+            throw new AlreadyExistsCategoryException();
         });
         existingEmail.ifPresent(foundMember -> {
-            throw new DuplicationException(ErrorMessage.EMAIL_DUPLICATED);
+            throw new AlreadyExistsCategoryException();
         });
     }
 
@@ -95,7 +77,7 @@ public class MemberService {
         Optional<Member> existingUsername = memberRepository.findMemberByUsername(username);
 
         existingUsername.ifPresent(foundMember -> {
-            throw new DuplicationException(ErrorMessage.USERNAME_DUPLICATED);
+            throw new AlreadyExistsUsernameException();
         });
     }
 
@@ -103,7 +85,7 @@ public class MemberService {
         Optional<Member> existingEmail = memberRepository.findMemberByEmail(email);
 
         existingEmail.ifPresent(foundMember -> {
-            throw new DuplicationException(ErrorMessage.EMAIL_DUPLICATED);
+            throw new AlreadyExistsEmailException();
         });
     }
 

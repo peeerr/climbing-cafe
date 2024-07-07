@@ -163,7 +163,7 @@ public class CategoryDocTest {
         result
             .andDo(print())
             .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("message").value(ErrorMessage.CATEGORY_DUPLICATED));
+            .andExpect(jsonPath("message").value(ErrorMessage.ALREADY_EXISTS_CATEGORY));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시판 이름 변경")

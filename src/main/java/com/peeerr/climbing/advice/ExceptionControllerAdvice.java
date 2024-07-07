@@ -1,9 +1,8 @@
 package com.peeerr.climbing.advice;
 
-import com.peeerr.climbing.dto.ApiResponse;
 import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.exception.*;
-import java.util.Map;
+import com.peeerr.climbing.dto.ErrorResponse;
+import com.peeerr.climbing.exception.ClimbingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,64 +12,40 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 @RestControllerAdvice
 public class ExceptionControllerAdvice {
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ApiResponse> entityNotFound(EntityNotFoundException e) {
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.of(e.getMessage()));
-    }
+    @ExceptionHandler(ClimbingException.class)
+    public ResponseEntity<ErrorResponse> validation(ClimbingException e) {
+        int statusCode = e.getStatusCode();
 
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ApiResponse<Map<String, String>>> validation(ValidationException e) {
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.of(e.getMessage(), e.getErrorMap()));
+        ErrorResponse response = ErrorResponse.builder()
+            .code(statusCode)
+            .message(e.getMessage())
+            .validation(e.getValidation())
+            .build();
+
+        return ResponseEntity.status(statusCode)
+            .body(response);
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ApiResponse> fileMaxSize(MaxUploadSizeExceededException e) {
+    public ResponseEntity<ErrorResponse> fileMaxSize() {
+        ErrorResponse response = ErrorResponse.builder()
+            .code(HttpStatus.PAYLOAD_TOO_LARGE.value())
+            .message(ErrorMessage.FILE_SIZE_EXCEEDED)
+            .build();
+
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body(ApiResponse.of(ErrorMessage.FILE_SIZE_EXCEEDED));
+                .body(response);
     }
 
-    @ExceptionHandler(DirectoryCreateException.class)
-    public ResponseEntity<ApiResponse> createDirectory(DirectoryCreateException e) {
-        return ResponseEntity.internalServerError()
-                .body(ApiResponse.of(e.getMessage()));
-    }
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> exception(Exception e) {
+        ErrorResponse response = ErrorResponse.builder()
+            .code(500)
+            .message(e.getMessage())
+            .build();
 
-    @ExceptionHandler(FileStoreException.class)
-    public ResponseEntity<ApiResponse> storeFile(FileStoreException e) {
-        return ResponseEntity.internalServerError()
-                .body(ApiResponse.of(e.getMessage()));
-    }
-
-    @ExceptionHandler(FileAlreadyDeletedException.class)
-    public ResponseEntity<ApiResponse> fileAlreadyDeleted(FileAlreadyDeletedException e) {
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.of(e.getMessage()));
-    }
-
-    @ExceptionHandler(DuplicationException.class)
-    public ResponseEntity<ApiResponse> duplicated(DuplicationException e) {
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.of(e.getMessage()));
-    }
-
-    @ExceptionHandler(UnauthorizedAccessException.class)
-    public ResponseEntity<ApiResponse> unAuthorizedAccess(UnauthorizedAccessException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(ApiResponse.of(e.getMessage()));
-    }
-
-    @ExceptionHandler(AlreadyExistsException.class)
-    public ResponseEntity<ApiResponse> alreadyExists(AlreadyExistsException e) {
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.of(e.getMessage()));
-    }
-
-    @ExceptionHandler(FileTypeException.class)
-    public ResponseEntity<ApiResponse> fileType(FileTypeException e) {
-        return ResponseEntity.badRequest()
-                .body(ApiResponse.of(e.getMessage()));
+        return ResponseEntity.status(500)
+            .body(response);
     }
 
 }

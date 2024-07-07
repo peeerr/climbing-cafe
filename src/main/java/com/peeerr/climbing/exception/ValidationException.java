@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.util.Map;
 
 @Getter
-public class ValidationException extends RuntimeException {
+public class ValidationException extends ClimbingException {
 
     private Map<String, String> errorMap;
 
@@ -16,6 +16,11 @@ public class ValidationException extends RuntimeException {
     public ValidationException(String message, Map errorMap) {
         super(message);
         this.errorMap = errorMap;
+    }
+
+    @Override
+    public int getStatusCode() {
+        return 400;
     }
 
 }

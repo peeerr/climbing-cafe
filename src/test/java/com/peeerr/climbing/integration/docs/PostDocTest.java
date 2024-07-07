@@ -415,7 +415,7 @@ public class PostDocTest {
         result
             .andDo(print())
             .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.NO_ACCESS_PERMISSION));
+            .andExpect(jsonPath("$.message").value(ErrorMessage.ACCESS_DENIED));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시물 삭제")

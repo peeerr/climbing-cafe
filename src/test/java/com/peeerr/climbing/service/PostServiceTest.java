@@ -10,8 +10,8 @@ import com.peeerr.climbing.dto.post.PostEditRequest;
 import com.peeerr.climbing.dto.post.PostSearchCondition;
 import com.peeerr.climbing.dto.post.PostResponse;
 import com.peeerr.climbing.dto.post.PostDetailResponse;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.exception.AccessDeniedException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -167,7 +167,8 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class, () -> postService.editPost(postId, request, loginId));
+        assertThrows(
+            AccessDeniedException.class, () -> postService.editPost(postId, request, loginId));
         then(postRepository).should().findById(postId);
     }
 
@@ -182,7 +183,7 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
                 () -> postService.editPost(postId, request, loginId));
 
         then(postRepository).should().findById(postId);
@@ -220,7 +221,7 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class, () -> postService.removePost(postId, loginId));
+        assertThrows(AccessDeniedException.class, () -> postService.removePost(postId, loginId));
         then(postRepository).should().findById(postId);
     }
 
@@ -234,7 +235,7 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
                 () -> postService.removePost(postId, loginId));
 
         then(postRepository).should().findById(postId);

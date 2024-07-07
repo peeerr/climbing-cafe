@@ -9,9 +9,9 @@ import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.member.MemberCreateRequest;
 import com.peeerr.climbing.dto.member.MemberEditRequest;
-import com.peeerr.climbing.exception.DuplicationException;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
+import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.ValidationException;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
@@ -71,7 +71,7 @@ class MemberServiceTest {
         given(memberRepository.findMemberByEmail(request.getEmail())).willReturn(Optional.of(member));
 
         //when & then
-        assertThrows(DuplicationException.class, () -> memberService.addMember(request));
+        assertThrows(AlreadyExistsCategoryException.class, () -> memberService.addMember(request));
 
         then(memberRepository).should().findMemberByUsername(request.getUsername());
         then(memberRepository).should().findMemberByEmail(request.getEmail());
@@ -121,7 +121,8 @@ class MemberServiceTest {
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class, () -> memberService.editMember(memberId, request, loginId));
+        assertThrows(
+            AccessDeniedException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
@@ -137,7 +138,8 @@ class MemberServiceTest {
         given(memberRepository.findById(memberId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class, () -> memberService.editMember(memberId, request, loginId));
+        assertThrows(
+            CategoryNotFoundException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
@@ -163,7 +165,8 @@ class MemberServiceTest {
         given(memberRepository.findMemberByUsername(editUsername)).willReturn(Optional.of(member));
 
         //when & then
-        assertThrows(DuplicationException.class, () -> memberService.editMember(memberId, request, loginId));
+        assertThrows(
+            AlreadyExistsCategoryException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
         then(memberRepository).should().findMemberByUsername(editUsername);
@@ -190,7 +193,8 @@ class MemberServiceTest {
         given(memberRepository.findMemberByEmail(editEmail)).willReturn(Optional.of(member));
 
         //when & then
-        assertThrows(DuplicationException.class, () -> memberService.editMember(memberId, request, loginId));
+        assertThrows(
+            AlreadyExistsCategoryException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
         then(memberRepository).should().findMemberByEmail(editEmail);

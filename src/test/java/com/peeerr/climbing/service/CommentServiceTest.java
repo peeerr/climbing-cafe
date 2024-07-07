@@ -11,8 +11,8 @@ import com.peeerr.climbing.dto.comment.CommentEditRequest;
 import com.peeerr.climbing.entity.Comment;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.entity.Post;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import java.util.Optional;
@@ -71,7 +71,7 @@ class CommentServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
             () -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
@@ -91,7 +91,7 @@ class CommentServiceTest {
         given(commentRepository.findById(parentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
             () -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
@@ -130,7 +130,7 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
             () -> commentService.editComment(commentId, request, loginId));
 
         //then
@@ -152,7 +152,8 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class, () -> commentService.editComment(commentId, request, loginId));
+        assertThrows(
+            AccessDeniedException.class, () -> commentService.editComment(commentId, request, loginId));
         then(commentRepository).should().findById(commentId);
     }
 
@@ -188,7 +189,7 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(CategoryNotFoundException.class,
             () -> commentService.removeComment(commentId, loginId));
 
         //then
@@ -209,7 +210,8 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class, () -> commentService.removeComment(commentId, loginId));
+        assertThrows(
+            AccessDeniedException.class, () -> commentService.removeComment(commentId, loginId));
         then(commentRepository).should().findById(commentId);
     }
 
