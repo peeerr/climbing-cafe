@@ -32,7 +32,7 @@ public class Member extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private MemberRole role = MemberRole.USER;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts = new ArrayList<>();
 
     @Builder

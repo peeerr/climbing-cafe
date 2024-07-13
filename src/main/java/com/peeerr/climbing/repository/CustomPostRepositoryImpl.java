@@ -1,25 +1,26 @@
 package com.peeerr.climbing.repository;
 
-import static com.peeerr.climbing.entity.QCategory.category;
-import static com.peeerr.climbing.entity.QMember.member;
-import static com.peeerr.climbing.entity.QPost.post;
-
-import com.peeerr.climbing.entity.QPost;
-import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
-import com.peeerr.climbing.dto.post.QPostResponse;
+import com.peeerr.climbing.dto.response.PostResponse;
+import com.peeerr.climbing.dto.response.QPostResponse;
 import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.entity.QPost;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static com.peeerr.climbing.entity.QCategory.category;
+import static com.peeerr.climbing.entity.QMember.member;
+import static com.peeerr.climbing.entity.QPost.post;
 
 public class CustomPostRepositoryImpl implements CustomPostRepository {
 

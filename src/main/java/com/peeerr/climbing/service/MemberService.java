@@ -11,11 +11,12 @@ import com.peeerr.climbing.exception.already.AlreadyExistsEmailException;
 import com.peeerr.climbing.exception.already.AlreadyExistsUsernameException;
 import com.peeerr.climbing.exception.notfound.MemberNotFoundException;
 import com.peeerr.climbing.repository.MemberRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -66,7 +67,7 @@ public class MemberService {
         Optional<Member> existingEmail = memberRepository.findMemberByEmail(email);
 
         existingUsername.ifPresent(foundMember -> {
-            throw new AlreadyExistsCategoryException();
+            throw new AlreadyExistsUsernameException();
         });
         existingEmail.ifPresent(foundMember -> {
             throw new AlreadyExistsCategoryException();
@@ -87,6 +88,12 @@ public class MemberService {
         existingEmail.ifPresent(foundMember -> {
             throw new AlreadyExistsEmailException();
         });
+    }
+
+    public void test(Long memberId) {
+        Member member = memberRepository.findById(memberId).get();
+
+        memberRepository.delete(member);
     }
 
 }
