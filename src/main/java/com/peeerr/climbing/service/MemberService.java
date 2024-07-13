@@ -6,7 +6,6 @@ import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.ValidationException;
-import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
 import com.peeerr.climbing.exception.already.AlreadyExistsEmailException;
 import com.peeerr.climbing.exception.already.AlreadyExistsUsernameException;
 import com.peeerr.climbing.exception.notfound.MemberNotFoundException;
@@ -15,8 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -28,10 +25,7 @@ public class MemberService {
     @Transactional
     public void addMember(MemberCreateRequest request) {
         validateDuplicateUser(request.getUsername(), request.getEmail());
-
-        if (!request.getPassword().equals(request.getCheckPassword())) {
-            throw new ValidationException(ErrorMessage.PASSWORD_CONFIRMATION_FAILED);
-        }
+        validatePassword(request.getPassword(), request.getCheckPassword());
 
         Member member = Member.builder()
                 .username(request.getUsername())
@@ -45,11 +39,9 @@ public class MemberService {
     @Transactional
     public void editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberNotFoundException());
+                .orElseThrow(MemberNotFoundException::new);
 
-        if (!member.getId().equals(loginId)) {
-            throw new AccessDeniedException();
-        }
+        validateUserAccess(member, loginId);
 
         if (!member.getUsername().equals(request.getUsername())) {
             validateDuplicateUsername(request.getUsername());
@@ -62,38 +54,35 @@ public class MemberService {
         }
     }
 
-    public void validateDuplicateUser(String username, String email) {
-        Optional<Member> existingUsername = memberRepository.findMemberByUsername(username);
-        Optional<Member> existingEmail = memberRepository.findMemberByEmail(email);
-
-        existingUsername.ifPresent(foundMember -> {
-            throw new AlreadyExistsUsernameException();
-        });
-        existingEmail.ifPresent(foundMember -> {
-            throw new AlreadyExistsCategoryException();
-        });
+    private void validateDuplicateUser(String username, String email) {
+        validateDuplicateUsername(username);
+        validateDuplicateEmail(email);
     }
 
-    public void validateDuplicateUsername(String username) {
-        Optional<Member> existingUsername = memberRepository.findMemberByUsername(username);
-
-        existingUsername.ifPresent(foundMember -> {
-            throw new AlreadyExistsUsernameException();
-        });
+    private void validateDuplicateUsername(String username) {
+        memberRepository.findMemberByUsername(username)
+                .ifPresent(foundMember -> {
+                    throw new AlreadyExistsUsernameException();
+                });
     }
 
-    public void validateDuplicateEmail(String email) {
-        Optional<Member> existingEmail = memberRepository.findMemberByEmail(email);
-
-        existingEmail.ifPresent(foundMember -> {
-            throw new AlreadyExistsEmailException();
-        });
+    private void validateDuplicateEmail(String email) {
+        memberRepository.findMemberByEmail(email)
+                .ifPresent(foundMember -> {
+                    throw new AlreadyExistsEmailException();
+                });
     }
 
-    public void test(Long memberId) {
-        Member member = memberRepository.findById(memberId).get();
+    private void validatePassword(String password, String checkPassword) {
+        if (!password.equals(checkPassword)) {
+            throw new ValidationException(ErrorMessage.PASSWORD_CONFIRMATION_FAILED);
+        }
+    }
 
-        memberRepository.delete(member);
+    private void validateUserAccess(Member member, Long loginId) {
+        if (!member.getId().equals(loginId)) {
+            throw new AccessDeniedException();
+        }
     }
 
 }

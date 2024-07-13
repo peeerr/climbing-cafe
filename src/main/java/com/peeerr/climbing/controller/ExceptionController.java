@@ -5,7 +5,6 @@ import com.peeerr.climbing.dto.common.ErrorResponse;
 import com.peeerr.climbing.exception.ClimbingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,9 +20,8 @@ public class ExceptionController {
                 .message(ErrorMessage.VALIDATION_ERROR)
                 .build();
 
-        for (FieldError fieldError : e.getFieldErrors()) {
-            response.addValidation(fieldError.getField(), fieldError.getDefaultMessage());
-        }
+        e.getFieldErrors().forEach(filedError ->
+                response.addValidation(filedError.getField(), filedError.getDefaultMessage()));
 
         return ResponseEntity.badRequest()
                 .body(response);

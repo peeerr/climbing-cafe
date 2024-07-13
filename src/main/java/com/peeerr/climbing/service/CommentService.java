@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class CommentService {
@@ -23,23 +25,22 @@ public class CommentService {
 
     @Transactional
     public void addComment(Long postId, CommentCreateRequest request, Member member) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new PostNotFoundException());
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
 
-        if (request.getParentId() == null) {
-            commentRepository.save(request.toEntity(post, member, null));
-        } else {
-            Comment parentComment = commentRepository.findById(request.getParentId()).orElseThrow(
-                    () -> new CommentNotFoundException());
-
-            commentRepository.save(request.toEntity(post, member, parentComment));
-        }
+        Optional.ofNullable(request.getParentId())
+                .map(parentId -> commentRepository.findById(parentId)
+                        .orElseThrow(CommentNotFoundException::new))
+                .ifPresentOrElse(
+                        parentComment -> commentRepository.save(request.toEntity(post, member, parentComment)),
+                        () -> commentRepository.save(request.toEntity(post, member, null))
+                );
     }
 
     @Transactional
     public void editComment(Long commentId, CommentEditRequest request, Long loginId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new CommentNotFoundException());
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
 
         if (!comment.getMember().getId().equals(loginId)) {
             throw new AccessDeniedException();
@@ -50,8 +51,8 @@ public class CommentService {
 
     @Transactional
     public void removeComment(Long commentId, Long loginId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(
-                () -> new CommentNotFoundException());
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(CommentNotFoundException::new);
 
         if (!comment.getMember().getId().equals(loginId)) {
             throw new AccessDeniedException();

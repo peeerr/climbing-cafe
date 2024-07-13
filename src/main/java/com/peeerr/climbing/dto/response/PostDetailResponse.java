@@ -39,7 +39,7 @@ public class PostDetailResponse {
                 post.getMember().getUsername(),
                 post.getFiles().stream()
                         .map(File::getFilePath)
-                        .collect(Collectors.toList()),
+                        .toList(),
                 organizeComments(post.getComments()),
                 post.getCreateDate(),
                 post.getModifyDate());

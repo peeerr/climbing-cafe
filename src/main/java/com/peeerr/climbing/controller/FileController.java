@@ -1,9 +1,9 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.exception.ValidationException;
+import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,14 +34,8 @@ public class FileController {
     public ResponseEntity<Void> fileUpload(@PathVariable Long postId,
                                            @RequestParam List<MultipartFile> files,
                                            @AuthenticationPrincipal MemberPrincipal userDetails) {
-        if (files == null) {
+        if (files == null || files.isEmpty() || files.stream().anyMatch(file -> file == null || file.isEmpty())) {
             throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
-        } else {
-            for (MultipartFile file : files) {
-                if (file.isEmpty()) {
-                    throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
-                }
-            }
         }
 
         Long loginId = userDetails.getMember().getId();

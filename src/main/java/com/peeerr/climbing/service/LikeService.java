@@ -24,8 +24,8 @@ public class LikeService {
 
     @Transactional(readOnly = true)
     public Long getLikeCount(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new PostNotFoundException());
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
 
         return likeRepository.countLikeByPost(post);
     }
@@ -36,10 +36,10 @@ public class LikeService {
             throw new AlreadyExistsLikeException();
         }
 
-        Post post = postRepository.findById(postId).orElseThrow(
-                () -> new PostNotFoundException());
-        Member member = memberRepository.findById(loginId).orElseThrow(
-                () -> new MemberNotFoundException());
+        Post post = postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::new);
+        Member member = memberRepository.findById(loginId)
+                .orElseThrow(MemberNotFoundException::new);
 
         Like like = Like.builder()
                 .member(member)
@@ -51,8 +51,8 @@ public class LikeService {
 
     @Transactional
     public void unlike(Long loginId, Long postId) {
-        Like like = likeRepository.findLikeByMemberIdAndPostId(loginId, postId).orElseThrow(
-                () -> new LikeNotFoundException());
+        Like like = likeRepository.findLikeByMemberIdAndPostId(loginId, postId)
+                .orElseThrow(LikeNotFoundException::new);
 
         likeRepository.delete(like);
     }

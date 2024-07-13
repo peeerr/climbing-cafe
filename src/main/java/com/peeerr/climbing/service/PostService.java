@@ -1,10 +1,10 @@
 package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.dto.request.PostCreateRequest;
-import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.request.PostEditRequest;
-import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
+import com.peeerr.climbing.dto.response.PostDetailResponse;
+import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.entity.Category;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.entity.Post;
@@ -35,7 +35,7 @@ public class PostService {
     public PostDetailResponse getPostWithComments(Long postId) {
         return postRepository.findPostById(postId)
                 .map(PostDetailResponse::from)
-                .orElseThrow(() -> new PostNotFoundException());
+                .orElseThrow(PostNotFoundException::new);
     }
 
     @Transactional
@@ -53,7 +53,7 @@ public class PostService {
     @Transactional
     public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException());
+                .orElseThrow(PostNotFoundException::new);
 
         if (!post.getMember().getId().equals(loginId)) {
             throw new AccessDeniedException();
@@ -67,7 +67,7 @@ public class PostService {
     @Transactional
     public void removePost(Long postId, Long loginId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException());
+                .orElseThrow(PostNotFoundException::new);
 
         if (!post.getMember().getId().equals(loginId)) {
             throw new AccessDeniedException();
@@ -78,7 +78,7 @@ public class PostService {
 
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new CategoryNotFoundException());
+                .orElseThrow(CategoryNotFoundException::new);
     }
 
 }

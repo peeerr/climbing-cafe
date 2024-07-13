@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
@@ -33,7 +32,7 @@ public class CommentResponse {
         List<CommentResponse> childComments = new ArrayList<>();
         childComments.stream()
                 .sorted(childCommentComparator)
-                .collect(Collectors.toList());
+                .toList();
 
         return new CommentResponse(comment.getId(),
                 comment.getContent(),

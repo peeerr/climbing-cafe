@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,25 +51,16 @@ public class S3FileUploader {
     }
 
     public List<String> getFiles(List<String> filenames) {
-        List<String> fileUrls = new ArrayList<>();
-
-        for (String filename : filenames) {
-            fileUrls.add(amazonS3.getUrl(bucket, filename).toString());
-        }
-
-        return fileUrls;
+        return filenames.stream()
+                .map(filename -> amazonS3.getUrl(bucket, filename).toString())
+                .toList();
     }
 
     public List<FileStoreDto> uploadFiles(List<MultipartFile> files) {
-        List<FileStoreDto> storeFiles = new ArrayList<>();
-
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                storeFiles.add(uploadFile(file));
-            }
-        }
-
-        return storeFiles;
+        return files.stream()
+                .filter(file -> !file.isEmpty())
+                .map(this::uploadFile)
+                .toList();
     }
 
     public FileStoreDto uploadFile(MultipartFile file) {
@@ -95,17 +85,8 @@ public class S3FileUploader {
 //        amazonS3.deleteObject(bucket, fileName);
 //    }
 //
-//    public String checkFileType(MultipartFile file) throws IOException {
-//        String fileType = new Tika().detect(file.getInputStream());
-//
-//        if (MediaType.IMAGE_JPEG_VALUE.equals(fileType) || MediaType.IMAGE_PNG_VALUE.equals(fileType) || MediaType.IMAGE_GIF_VALUE.equals(fileType)) {
-//            return fileType;
-//        }
-//
-//        throw new FileTypeException(ErrorMessage.INVALID_FILE_TYPE);
-//    }
 
-    public String checkFileType(MultipartFile file) throws IOException {
+    private String checkFileType(MultipartFile file) throws IOException {
         String fileType = file.getContentType();
 
         if (fileType != null && (fileType.equals(MediaType.IMAGE_JPEG_VALUE)

@@ -8,14 +8,12 @@ import com.peeerr.climbing.exception.notfound.FileNotFoundException;
 import com.peeerr.climbing.exception.notfound.PostNotFoundException;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.PostRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -28,12 +26,11 @@ public class FileService {
     @Transactional
     public List<String> getFilesByPostId(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException());
+                .orElseThrow(PostNotFoundException::new);
 
-        List<String> filenames = new ArrayList<>();
-        for (File file : post.getFiles()) {
-            filenames.add(file.getFilename());
-        }
+        List<String> filenames = post.getFiles().stream()
+                .map(File::getFilename)
+                .toList();
 
         return s3FileUploader.getFiles(filenames);
     }
@@ -41,7 +38,7 @@ public class FileService {
     @Transactional
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException());
+                .orElseThrow(PostNotFoundException::new);
 
         if (!post.getMember().getId().equals(loginId)) {
             throw new AccessDeniedException();
@@ -49,17 +46,14 @@ public class FileService {
 
         List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
 
-        List<File> fileEntities = new ArrayList<>();
-        for (FileStoreDto fileDto : storedFiles) {
-            File fileEntity = File.builder()
-                    .post(post)
-                    .originalFilename(fileDto.getOriginalFilename())
-                    .filename(fileDto.getFilename())
-                    .filePath(fileDto.getFilePath())
-                    .build();
-
-            fileEntities.add(fileEntity);
-        }
+        List<File> fileEntities = storedFiles.stream()
+                .map(fileDto -> File.builder()
+                        .post(post)
+                        .originalFilename(fileDto.getOriginalFilename())
+                        .filename(fileDto.getFilename())
+                        .filePath(fileDto.getFilePath())
+                        .build())
+                .toList();
 
         fileRepository.saveAll(fileEntities);
     }
@@ -67,7 +61,7 @@ public class FileService {
     @Transactional
     public void updateDeleteFlag(Long loginId, Long fileId) {
         File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new FileNotFoundException());
+                .orElseThrow(FileNotFoundException::new);
 
         if (!file.getPost().getMember().getId().equals(loginId)) {
             throw new AccessDeniedException();

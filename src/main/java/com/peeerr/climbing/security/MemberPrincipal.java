@@ -8,9 +8,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
 
 @Generated
 @Getter
@@ -24,10 +23,7 @@ public class MemberPrincipal implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(member.getRole().toString()));
-
-        return authorities;
+        return Collections.singletonList(new SimpleGrantedAuthority(member.getRole().toString()));
     }
 
     @Override
