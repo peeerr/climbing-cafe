@@ -2,7 +2,7 @@ package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.FileRepository;

@@ -22,7 +22,7 @@ import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.LikeRepository;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;

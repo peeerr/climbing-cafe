@@ -1,4 +1,4 @@
-package com.peeerr.climbing.entity;
+package com.peeerr.climbing.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -15,7 +15,7 @@ import com.querydsl.core.types.Path;
 @Generated("com.querydsl.codegen.DefaultSupertypeSerializer")
 public class QBaseEntity extends EntityPathBase<BaseEntity> {
 
-    private static final long serialVersionUID = 1991612554L;
+    private static final long serialVersionUID = -278134519L;
 
     public static final QBaseEntity baseEntity = new QBaseEntity("baseEntity");
 

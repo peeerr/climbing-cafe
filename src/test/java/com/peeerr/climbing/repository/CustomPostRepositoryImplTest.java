@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Post;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import java.util.Optional;

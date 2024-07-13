@@ -1,8 +1,8 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.Like;
-import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Like;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.exception.already.AlreadyExistsLikeException;
 import com.peeerr.climbing.exception.notfound.LikeNotFoundException;
 import com.peeerr.climbing.exception.notfound.MemberNotFoundException;

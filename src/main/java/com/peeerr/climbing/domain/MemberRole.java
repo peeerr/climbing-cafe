@@ -1,4 +1,4 @@
-package com.peeerr.climbing.entity;
+package com.peeerr.climbing.domain;
 
 import lombok.Getter;
 

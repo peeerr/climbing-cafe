@@ -1,10 +1,10 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.request.PostEditRequest;
 import com.peeerr.climbing.dto.request.PostSearchCondition;

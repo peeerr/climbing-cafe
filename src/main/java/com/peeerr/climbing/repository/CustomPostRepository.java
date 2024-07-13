@@ -1,6 +1,6 @@
 package com.peeerr.climbing.repository;
 
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.response.PostResponse;
 import org.springframework.data.domain.Page;

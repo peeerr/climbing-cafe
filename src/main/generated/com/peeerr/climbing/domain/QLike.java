@@ -1,4 +1,4 @@
-package com.peeerr.climbing.entity;
+package com.peeerr.climbing.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,55 +11,50 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QFile is a Querydsl query type for File
+ * QLike is a Querydsl query type for Like
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QFile extends EntityPathBase<File> {
+public class QLike extends EntityPathBase<Like> {
 
-    private static final long serialVersionUID = 142305394L;
+    private static final long serialVersionUID = -1034906036L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QFile file = new QFile("file");
+    public static final QLike like = new QLike("like1");
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
 
-    public final BooleanPath deleted = createBoolean("deleted");
-
-    public final StringPath filename = createString("filename");
-
-    public final StringPath filePath = createString("filePath");
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final QMember member;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
-    public final StringPath originalFilename = createString("originalFilename");
-
     public final QPost post;
 
-    public QFile(String variable) {
-        this(File.class, forVariable(variable), INITS);
+    public QLike(String variable) {
+        this(Like.class, forVariable(variable), INITS);
     }
 
-    public QFile(Path<? extends File> path) {
+    public QLike(Path<? extends Like> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QFile(PathMetadata metadata) {
+    public QLike(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QFile(PathMetadata metadata, PathInits inits) {
-        this(File.class, metadata, inits);
+    public QLike(PathMetadata metadata, PathInits inits) {
+        this(Like.class, metadata, inits);
     }
 
-    public QFile(Class<? extends File> type, PathMetadata metadata, PathInits inits) {
+    public QLike(Class<? extends Like> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
         this.post = inits.isInitialized("post") ? new QPost(forProperty("post"), inits.get("post")) : null;
     }
 

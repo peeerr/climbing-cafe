@@ -1,6 +1,6 @@
 package com.peeerr.climbing.repository;
 
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

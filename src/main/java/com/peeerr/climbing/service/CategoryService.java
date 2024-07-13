@@ -3,7 +3,7 @@ package com.peeerr.climbing.service;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.response.CategoryResponse;
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.repository.CategoryRepository;

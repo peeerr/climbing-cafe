@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.request.PostEditRequest;

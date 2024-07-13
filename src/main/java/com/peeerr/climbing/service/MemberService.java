@@ -3,7 +3,7 @@ package com.peeerr.climbing.service;
 import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.ValidationException;
 import com.peeerr.climbing.exception.already.AlreadyExistsEmailException;

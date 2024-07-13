@@ -1,6 +1,6 @@
 package com.peeerr.climbing.repository;
 
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

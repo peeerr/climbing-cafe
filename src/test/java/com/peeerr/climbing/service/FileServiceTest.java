@@ -1,10 +1,10 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.domain.File;
 import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import org.junit.jupiter.api.DisplayName;

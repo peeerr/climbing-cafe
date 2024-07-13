@@ -8,9 +8,9 @@ import static org.mockito.BDDMockito.willDoNothing;
 
 import com.peeerr.climbing.dto.request.CommentCreateRequest;
 import com.peeerr.climbing.dto.request.CommentEditRequest;
-import com.peeerr.climbing.entity.Comment;
-import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Comment;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.repository.CommentRepository;

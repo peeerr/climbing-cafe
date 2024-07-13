@@ -1,8 +1,8 @@
 package com.peeerr.climbing.repository;
 
-import com.peeerr.climbing.entity.Category;
-import com.peeerr.climbing.entity.Post;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Category;
+import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

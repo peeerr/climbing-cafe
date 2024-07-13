@@ -1,4 +1,4 @@
-package com.peeerr.climbing.entity;
+package com.peeerr.climbing.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,45 +11,39 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QMember is a Querydsl query type for Member
+ * QCategory is a Querydsl query type for Category
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QMember extends EntityPathBase<Member> {
+public class QCategory extends EntityPathBase<Category> {
 
-    private static final long serialVersionUID = -486729712L;
+    private static final long serialVersionUID = 565461299L;
 
-    public static final QMember member = new QMember("member1");
+    public static final QCategory category = new QCategory("category");
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
+    public final StringPath categoryName = createString("categoryName");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createDate = _super.createDate;
-
-    public final StringPath email = createString("email");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> modifyDate = _super.modifyDate;
 
-    public final StringPath password = createString("password");
-
     public final ListPath<Post, QPost> posts = this.<Post, QPost>createList("posts", Post.class, QPost.class, PathInits.DIRECT2);
 
-    public final EnumPath<MemberRole> role = createEnum("role", MemberRole.class);
-
-    public final StringPath username = createString("username");
-
-    public QMember(String variable) {
-        super(Member.class, forVariable(variable));
+    public QCategory(String variable) {
+        super(Category.class, forVariable(variable));
     }
 
-    public QMember(Path<? extends Member> path) {
+    public QCategory(Path<? extends Category> path) {
         super(path.getType(), path.getMetadata());
     }
 
-    public QMember(PathMetadata metadata) {
-        super(Member.class, metadata);
+    public QCategory(PathMetadata metadata) {
+        super(Category.class, metadata);
     }
 
 }

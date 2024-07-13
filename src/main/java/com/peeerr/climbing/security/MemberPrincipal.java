@@ -1,6 +1,6 @@
 package com.peeerr.climbing.security;
 
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import lombok.Generated;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
