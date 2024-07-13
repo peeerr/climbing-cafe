@@ -49,17 +49,27 @@ import org.springframework.test.web.servlet.ResultActions;
 @ExtendWith(RestDocumentationExtension.class)
 public class MemberDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private MemberService memberService;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private ObjectMapper mapper;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void cleanup() {

@@ -25,32 +25,32 @@ public class CategoryController {
         List<CategoryResponse> categories = categoryService.getCategories();
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(categories));
+                .body(ApiResponse.of(categories));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest) {
+    public ResponseEntity<Void> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest) {
         categoryService.addCategory(categoryCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success());
+                .build();
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse> categoryEdit(@PathVariable Long categoryId,
-                                                    @RequestBody @Valid CategoryEditRequest categoryEditRequest) {
+    public ResponseEntity<Void> categoryEdit(@PathVariable Long categoryId,
+                                             @RequestBody @Valid CategoryEditRequest categoryEditRequest) {
         categoryService.editCategory(categoryId, categoryEditRequest);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse> categoryRemove(@PathVariable Long categoryId) {
+    public ResponseEntity<Void> categoryRemove(@PathVariable Long categoryId) {
         categoryService.removeCategory(categoryId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
 }

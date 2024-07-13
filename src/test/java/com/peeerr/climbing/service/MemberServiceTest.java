@@ -13,7 +13,9 @@ import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.ValidationException;
+
 import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -122,7 +124,7 @@ class MemberServiceTest {
 
         //when & then
         assertThrows(
-            AccessDeniedException.class, () -> memberService.editMember(memberId, request, loginId));
+                AccessDeniedException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
@@ -139,7 +141,7 @@ class MemberServiceTest {
 
         //when & then
         assertThrows(
-            CategoryNotFoundException.class, () -> memberService.editMember(memberId, request, loginId));
+                CategoryNotFoundException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
@@ -166,7 +168,7 @@ class MemberServiceTest {
 
         //when & then
         assertThrows(
-            AlreadyExistsCategoryException.class, () -> memberService.editMember(memberId, request, loginId));
+                AlreadyExistsCategoryException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
         then(memberRepository).should().findMemberByUsername(editUsername);
@@ -194,7 +196,7 @@ class MemberServiceTest {
 
         //when & then
         assertThrows(
-            AlreadyExistsCategoryException.class, () -> memberService.editMember(memberId, request, loginId));
+                AlreadyExistsCategoryException.class, () -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
         then(memberRepository).should().findMemberByEmail(editEmail);

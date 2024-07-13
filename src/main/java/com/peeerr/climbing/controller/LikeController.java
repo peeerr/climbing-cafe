@@ -21,25 +21,25 @@ public class LikeController {
         Long likeCount = likeService.getLikeCount(postId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(likeCount));
+                .body(ApiResponse.of(likeCount));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> likeAdd(@PathVariable Long postId,
-                                               @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> likeAdd(@PathVariable Long postId,
+                                        @AuthenticationPrincipal MemberPrincipal userDetails) {
         likeService.like(userDetails.getMember().getId(), postId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success());
+                .build();
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse> likeRemove(@PathVariable Long postId,
-                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> likeRemove(@PathVariable Long postId,
+                                           @AuthenticationPrincipal MemberPrincipal userDetails) {
         likeService.unlike(userDetails.getMember().getId(), postId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
 }

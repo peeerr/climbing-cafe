@@ -32,8 +32,10 @@ import org.springframework.test.web.servlet.ResultActions;
 @SpringBootTest
 class CommentControllerTest {
 
-    @Autowired private MockMvc mvc;
-    @Autowired private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mvc;
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private CommentService commentService;

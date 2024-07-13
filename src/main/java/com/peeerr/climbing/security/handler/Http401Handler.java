@@ -1,18 +1,19 @@
 package com.peeerr.climbing.security.handler;
 
-import static jakarta.servlet.http.HttpServletResponse.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.dto.common.ApiResponse;
+import com.peeerr.climbing.dto.common.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
+
+import java.io.IOException;
+
+import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 @RequiredArgsConstructor
 public class Http401Handler implements AuthenticationEntryPoint {
@@ -27,7 +28,12 @@ public class Http401Handler implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
 
-        mapper.writeValue(response.getWriter(), ApiResponse.of(ErrorMessage.LOGIN_REQUIRED));
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(SC_UNAUTHORIZED)
+                .message(ErrorMessage.LOGIN_REQUIRED)
+                .build();
+
+        mapper.writeValue(response.getWriter(), errorResponse);
     }
 
 }

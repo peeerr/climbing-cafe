@@ -9,7 +9,6 @@
 :sectanchors:
 
 [[api]]
-
 == 게시물 API
 
 === GET /api/posts [게시물 조회]

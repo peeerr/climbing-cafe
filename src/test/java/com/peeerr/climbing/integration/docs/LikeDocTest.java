@@ -48,15 +48,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class LikeDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void cleanup() {
@@ -67,7 +75,7 @@ public class LikeDocTest {
         memberRepository.deleteAll();
         categoryRepository.deleteAll();
     }
-    
+
     @DisplayName("[통합 테스트/API 문서화] - 게시물에 달린 좋아요 개수 조회")
     @Test
     void likeCount() throws Exception {

@@ -6,7 +6,9 @@ import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.entity.Post;
 import com.querydsl.core.types.dsl.BooleanExpression;
+
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,8 +21,10 @@ import org.springframework.data.domain.Pageable;
 @DataJpaTest
 public class CustomPostRepositoryImplTest {
 
-    @Autowired private CustomPostRepositoryImpl customPostRepository;
-    @Autowired private PostRepository postRepository;
+    @Autowired
+    private CustomPostRepositoryImpl customPostRepository;
+    @Autowired
+    private PostRepository postRepository;
 
     @BeforeEach
     public void cleanup() {

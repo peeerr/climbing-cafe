@@ -15,7 +15,9 @@ import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.PostRepository;
+
 import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -72,7 +74,7 @@ class CommentServiceTest {
 
         //when & then
         assertThrows(CategoryNotFoundException.class,
-            () -> commentService.addComment(postId, request, member));
+                () -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
     }
@@ -92,7 +94,7 @@ class CommentServiceTest {
 
         //when & then
         assertThrows(CategoryNotFoundException.class,
-            () -> commentService.addComment(postId, request, member));
+                () -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
         then(commentRepository).should().findById(parentId);
@@ -131,7 +133,7 @@ class CommentServiceTest {
 
         //when & then
         assertThrows(CategoryNotFoundException.class,
-            () -> commentService.editComment(commentId, request, loginId));
+                () -> commentService.editComment(commentId, request, loginId));
 
         //then
         then(commentRepository).should().findById(commentId);
@@ -153,7 +155,7 @@ class CommentServiceTest {
 
         //when & then
         assertThrows(
-            AccessDeniedException.class, () -> commentService.editComment(commentId, request, loginId));
+                AccessDeniedException.class, () -> commentService.editComment(commentId, request, loginId));
         then(commentRepository).should().findById(commentId);
     }
 
@@ -190,7 +192,7 @@ class CommentServiceTest {
 
         //when & then
         assertThrows(CategoryNotFoundException.class,
-            () -> commentService.removeComment(commentId, loginId));
+                () -> commentService.removeComment(commentId, loginId));
 
         //then
         then(commentRepository).should().findById(commentId);
@@ -211,7 +213,7 @@ class CommentServiceTest {
 
         //when & then
         assertThrows(
-            AccessDeniedException.class, () -> commentService.removeComment(commentId, loginId));
+                AccessDeniedException.class, () -> commentService.removeComment(commentId, loginId));
         then(commentRepository).should().findById(commentId);
     }
 

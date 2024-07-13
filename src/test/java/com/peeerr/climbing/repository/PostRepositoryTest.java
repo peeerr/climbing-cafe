@@ -23,9 +23,12 @@ import static org.assertj.core.api.Assertions.tuple;
 @DataJpaTest
 class PostRepositoryTest {
 
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @BeforeEach

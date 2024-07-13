@@ -18,7 +18,9 @@ import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.entity.Member;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
+
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,17 +100,17 @@ class FileControllerTest {
 
         //when
         ResultActions result = mvc.perform(multipart("/api/posts/{postId}/files", postId)
-            .file("files", null)
-            .with(csrf())
-            .with(user(userDetails))
-            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+                .file("files", null)
+                .with(csrf())
+                .with(user(userDetails))
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         //then
         result
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-            .andExpect(jsonPath("$.data.files").value(ErrorMessage.NO_FILE_SELECTED));
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
+                .andExpect(jsonPath("$.data.files").value(ErrorMessage.NO_FILE_SELECTED));
     }
 
     @DisplayName("파일 id 를 받아 삭제 처리한다. (유저 권한 기준)")

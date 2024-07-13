@@ -23,7 +23,9 @@ import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.PostService;
+
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

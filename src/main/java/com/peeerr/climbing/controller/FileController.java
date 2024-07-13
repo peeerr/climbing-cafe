@@ -27,17 +27,17 @@ public class FileController {
         List<String> fileUrls = fileService.getFilesByPostId(postId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(fileUrls));
+                .body(ApiResponse.of(fileUrls));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> fileUpload(@PathVariable Long postId,
-                                                  @RequestParam List<MultipartFile> files,
-                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> fileUpload(@PathVariable Long postId,
+                                           @RequestParam List<MultipartFile> files,
+                                           @AuthenticationPrincipal MemberPrincipal userDetails) {
         if (files == null) {
             throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
         } else {
-            for (MultipartFile file: files) {
+            for (MultipartFile file : files) {
                 if (file.isEmpty()) {
                     throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
                 }
@@ -48,18 +48,18 @@ public class FileController {
         fileService.uploadFiles(loginId, postId, files);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success());
+                .build();
     }
 
     @DeleteMapping("/{fileId}")
-    public ResponseEntity<ApiResponse> fileUpdateDeleteFlag(@PathVariable String postId,
-                                                            @PathVariable Long fileId,
-                                                            @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> fileUpdateDeleteFlag(@PathVariable String postId,
+                                                     @PathVariable Long fileId,
+                                                     @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         fileService.updateDeleteFlag(loginId, fileId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
 }

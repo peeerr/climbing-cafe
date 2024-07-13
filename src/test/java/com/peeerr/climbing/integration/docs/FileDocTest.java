@@ -48,15 +48,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class FileDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void cleanup() {
@@ -193,24 +201,24 @@ public class FileDocTest {
     void fileUploadWithInvalidFileType() throws Exception {
         //given
         Member member = memberRepository.save(
-            Member.builder()
-                .username("test")
-                .password(passwordEncoder.encode("test1234"))
-                .email("test@example.com")
-                .build()
+                Member.builder()
+                        .username("test")
+                        .password(passwordEncoder.encode("test1234"))
+                        .email("test@example.com")
+                        .build()
         );
         Category category = categoryRepository.save(
-            Category.builder()
-                .categoryName("자유 게시판")
-                .build()
+                Category.builder()
+                        .categoryName("자유 게시판")
+                        .build()
         );
         Post post = postRepository.save(
-            Post.builder()
-                .category(category)
-                .member(member)
-                .title("제목 테스트")
-                .content("본문 테스트")
-                .build()
+                Post.builder()
+                        .category(category)
+                        .member(member)
+                        .title("제목 테스트")
+                        .content("본문 테스트")
+                        .build()
         );
 
         MockMultipartFile file1 = new MockMultipartFile("files", "example1.mp4", "image/mp4", "image1".getBytes());
@@ -222,17 +230,17 @@ public class FileDocTest {
 
         //when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/posts/{postId}/files", postId)
-            .file(file1)
-            .file(file2)
-            .file(file3)
-            .with(user(userDetails))
-            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+                .file(file1)
+                .file(file2)
+                .file(file3)
+                .with(user(userDetails))
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         //then
         result
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("message").value(ErrorMessage.INVALID_FILE_TYPE));
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message").value(ErrorMessage.INVALID_FILE_TYPE));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 파일 삭제 (유저 권한)")

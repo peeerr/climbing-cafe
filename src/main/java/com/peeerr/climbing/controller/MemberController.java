@@ -1,6 +1,5 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.security.MemberPrincipal;
@@ -20,22 +19,22 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> memberAdd(@RequestBody @Valid MemberCreateRequest memberCreateRequest) {
+    public ResponseEntity<Void> memberAdd(@RequestBody @Valid MemberCreateRequest memberCreateRequest) {
         memberService.addMember(memberCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success());
+                .build();
     }
 
     @PutMapping("/{memberId}")
-    public ResponseEntity<ApiResponse> memberEdit(@PathVariable Long memberId,
-                                                  @RequestBody @Valid MemberEditRequest memberEditRequest,
-                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> memberEdit(@PathVariable Long memberId,
+                                           @RequestBody @Valid MemberEditRequest memberEditRequest,
+                                           @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         memberService.editMember(memberId, memberEditRequest, loginId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
 }

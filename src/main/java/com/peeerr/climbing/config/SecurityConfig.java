@@ -34,26 +34,26 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(c -> c.disable())
-            .formLogin(f -> f.disable())
-            .httpBasic(h -> h.disable())
-            .addFilterBefore(memberAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-            .logout(logout -> logout
-                .logoutUrl("/api/members/logout")
-                .logoutSuccessHandler(new LogoutSuccessHandler(objectMapper)))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST, "/api/members/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+                .csrf(c -> c.disable())
+                .formLogin(f -> f.disable())
+                .httpBasic(h -> h.disable())
+                .addFilterBefore(memberAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/api/members/logout")
+                        .logoutSuccessHandler(new LogoutSuccessHandler()))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/members/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
 //                        .requestMatchers("/api/categories").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/posts/{postId}/files/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/posts/{postId}/likes/**").permitAll()
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll())
-            .exceptionHandling(ex -> ex
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/{postId}/files/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/posts/{postId}/likes/**").permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll())
+                .exceptionHandling(ex -> ex
 //                        .accessDeniedHandler(new Http403Handler(objectMapper))
-                .authenticationEntryPoint(new Http401Handler(objectMapper)));
+                        .authenticationEntryPoint(new Http401Handler(objectMapper)));
 
         return http.build();
     }
@@ -63,7 +63,7 @@ public class SecurityConfig {
         MemberAuthenticationFilter filter = new MemberAuthenticationFilter(defaultFilterProcessesUrl, objectMapper);
 
         filter.setAuthenticationManager(authenticationManager());
-        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler(objectMapper));
+        filter.setAuthenticationSuccessHandler(new LoginSuccessHandler());
         filter.setAuthenticationFailureHandler(new LoginFailureHandler(objectMapper));
         filter.setSecurityContextRepository(new HttpSessionSecurityContextRepository());
 

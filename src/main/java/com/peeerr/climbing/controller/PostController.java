@@ -31,7 +31,7 @@ public class PostController {
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(posts));
+                .body(ApiResponse.of(posts));
     }
 
     @GetMapping("/{postId}")
@@ -39,37 +39,37 @@ public class PostController {
         PostDetailResponse post = postService.getPostWithComments(postId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(post));
+                .body(ApiResponse.of(post));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,
-                                               @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> postAdd(@RequestBody @Valid PostCreateRequest postCreateRequest,
+                                        @AuthenticationPrincipal MemberPrincipal userDetails) {
         postService.addPost(postCreateRequest, userDetails.getMember());
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success());
+                .build();
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<ApiResponse> postEdit(@PathVariable Long postId,
-                                                @RequestBody @Valid PostEditRequest postEditRequest,
-                                                @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> postEdit(@PathVariable Long postId,
+                                         @RequestBody @Valid PostEditRequest postEditRequest,
+                                         @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         postService.editPost(postId, postEditRequest, loginId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<ApiResponse> postRemove(@PathVariable Long postId,
-                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> postRemove(@PathVariable Long postId,
+                                           @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
         postService.removePost(postId, loginId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
 }

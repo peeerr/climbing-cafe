@@ -31,8 +31,10 @@ import org.springframework.test.web.servlet.ResultActions;
 @SpringBootTest
 class MemberControllerTest {
 
-    @Autowired private MockMvc mvc;
-    @Autowired private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mvc;
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private MemberService memberService;

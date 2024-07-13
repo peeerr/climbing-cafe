@@ -13,7 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class CategoryRepositoryTest {
 
-    @Autowired private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @DisplayName("카테고리 하나를 저장한다.")
     @Test

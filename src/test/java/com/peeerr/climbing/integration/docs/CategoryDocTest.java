@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
+
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,15 +47,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class CategoryDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private ObjectMapper mapper;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void cleanup() {
@@ -77,14 +86,14 @@ public class CategoryDocTest {
         categoryRepository.saveAll(
                 List.of(
                         Category.builder()
-                            .categoryName(categoryName1)
-                            .build(),
+                                .categoryName(categoryName1)
+                                .build(),
                         Category.builder()
-                            .categoryName(categoryName2)
-                            .build(),
+                                .categoryName(categoryName2)
+                                .build(),
                         Category.builder()
-                            .categoryName(categoryName3)
-                            .build()
+                                .categoryName(categoryName3)
+                                .build()
                 )
         );
 
@@ -147,23 +156,23 @@ public class CategoryDocTest {
         String duplicatedCategory = "자유 게시판";
 
         categoryRepository.save(
-            Category.builder()
-                .categoryName(duplicatedCategory)
-                .build()
+                Category.builder()
+                        .categoryName(duplicatedCategory)
+                        .build()
         );
 
         CategoryCreateRequest request = CategoryCreateRequest.of(duplicatedCategory);
 
         //when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(mapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
 
         //then
         result
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("message").value(ErrorMessage.ALREADY_EXISTS_CATEGORY));
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message").value(ErrorMessage.ALREADY_EXISTS_CATEGORY));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시판 이름 변경")

@@ -55,16 +55,25 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ExtendWith(RestDocumentationExtension.class)
 public class PostDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private ObjectMapper mapper;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
     public void cleanup() {
@@ -270,16 +279,16 @@ public class PostDocTest {
     void postAddWithInvalidData() throws Exception {
         //given
         Member member = memberRepository.save(
-            Member.builder()
-                .username("test")
-                .password(passwordEncoder.encode("test1234"))
-                .email("test@example.com")
-                .build()
+                Member.builder()
+                        .username("test")
+                        .password(passwordEncoder.encode("test1234"))
+                        .email("test@example.com")
+                        .build()
         );
         Category category = categoryRepository.save(
-            Category.builder()
-                .categoryName("자유 게시판")
-                .build()
+                Category.builder()
+                        .categoryName("자유 게시판")
+                        .build()
         );
 
         MemberPrincipal userDetails = new MemberPrincipal(member);
@@ -289,14 +298,14 @@ public class PostDocTest {
 
         //when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/posts")
-            .with(user(userDetails))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(mapper.writeValueAsString(request)));
+                .with(user(userDetails))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
 
         //then
         result
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시물 수정")
@@ -368,38 +377,38 @@ public class PostDocTest {
     void postEditWithOutPermission() throws Exception {
         //given
         Member loginMember = memberRepository.save(
-            Member.builder()
-                .username("test1")
-                .password(passwordEncoder.encode("test1234"))
-                .email("test1@example.com")
-                .build()
+                Member.builder()
+                        .username("test1")
+                        .password(passwordEncoder.encode("test1234"))
+                        .email("test1@example.com")
+                        .build()
         );
         Member postOwner = memberRepository.save(
-            Member.builder()
-                .username("test2")
-                .password(passwordEncoder.encode("test1234"))
-                .email("test2@example.com")
-                .build()
+                Member.builder()
+                        .username("test2")
+                        .password(passwordEncoder.encode("test1234"))
+                        .email("test2@example.com")
+                        .build()
         );
         Category category = categoryRepository.save(
-            Category.builder()
-                .categoryName("자유 게시판")
-                .build()
+                Category.builder()
+                        .categoryName("자유 게시판")
+                        .build()
         );
         Long postId = postRepository.save(
-            Post.builder()
-                .category(category)
-                .member(postOwner)
-                .title("제목 테스트")
-                .content("본문 테스트")
-                .build()
+                Post.builder()
+                        .category(category)
+                        .member(postOwner)
+                        .title("제목 테스트")
+                        .content("본문 테스트")
+                        .build()
         ).getId();
 
         MemberPrincipal userDetails = new MemberPrincipal(loginMember);
         Category editCategory = categoryRepository.save(
-            Category.builder()
-                .categoryName("후기 게시판")
-                .build()
+                Category.builder()
+                        .categoryName("후기 게시판")
+                        .build()
         );
 
         Long categoryId = editCategory.getId();
@@ -407,15 +416,15 @@ public class PostDocTest {
 
         //when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/{postId}", postId)
-            .with(user(userDetails))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(mapper.writeValueAsString(request)));
+                .with(user(userDetails))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
 
         //then
         result
-            .andDo(print())
-            .andExpect(status().isUnauthorized())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.ACCESS_DENIED));
+                .andDo(print())
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value(ErrorMessage.ACCESS_DENIED));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시물 삭제")

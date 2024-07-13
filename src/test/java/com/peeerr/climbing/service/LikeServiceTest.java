@@ -25,9 +25,12 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class LikeServiceTest {
 
-    @Mock private LikeRepository likeRepository;
-    @Mock private PostRepository postRepository;
-    @Mock private MemberRepository memberRepository;
+    @Mock
+    private LikeRepository likeRepository;
+    @Mock
+    private PostRepository postRepository;
+    @Mock
+    private MemberRepository memberRepository;
 
     @InjectMocks
     private LikeService likeService;

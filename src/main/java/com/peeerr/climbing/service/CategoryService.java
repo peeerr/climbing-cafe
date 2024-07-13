@@ -7,9 +7,11 @@ import com.peeerr.climbing.entity.Category;
 import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.repository.CategoryRepository;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

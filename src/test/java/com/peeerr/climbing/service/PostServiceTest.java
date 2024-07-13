@@ -168,7 +168,7 @@ class PostServiceTest {
 
         //when & then
         assertThrows(
-            AccessDeniedException.class, () -> postService.editPost(postId, request, loginId));
+                AccessDeniedException.class, () -> postService.editPost(postId, request, loginId));
         then(postRepository).should().findById(postId);
     }
 
