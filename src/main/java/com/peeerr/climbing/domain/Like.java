@@ -1,12 +1,13 @@
 package com.peeerr.climbing.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "likes", uniqueConstraints = {
         @UniqueConstraint(
                 name = "like_uk",
