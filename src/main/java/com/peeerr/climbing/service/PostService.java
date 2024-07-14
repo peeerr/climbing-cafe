@@ -55,9 +55,7 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        if (!post.getMember().getId().equals(loginId)) {
-            throw new AccessDeniedException();
-        }
+        checkOwner(loginId, post.getMember().getId());
 
         post.changeTitle(postEditRequest.getTitle());
         post.changeContent(postEditRequest.getContent());
@@ -69,11 +67,15 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        if (!post.getMember().getId().equals(loginId)) {
-            throw new AccessDeniedException();
-        }
+        checkOwner(loginId, post.getMember().getId());
 
         postRepository.delete(post);
+    }
+
+    private void checkOwner(Long loginId, Long ownerId) {
+        if (!loginId.equals(ownerId)) {
+            throw new AccessDeniedException();
+        }
     }
 
     private Category getCategory(Long categoryId) {

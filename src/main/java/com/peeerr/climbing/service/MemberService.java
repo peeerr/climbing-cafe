@@ -1,11 +1,9 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
-import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.exception.AccessDeniedException;
-import com.peeerr.climbing.exception.ValidationException;
 import com.peeerr.climbing.exception.already.AlreadyExistsEmailException;
 import com.peeerr.climbing.exception.already.AlreadyExistsUsernameException;
 import com.peeerr.climbing.exception.notfound.MemberNotFoundException;
@@ -24,9 +22,6 @@ public class MemberService {
 
     @Transactional
     public void addMember(MemberCreateRequest request) {
-        validateDuplicateUser(request.getUsername(), request.getEmail());
-        validatePassword(request.getPassword(), request.getCheckPassword());
-
         Member member = Member.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -41,22 +36,24 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);
 
-        validateUserAccess(member, loginId);
+        checkOwner(loginId, memberId);
 
-        if (!member.getUsername().equals(request.getUsername())) {
-            validateDuplicateUsername(request.getUsername());
-            member.changeUsername(request.getUsername());
-        }
+        updateUsernameIfNecessary(member, request.getUsername());
+        updateEmailIfNecessary(member, request.getEmail());
+    }
 
-        if (!member.getEmail().equals(request.getEmail())) {
-            validateDuplicateEmail(request.getEmail());
-            member.changeEmail(request.getEmail());
+    private void updateUsernameIfNecessary(Member member, String newUsername) {
+        if (!member.getUsername().equals(newUsername)) {
+            validateDuplicateUsername(newUsername);
+            member.changeUsername(newUsername);
         }
     }
 
-    private void validateDuplicateUser(String username, String email) {
-        validateDuplicateUsername(username);
-        validateDuplicateEmail(email);
+    private void updateEmailIfNecessary(Member member, String newEmail) {
+        if (!member.getEmail().equals(newEmail)) {
+            validateDuplicateEmail(newEmail);
+            member.changeEmail(newEmail);
+        }
     }
 
     private void validateDuplicateUsername(String username) {
@@ -73,14 +70,8 @@ public class MemberService {
                 });
     }
 
-    private void validatePassword(String password, String checkPassword) {
-        if (!password.equals(checkPassword)) {
-            throw new ValidationException(ErrorMessage.PASSWORD_CONFIRMATION_FAILED);
-        }
-    }
-
-    private void validateUserAccess(Member member, Long loginId) {
-        if (!member.getId().equals(loginId)) {
+    private void checkOwner(Long loginId, Long ownerId) {
+        if (!loginId.equals(ownerId)) {
             throw new AccessDeniedException();
         }
     }

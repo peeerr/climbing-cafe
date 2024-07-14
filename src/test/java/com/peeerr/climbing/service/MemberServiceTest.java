@@ -9,7 +9,6 @@ import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
-import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.ValidationException;

@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.peeerr.climbing.constant.ErrorMessage.CONTENT_NOT_BLANK;
+
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
@@ -18,7 +20,7 @@ public class CommentCreateRequest {
     private Long parentId;
 
     @Size(min = 1, max = 500)
-    @NotBlank(message = "내용을 입력해 주세요.")
+    @NotBlank(message = CONTENT_NOT_BLANK)
     private String content;
 
     public Comment toEntity(Post post, Member member, Comment parentComment) {

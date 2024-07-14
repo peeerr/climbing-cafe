@@ -1,10 +1,10 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.dto.request.CommentCreateRequest;
-import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.domain.Comment;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.exception.AccessDeniedException;
 import com.peeerr.climbing.exception.notfound.CommentNotFoundException;
 import com.peeerr.climbing.exception.notfound.PostNotFoundException;
@@ -42,9 +42,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!comment.getMember().getId().equals(loginId)) {
-            throw new AccessDeniedException();
-        }
+        checkOwner(loginId, comment.getMember().getId());
 
         comment.changeContent(request.getContent());
     }
@@ -54,11 +52,15 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
 
-        if (!comment.getMember().getId().equals(loginId)) {
-            throw new AccessDeniedException();
-        }
+        checkOwner(loginId, comment.getMember().getId());
 
         commentRepository.delete(comment);
+    }
+
+    private void checkOwner(Long loginId, Long ownerId) {
+        if (!loginId.equals(ownerId)) {
+            throw new AccessDeniedException();
+        }
     }
 
 }

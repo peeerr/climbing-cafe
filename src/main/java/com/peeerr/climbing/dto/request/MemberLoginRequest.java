@@ -5,14 +5,17 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import static com.peeerr.climbing.constant.ErrorMessage.EMAIL_NOT_BLANK;
+import static com.peeerr.climbing.constant.ErrorMessage.PASSWORD_NOT_BLANK;
+
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class MemberLoginRequest {
 
-    @NotBlank(message = "이메일 아이디를 입력해 주세요.")
+    @NotBlank(message = EMAIL_NOT_BLANK)
     private String email;
 
-    @NotBlank(message = "비밀번호를 입력해 주세요.")
+    @NotBlank(message = PASSWORD_NOT_BLANK)
     private String password;
 
     public static MemberLoginRequest of(String email, String password) {

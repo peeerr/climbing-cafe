@@ -3,7 +3,12 @@ package com.peeerr.climbing.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import static com.peeerr.climbing.constant.ErrorMessage.*;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -11,13 +16,13 @@ import lombok.*;
 public class PostCreateRequest {
 
     @Size(min = 1, max = 100)
-    @NotBlank(message = "제목을 입력해 주세요.")
+    @NotBlank(message = TITLE_NOT_BLANK)
     private String title;
 
-    @NotBlank(message = "본문을 입력해 주세요.")
+    @NotBlank(message = CONTENT_NOT_BLANK)
     private String content;
 
-    @NotNull(message = "카테고리를 선택해 주세요.")
+    @NotNull(message = CATEGORY_NOT_NULL)
     private Long categoryId;
 
     public static PostCreateRequest of(String title, String content, Long categoryId) {

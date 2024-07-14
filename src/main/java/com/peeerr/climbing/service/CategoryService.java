@@ -1,10 +1,9 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.response.CategoryResponse;
-import com.peeerr.climbing.domain.Category;
-import com.peeerr.climbing.exception.already.AlreadyExistsCategoryException;
 import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
 import com.peeerr.climbing.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +27,6 @@ public class CategoryService {
 
     @Transactional
     public void addCategory(CategoryCreateRequest request) {
-        validateDuplicateCategory(request.getCategoryName());
-
         Category category = Category.builder()
                 .categoryName(request.getCategoryName())
                 .build();
@@ -39,8 +36,6 @@ public class CategoryService {
 
     @Transactional
     public void editCategory(Long categoryId, CategoryEditRequest request) {
-        validateDuplicateCategory(request.getCategoryName());
-
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(CategoryNotFoundException::new);
 
@@ -53,13 +48,6 @@ public class CategoryService {
                 .orElseThrow(CategoryNotFoundException::new);
 
         categoryRepository.delete(category);
-    }
-
-    public void validateDuplicateCategory(String categoryName) {
-        categoryRepository.findCategoryByCategoryName(categoryName)
-                .ifPresent(category -> {
-                    throw new AlreadyExistsCategoryException();
-                });
     }
 
 }

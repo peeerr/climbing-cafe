@@ -40,9 +40,7 @@ public class FileService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
 
-        if (!post.getMember().getId().equals(loginId)) {
-            throw new AccessDeniedException();
-        }
+        checkOwner(loginId, post.getMember().getId());
 
         List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
 
@@ -63,15 +61,19 @@ public class FileService {
         File file = fileRepository.findById(fileId)
                 .orElseThrow(FileNotFoundException::new);
 
-        if (!file.getPost().getMember().getId().equals(loginId)) {
-            throw new AccessDeniedException();
-        }
+        checkOwner(loginId, file.getPost().getMember().getId());
 
         if (file.isDeleted()) {
             throw new FileNotFoundException();
         }
 
         file.changeDeleted(true);
+    }
+
+    private void checkOwner(Long loginId, Long ownerId) {
+        if (!loginId.equals(ownerId)) {
+            throw new AccessDeniedException();
+        }
     }
 
 }
