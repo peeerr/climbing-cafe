@@ -1,13 +1,13 @@
 package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.domain.Like;
-import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.domain.Post;
-import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.domain.Member;
-import com.peeerr.climbing.repository.MemberRepository;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.exception.already.AlreadyExistsLikeException;
-import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.exception.notfound.LikeNotFoundException;
+import com.peeerr.climbing.repository.LikeRepository;
+import com.peeerr.climbing.repository.MemberRepository;
+import com.peeerr.climbing.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -121,7 +121,7 @@ class LikeServiceTest {
         given(likeRepository.findLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class, () -> likeService.unlike(1L, 1L));
+        assertThrows(LikeNotFoundException.class, () -> likeService.unlike(1L, 1L));
 
         then(likeRepository).should().findLikeByMemberIdAndPostId(anyLong(), anyLong());
     }

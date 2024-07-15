@@ -1,12 +1,13 @@
 package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.domain.File;
-import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.domain.Post;
-import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.domain.Member;
-import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.exception.AccessDeniedException;
+import com.peeerr.climbing.exception.notfound.FileNotFoundException;
+import com.peeerr.climbing.exception.notfound.PostNotFoundException;
+import com.peeerr.climbing.repository.FileRepository;
+import com.peeerr.climbing.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -98,7 +99,7 @@ class FileServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
+        assertThrows(PostNotFoundException.class,
                 () -> fileService.uploadFiles(1L, postId, files));
 
         then(postRepository).should().findById(postId);
@@ -163,7 +164,7 @@ class FileServiceTest {
         given(fileRepository.findById(fileId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
+        assertThrows(FileNotFoundException.class,
                 () -> fileService.updateDeleteFlag(1L, fileId));
 
         then(fileRepository).should().findById(fileId);

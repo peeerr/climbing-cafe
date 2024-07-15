@@ -25,7 +25,7 @@ public class ErrorMessage {
     public static final String CATEGORY_NOT_NULL = "카테고리를 선택해 주세요.";
     public static final String TITLE_NOT_BLANK = "제목을 입력해 주세요.";
 
-    public static final String NO_FILE_SELECTED = "파일을 선택하지 않았습니다. 파일을 선택해주세요.";
+    public static final String FILE_REQUIRED = "파일을 선택하지 않았습니다. 파일을 선택해주세요.";
 
     /* CategoryService */
     public static final String ALREADY_EXISTS_CATEGORY = "이미 존재하는 카테고리입니다.";

@@ -3,14 +3,9 @@ package com.peeerr.climbing.integration.docs;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.domain.Category;
-import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.repository.CommentRepository;
-import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
+import com.peeerr.climbing.repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,10 +19,9 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
-
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -105,7 +99,6 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andExpect(jsonPath("data[0].categoryName").value(categoryName1))
                 .andExpect(jsonPath("data[1].categoryName").value(categoryName2))
                 .andExpect(jsonPath("data[2].categoryName").value(categoryName3))
@@ -113,7 +106,6 @@ public class CategoryDocTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
                                 fieldWithPath("data[*].categoryId").description("게시판 ID"),
                                 fieldWithPath("data[*].categoryName").description("게시판 이름")
                         )
@@ -135,16 +127,11 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("category-create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("categoryName").description("게시판 이름")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -172,7 +159,7 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("message").value(ErrorMessage.ALREADY_EXISTS_CATEGORY));
+                .andExpect(jsonPath("message").value(ErrorMessage.VALIDATION_ERROR));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시판 이름 변경")
@@ -200,7 +187,6 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("category-edit",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -209,10 +195,6 @@ public class CategoryDocTest {
                         ),
                         requestFields(
                                 fieldWithPath("categoryName").description("게시판 이름")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
 
@@ -242,16 +224,11 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("category-remove",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("categoryId").description("게시판 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }

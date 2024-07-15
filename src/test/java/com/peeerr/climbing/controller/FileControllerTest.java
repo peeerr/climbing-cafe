@@ -1,26 +1,9 @@
 package com.peeerr.climbing.controller;
 
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
-
-import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +14,16 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
+
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -56,8 +49,7 @@ class FileControllerTest {
 
         //then
         result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"));
+                .andExpect(status().isOk());
 
         then(fileService).should().getFilesByPostId(anyLong());
     }
@@ -85,12 +77,12 @@ class FileControllerTest {
         //then
         result
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isCreated());
 
         then(fileService).should().uploadFiles(anyLong(), anyLong(), any(List.class));
     }
 
+    @DisplayName("파일 업로드 시 파일을 첨부하지 않으면 예외를 던진다.")
     @Test
     void fileUploadWithoutFile() throws Exception {
         //given
@@ -109,8 +101,7 @@ class FileControllerTest {
         result
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR))
-                .andExpect(jsonPath("$.data.files").value(ErrorMessage.NO_FILE_SELECTED));
+                .andExpect(jsonPath("$.message").value(ErrorMessage.FILE_REQUIRED));
     }
 
     @DisplayName("파일 id 를 받아 삭제 처리한다. (유저 권한 기준)")
@@ -131,8 +122,7 @@ class FileControllerTest {
         //then
         result
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isOk());
 
         then(fileService).should().updateDeleteFlag(loginId, fileId);
     }

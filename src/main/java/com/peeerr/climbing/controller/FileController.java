@@ -1,8 +1,7 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.dto.common.ApiResponse;
-import com.peeerr.climbing.exception.ValidationException;
+import com.peeerr.climbing.exception.FileRequiredException;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/posts/{postId}/files")
@@ -35,7 +33,7 @@ public class FileController {
                                            @RequestParam List<MultipartFile> files,
                                            @AuthenticationPrincipal MemberPrincipal userDetails) {
         if (files == null || files.isEmpty() || files.stream().anyMatch(file -> file == null || file.isEmpty())) {
-            throw new ValidationException(ErrorMessage.VALIDATION_ERROR, Map.of("files", ErrorMessage.NO_FILE_SELECTED));
+            throw new FileRequiredException();
         }
 
         Long loginId = userDetails.getMember().getId();

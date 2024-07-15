@@ -132,7 +132,6 @@ public class LikeDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andExpect(jsonPath("$.data").value("3"))
                 .andDo(document("like-count",
                         preprocessRequest(prettyPrint()),
@@ -141,7 +140,6 @@ public class LikeDocTest {
                                 parameterWithName("postId").description("게시물 ID")
                         ),
                         responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
                                 fieldWithPath("data").description("게시물에 달린 좋아요 개수")
                         )
                 ));
@@ -183,16 +181,11 @@ public class LikeDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("like",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -241,16 +234,11 @@ public class LikeDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("like-cancel",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
 

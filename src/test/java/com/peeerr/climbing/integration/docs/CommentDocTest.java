@@ -118,7 +118,6 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("comment-create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -128,10 +127,6 @@ public class CommentDocTest {
                         requestFields(
                                 fieldWithPath("parentId").description("부모 댓글 ID"),
                                 fieldWithPath("content").description("댓글 내용")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -183,7 +178,6 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("comment-edit",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -193,10 +187,6 @@ public class CommentDocTest {
                         ),
                         requestFields(
                                 fieldWithPath("content").description("댓글 내용")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -240,7 +230,7 @@ public class CommentDocTest {
         //then
         result
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(ErrorMessage.COMMENT_NOT_FOUND));
     }
 
@@ -289,17 +279,12 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("comment-remove",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID"),
                                 parameterWithName("commentId").description("댓글 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }

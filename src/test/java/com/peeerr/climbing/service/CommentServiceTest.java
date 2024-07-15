@@ -1,29 +1,26 @@
 package com.peeerr.climbing.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-
-import com.peeerr.climbing.dto.request.CommentCreateRequest;
-import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.domain.Comment;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
-import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.exception.AccessDeniedException;
+import com.peeerr.climbing.exception.notfound.CommentNotFoundException;
+import com.peeerr.climbing.exception.notfound.PostNotFoundException;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.PostRepository;
-
-import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
@@ -73,7 +70,7 @@ class CommentServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
+        assertThrows(PostNotFoundException.class,
                 () -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
@@ -93,7 +90,7 @@ class CommentServiceTest {
         given(commentRepository.findById(parentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
+        assertThrows(CommentNotFoundException.class,
                 () -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
@@ -132,7 +129,7 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
+        assertThrows(CommentNotFoundException.class,
                 () -> commentService.editComment(commentId, request, loginId));
 
         //then
@@ -191,7 +188,7 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
+        assertThrows(CommentNotFoundException.class,
                 () -> commentService.removeComment(commentId, loginId));
 
         //then

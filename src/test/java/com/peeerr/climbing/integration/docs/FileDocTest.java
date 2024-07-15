@@ -121,7 +121,6 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("file-urls-for-post",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -129,7 +128,6 @@ public class FileDocTest {
                                 parameterWithName("postId").description("게시물 ID")
                         ),
                         responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
                                 fieldWithPath("data").description("게시물 ID에 존재하는 모든 파일 URL")
                         )
                 ));
@@ -179,7 +177,6 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("file-upload",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -188,10 +185,6 @@ public class FileDocTest {
                         ),
                         requestParts(
                                 partWithName("files").description("이미지 파일")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -239,7 +232,7 @@ public class FileDocTest {
         //then
         result
                 .andDo(print())
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isUnsupportedMediaType())
                 .andExpect(jsonPath("message").value(ErrorMessage.INVALID_FILE_TYPE));
     }
 
@@ -290,17 +283,12 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("file-remove",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID"),
                                 parameterWithName("fileId").description("첨부파일 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
 
