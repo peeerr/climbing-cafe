@@ -6,7 +6,7 @@ import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
 import com.peeerr.climbing.repository.*;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,7 +59,7 @@ public class CategoryDocTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();

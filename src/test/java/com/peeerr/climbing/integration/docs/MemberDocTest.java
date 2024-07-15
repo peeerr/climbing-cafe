@@ -8,6 +8,7 @@ import com.peeerr.climbing.dto.request.MemberLoginRequest;
 import com.peeerr.climbing.repository.*;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.MemberService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,7 +63,7 @@ public class MemberDocTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();

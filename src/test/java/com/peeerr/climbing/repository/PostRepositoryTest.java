@@ -1,9 +1,9 @@
 package com.peeerr.climbing.repository;
 
 import com.peeerr.climbing.domain.Category;
-import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.domain.Member;
-import org.junit.jupiter.api.BeforeEach;
+import com.peeerr.climbing.domain.Post;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ class PostRepositoryTest {
     private MemberRepository memberRepository;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         postRepository.deleteAll();
         memberRepository.deleteAll();

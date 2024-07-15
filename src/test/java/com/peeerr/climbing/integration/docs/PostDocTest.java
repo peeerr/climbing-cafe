@@ -9,7 +9,7 @@ import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.request.PostEditRequest;
 import com.peeerr.climbing.repository.*;
 import com.peeerr.climbing.security.MemberPrincipal;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,7 +61,7 @@ public class PostDocTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();

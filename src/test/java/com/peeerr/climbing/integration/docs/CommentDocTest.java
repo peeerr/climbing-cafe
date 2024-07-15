@@ -15,6 +15,7 @@ import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.request.CommentCreateRequest;
 import com.peeerr.climbing.dto.request.CommentEditRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -69,7 +70,7 @@ public class CommentDocTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();

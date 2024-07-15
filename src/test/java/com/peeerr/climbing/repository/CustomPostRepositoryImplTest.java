@@ -1,15 +1,10 @@
 package com.peeerr.climbing.repository;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-import com.peeerr.climbing.dto.response.PostResponse;
-import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.dto.request.PostSearchCondition;
+import com.peeerr.climbing.dto.response.PostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
-
-import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +12,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class CustomPostRepositoryImplTest {
@@ -26,7 +25,7 @@ public class CustomPostRepositoryImplTest {
     @Autowired
     private PostRepository postRepository;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         postRepository.deleteAll();
     }

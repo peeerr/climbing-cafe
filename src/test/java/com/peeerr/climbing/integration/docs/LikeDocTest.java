@@ -11,6 +11,7 @@ import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -66,7 +67,7 @@ public class LikeDocTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();
