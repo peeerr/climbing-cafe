@@ -13,11 +13,7 @@ public class NotDuplicateCategoryNameValidator implements ConstraintValidator<No
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
-
-        return !categoryRepository.existsByCategoryName(value);
+        return (value == null) ? true : !categoryRepository.existsByCategoryName(value);
     }
 
 }

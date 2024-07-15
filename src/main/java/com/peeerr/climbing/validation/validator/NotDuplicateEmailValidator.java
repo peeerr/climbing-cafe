@@ -13,11 +13,7 @@ public class NotDuplicateEmailValidator implements ConstraintValidator<NotDuplic
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
-
-        return !memberRepository.existsByEmail(value);
+        return (value == null) ? true : !memberRepository.existsByEmail(value);
     }
 
 }

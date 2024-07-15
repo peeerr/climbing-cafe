@@ -13,11 +13,7 @@ public class NotDuplicateUsernameValidator implements ConstraintValidator<NotDup
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) {
-            return true;
-        }
-
-        return !memberRepository.existsByUsername(value);
+        return (value == null) ? true : !memberRepository.existsByUsername(value);
     }
 
 }
