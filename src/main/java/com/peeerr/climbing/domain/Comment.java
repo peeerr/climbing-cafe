@@ -1,5 +1,7 @@
 package com.peeerr.climbing.domain;
 
+import com.peeerr.climbing.exception.ClimbingException;
+import com.peeerr.climbing.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,6 +47,12 @@ public class Comment extends BaseEntity {
 
     public void changeContent(String content) {
         this.content = content;
+    }
+
+    public void checkOwner(Long loginId) {
+        if (!this.member.getId().equals(loginId)) {
+            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
+        }
     }
 
 }

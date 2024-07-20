@@ -44,14 +44,14 @@ public class CommentService {
 
     public void editComment(Long commentId, CommentEditRequest request, Long loginId) {
         Comment comment = getCommentById(commentId);
-        comment.getMember().checkOwner(loginId);
+        comment.checkOwner(loginId);
 
         comment.changeContent(request.getContent());
     }
 
     public void removeComment(Long commentId, Long loginId) {
         Comment comment = getCommentById(commentId);
-        comment.getMember().checkOwner(loginId);
+        comment.checkOwner(loginId);
 
         commentRepository.delete(comment);
     }

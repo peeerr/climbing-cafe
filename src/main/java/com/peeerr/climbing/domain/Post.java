@@ -1,6 +1,7 @@
 package com.peeerr.climbing.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.peeerr.climbing.exception.ClimbingException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.peeerr.climbing.exception.ErrorCode.ACCESS_DENIED;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -56,6 +59,12 @@ public class Post extends BaseEntity {
         this.member = member;
     }
 
+    public List<String> getFileNames() {
+        return this.files.stream()
+                .map(File::getFilename)
+                .toList();
+    }
+
     public void changeTitle(String title) {
         this.title = title;
     }
@@ -66,6 +75,12 @@ public class Post extends BaseEntity {
 
     public void changeCategory(Category category) {
         this.category = category;
+    }
+
+    public void checkOwner(Long loginId) {
+        if (!this.member.getId().equals(loginId)) {
+            throw new ClimbingException(ACCESS_DENIED);
+        }
     }
 
 }

@@ -33,16 +33,14 @@ public class FileService {
     public List<String> getFilesByPostId(Long postId) {
         Post post = getPostById(postId);
 
-        List<String> filenames = post.getFiles().stream()
-                .map(File::getFilename)
-                .toList();
+        List<String> filenames = post.getFileNames();
 
         return s3FileUploader.getFiles(filenames);
     }
 
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
         Post post = getPostById(postId);
-        post.getMember().checkOwner(loginId);
+        post.checkOwner(loginId);
 
         List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
 
@@ -61,7 +59,7 @@ public class FileService {
     public void updateDeleteFlag(Long loginId, Long fileId) {
         File file = fileRepository.findById(fileId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.FILE_NOT_FOUND));
-        file.getPost().getMember().checkOwner(loginId);
+        file.getPost().checkOwner(loginId);
 
         if (file.isDeleted()) {
             throw new ClimbingException(ErrorCode.FILE_NOT_FOUND);

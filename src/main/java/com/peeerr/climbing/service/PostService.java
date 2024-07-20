@@ -57,7 +57,7 @@ public class PostService {
 
     public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
         Post post = getPostById(postId);
-        post.getMember().checkOwner(loginId);
+        post.checkOwner(loginId);
 
         post.changeTitle(postEditRequest.getTitle());
         post.changeContent(postEditRequest.getContent());
@@ -66,7 +66,7 @@ public class PostService {
 
     public void removePost(Long postId, Long loginId) {
         Post post = getPostById(postId);
-        post.getMember().checkOwner(loginId);
+        post.checkOwner(loginId);
 
         postRepository.delete(post);
     }

@@ -1,11 +1,12 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.exception.ClimbingException;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.MemberRepository;
+import com.peeerr.climbing.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final MemberValidator memberValidator;
 
     public void addMember(MemberCreateRequest request) {
-        if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new ClimbingException(ErrorCode.ALREADY_EXISTS_EMAIL);
-        }
-        if (memberRepository.existsByUsername(request.getUsername())) {
-            throw new ClimbingException(ErrorCode.ALREADY_EXISTS_USERNAME);
-        }
+        memberValidator.validateNewMember(request);
 
         Member member = Member.builder()
                 .username(request.getUsername())
@@ -41,36 +38,15 @@ public class MemberService {
                 .orElseThrow(() -> new ClimbingException(ErrorCode.MEMBER_NOT_FOUND));
         member.checkOwner(loginId);
 
-        updateUsernameIfNecessary(member, request.getUsername());
-        updateEmailIfNecessary(member, request.getEmail());
-    }
-
-    private void updateUsernameIfNecessary(Member member, String newUsername) {
-        if (!member.getUsername().equals(newUsername)) {
-            validateDuplicateUsername(newUsername);
-            member.changeUsername(newUsername);
+        if (!member.getEmail().equals(request.getEmail())) {
+            memberValidator.validateDuplicateEmail(request.getEmail());
+            member.changeEmail(request.getEmail());
         }
-    }
 
-    private void updateEmailIfNecessary(Member member, String newEmail) {
-        if (!member.getEmail().equals(newEmail)) {
-            validateDuplicateEmail(newEmail);
-            member.changeEmail(newEmail);
+        if (!member.getUsername().equals(request.getUsername())) {
+            memberValidator.validateDuplicateUsername(request.getUsername());
+            member.changeUsername(request.getUsername());
         }
-    }
-
-    private void validateDuplicateUsername(String username) {
-        memberRepository.findMemberByUsername(username)
-                .ifPresent(foundMember -> {
-                    throw new ClimbingException(ErrorCode.ALREADY_EXISTS_USERNAME);
-                });
-    }
-
-    private void validateDuplicateEmail(String email) {
-        memberRepository.findMemberByEmail(email)
-                .ifPresent(foundMember -> {
-                    throw new ClimbingException(ErrorCode.ALREADY_EXISTS_EMAIL);
-                });
     }
 
 }
