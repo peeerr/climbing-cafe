@@ -14,6 +14,7 @@ public class ValidationErrorMessage {
     public static final String CHECK_PASSWORD_NOT_BLANK = "비밀번호를 다시 입력해 주세요.";
 
     public static final String PASSWORD_MISMATCH = "비밀번호 확인에 실패했습니다. 동일한 비밀번호를 입력해 주세요.";
+    public static final String CHECK_PASSWORD = "checkPassword";
 
     public static final String CATEGORY_NAME_NOT_BLANK = "카테고리명을 입력해 주세요.";
 

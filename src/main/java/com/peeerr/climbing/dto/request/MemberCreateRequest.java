@@ -12,7 +12,7 @@ import static com.peeerr.climbing.exception.ValidationErrorMessage.*;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@PasswordMatches(message = PASSWORD_MISMATCH, field = "checkPassword")
+@PasswordMatches(message = PASSWORD_MISMATCH, field = CHECK_PASSWORD)
 public class MemberCreateRequest {
 
     @Pattern(regexp = "^(?=.*[a-zA-Z0-9가-힣])[a-zA-Z0-9가-힣]{2,16}$", message = INVALID_USERNAME_LENGTH)
