@@ -55,13 +55,13 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
+    public void editPost(Long postId, PostEditRequest request, Long loginId) {
         Post post = getPostById(postId);
         post.checkOwner(loginId);
 
-        post.changeTitle(postEditRequest.getTitle());
-        post.changeContent(postEditRequest.getContent());
-        post.changeCategory(getCategory(postEditRequest.getCategoryId()));
+        post.changeTitle(request.getTitle());
+        post.changeContent(request.getContent());
+        post.changeCategory(getCategory(request.getCategoryId()));
     }
 
     public void removePost(Long postId, Long loginId) {

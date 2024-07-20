@@ -1,10 +1,13 @@
 package com.peeerr.climbing.domain;
 
+import com.peeerr.climbing.exception.ClimbingException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.peeerr.climbing.exception.ErrorCode.FILE_NOT_FOUND;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,8 +40,14 @@ public class File extends BaseEntity {
         this.deleted = false;
     }
 
-    public void changeDeleted(boolean deleted) {
-        this.deleted = deleted;
+    public void checkNotDeleted() {
+        if (this.isDeleted()) {
+            throw new ClimbingException(FILE_NOT_FOUND);
+        }
+    }
+
+    public void delete() {
+        this.deleted = true;
     }
 
     @Builder
