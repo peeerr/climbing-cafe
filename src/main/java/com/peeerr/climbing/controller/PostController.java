@@ -25,7 +25,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse> postListFilteredByCategoryIdAndSearchWord(@RequestParam(required = false) final Long categoryId,
+    public ResponseEntity<ApiResponse<Page<PostResponse>>> postListFilteredByCategoryIdAndSearchWord(@RequestParam(required = false) final Long categoryId,
                                                                                  @ModelAttribute PostSearchCondition condition,
                                                                                  Pageable pageable) {
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
@@ -35,7 +35,7 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<ApiResponse> postDetail(@PathVariable Long postId) {
+    public ResponseEntity<ApiResponse<PostDetailResponse>> postDetail(@PathVariable Long postId) {
         PostDetailResponse post = postService.getPostWithComments(postId);
 
         return ResponseEntity.ok()
