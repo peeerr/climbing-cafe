@@ -26,8 +26,8 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<PostResponse>>> postListFilteredByCategoryIdAndSearchWord(@RequestParam(required = false) final Long categoryId,
-                                                                                 @ModelAttribute PostSearchCondition condition,
-                                                                                 Pageable pageable) {
+                                                                                                     @ModelAttribute PostSearchCondition condition,
+                                                                                                     Pageable pageable) {
         Page<PostResponse> posts = postService.getPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
 
         return ResponseEntity.ok()

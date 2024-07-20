@@ -90,7 +90,7 @@ class CategoryServiceTest {
 
         //when & then
         assertThatExceptionOfType(ClimbingException.class)
-                        .isThrownBy(() -> categoryService.editCategory(categoryId, request));
+                .isThrownBy(() -> categoryService.editCategory(categoryId, request));
 
         then(categoryRepository).should().findById(categoryId);
     }
