@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
@@ -41,21 +41,21 @@ public class CategoryService {
         validateCategoryNameUnique(request.getCategoryName());
 
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.CATEGORY_NOT_FOUND));
 
         category.changeCategoryName(request.getCategoryName());
     }
 
     public void removeCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(category);
     }
 
     private void validateCategoryNameUnique(String categoryName) {
         if (categoryRepository.existsByCategoryName(categoryName)) {
-            throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_CATEGORY);
+            throw new ClimbingException(ErrorCode.ALREADY_EXISTS_CATEGORY);
         }
     }
 

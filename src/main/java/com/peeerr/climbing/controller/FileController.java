@@ -2,7 +2,7 @@ package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.exception.ClimbingException;
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,7 @@ public class FileController {
                                            @RequestParam List<MultipartFile> files,
                                            @AuthenticationPrincipal MemberPrincipal userDetails) {
         if (files == null || files.isEmpty() || files.stream().anyMatch(file -> file == null || file.isEmpty())) {
-            throw new ClimbingException(ErrorMessage.FILE_REQUIRED);
+            throw new ClimbingException(ErrorCode.FILE_REQUIRED);
         }
 
         Long loginId = userDetails.getMember().getId();

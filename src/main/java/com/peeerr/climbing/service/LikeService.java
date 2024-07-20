@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.Like;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
@@ -24,20 +24,20 @@ public class LikeService {
     @Transactional(readOnly = true)
     public Long getLikeCount(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
 
         return likeRepository.countLikeByPost(post);
     }
 
     public void like(Long loginId, Long postId) {
         if (likeRepository.existsLikeByMemberIdAndPostId(loginId, postId)) {
-            throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_LIKE);
+            throw new ClimbingException(ErrorCode.ALREADY_EXISTS_LIKE);
         }
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
         Member member = memberRepository.findById(loginId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.MEMBER_NOT_FOUND));
 
         Like like = Like.builder()
                 .member(member)
@@ -49,7 +49,7 @@ public class LikeService {
 
     public void unlike(Long loginId, Long postId) {
         Like like = likeRepository.findLikeByMemberIdAndPostId(loginId, postId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.LIKE_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.LIKE_NOT_FOUND));
 
         likeRepository.delete(like);
     }

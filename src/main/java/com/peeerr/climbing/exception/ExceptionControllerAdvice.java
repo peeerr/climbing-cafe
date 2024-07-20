@@ -27,7 +27,7 @@ public class ExceptionControllerAdvice {
 
     @ExceptionHandler(ClimbingException.class)
     public ResponseEntity<ErrorResponse> validation(ClimbingException e) {
-        HttpStatus status = e.getErrorMessage().getStatus();
+        HttpStatus status = e.getErrorCode().getStatus();
 
         ErrorResponse response = ErrorResponse.builder()
                 .code(status.value())
@@ -42,7 +42,7 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ErrorResponse> fileMaxSize() {
         ErrorResponse response = ErrorResponse.builder()
                 .code(HttpStatus.PAYLOAD_TOO_LARGE.value())
-                .message(ErrorMessage.FILE_SIZE_EXCEEDED.getMessage())
+                .message(ErrorCode.FILE_SIZE_EXCEEDED.getMessage())
                 .build();
 
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)

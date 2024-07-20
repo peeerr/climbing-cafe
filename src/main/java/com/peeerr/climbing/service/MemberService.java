@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
@@ -21,10 +21,10 @@ public class MemberService {
 
     public void addMember(MemberCreateRequest request) {
         if (memberRepository.existsByEmail(request.getEmail())) {
-            throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_EMAIL);
+            throw new ClimbingException(ErrorCode.ALREADY_EXISTS_EMAIL);
         }
         if (memberRepository.existsByUsername(request.getUsername())) {
-            throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_USERNAME);
+            throw new ClimbingException(ErrorCode.ALREADY_EXISTS_USERNAME);
         }
 
         Member member = Member.builder()
@@ -38,7 +38,7 @@ public class MemberService {
 
     public void editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.MEMBER_NOT_FOUND));
 
         checkOwner(loginId, memberId);
 
@@ -63,20 +63,20 @@ public class MemberService {
     private void validateDuplicateUsername(String username) {
         memberRepository.findMemberByUsername(username)
                 .ifPresent(foundMember -> {
-                    throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_USERNAME);
+                    throw new ClimbingException(ErrorCode.ALREADY_EXISTS_USERNAME);
                 });
     }
 
     private void validateDuplicateEmail(String email) {
         memberRepository.findMemberByEmail(email)
                 .ifPresent(foundMember -> {
-                    throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_EMAIL);
+                    throw new ClimbingException(ErrorCode.ALREADY_EXISTS_EMAIL);
                 });
     }
 
     private void checkOwner(Long loginId, Long ownerId) {
         if (!loginId.equals(ownerId)) {
-            throw new ClimbingException(ErrorMessage.ACCESS_DENIED);
+            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
         }
     }
 

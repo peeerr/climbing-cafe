@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
@@ -35,7 +35,7 @@ public class PostService {
     public PostDetailResponse getPostWithComments(Long postId) {
         return postRepository.findPostById(postId)
                 .map(PostDetailResponse::from)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
     }
 
     public void addPost(PostCreateRequest postCreateRequest, Member member) {
@@ -51,7 +51,7 @@ public class PostService {
 
     public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
 
         checkOwner(loginId, post.getMember().getId());
 
@@ -62,7 +62,7 @@ public class PostService {
 
     public void removePost(Long postId, Long loginId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
 
         checkOwner(loginId, post.getMember().getId());
 
@@ -71,13 +71,13 @@ public class PostService {
 
     private void checkOwner(Long loginId, Long ownerId) {
         if (!loginId.equals(ownerId)) {
-            throw new ClimbingException(ErrorMessage.ACCESS_DENIED);
+            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
         }
     }
 
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 
 }

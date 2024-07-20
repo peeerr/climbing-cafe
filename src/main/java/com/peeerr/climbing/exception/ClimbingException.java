@@ -5,11 +5,11 @@ import lombok.Getter;
 @Getter
 public class ClimbingException extends RuntimeException {
 
-    private final ErrorMessage errorMessage;
+    private final ErrorCode errorCode;
 
-    public ClimbingException(ErrorMessage errorMessage) {
-        super(errorMessage.getMessage());
-        this.errorMessage = errorMessage;
+    public ClimbingException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
+        this.errorCode = errorCode;
     }
 
 }

@@ -6,7 +6,7 @@ import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.request.PostEditRequest;
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.exception.ValidationErrorMessage;
 import com.peeerr.climbing.repository.*;
 import com.peeerr.climbing.security.MemberPrincipal;
@@ -382,7 +382,7 @@ public class PostDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message").value(ErrorMessage.ACCESS_DENIED));
+                .andExpect(jsonPath("$.message").value(ErrorCode.ACCESS_DENIED));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시물 삭제")

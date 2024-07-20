@@ -1,7 +1,7 @@
 package com.peeerr.climbing.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.dto.common.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -30,7 +30,7 @@ public class Http401Handler implements AuthenticationEntryPoint {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(SC_UNAUTHORIZED)
-                .message(ErrorMessage.LOGIN_REQUIRED.getMessage())
+                .message(ErrorCode.LOGIN_REQUIRED.getMessage())
                 .build();
 
         mapper.writeValue(response.getWriter(), errorResponse);

@@ -1,6 +1,6 @@
 package com.peeerr.climbing.integration.docs;
 
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
@@ -233,7 +233,7 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isUnsupportedMediaType())
-                .andExpect(jsonPath("message").value(ErrorMessage.INVALID_FILE_TYPE));
+                .andExpect(jsonPath("message").value(ErrorCode.INVALID_FILE_TYPE));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 파일 삭제 (유저 권한)")

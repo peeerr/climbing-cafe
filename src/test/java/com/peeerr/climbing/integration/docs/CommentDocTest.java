@@ -1,7 +1,7 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
@@ -231,7 +231,7 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(ErrorMessage.COMMENT_NOT_FOUND));
+                .andExpect(jsonPath("$.message").value(ErrorCode.COMMENT_NOT_FOUND));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 댓글 삭제")

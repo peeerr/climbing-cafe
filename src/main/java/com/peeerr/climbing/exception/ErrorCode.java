@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import static org.springframework.http.HttpStatus.*;
 
 @Getter
-public enum ErrorMessage {
+public enum ErrorCode {
 
     /* CategoryService */
     ALREADY_EXISTS_CATEGORY("이미 존재하는 카테고리입니다.", CONFLICT),
@@ -53,7 +53,7 @@ public enum ErrorMessage {
     private final String message;
     private final HttpStatus status;
 
-    ErrorMessage(String message, HttpStatus status) {
+    ErrorCode(String message, HttpStatus status) {
         this.message = message;
         this.status = status;
     }

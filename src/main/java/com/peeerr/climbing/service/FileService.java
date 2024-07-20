@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.File;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.FileStoreDto;
@@ -26,7 +26,7 @@ public class FileService {
     @Transactional(readOnly = true)
     public List<String> getFilesByPostId(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
 
         List<String> filenames = post.getFiles().stream()
                 .map(File::getFilename)
@@ -37,7 +37,7 @@ public class FileService {
 
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
 
         checkOwner(loginId, post.getMember().getId());
 
@@ -57,12 +57,12 @@ public class FileService {
 
     public void updateDeleteFlag(Long loginId, Long fileId) {
         File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new ClimbingException(ErrorMessage.FILE_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.FILE_NOT_FOUND));
 
         checkOwner(loginId, file.getPost().getMember().getId());
 
         if (file.isDeleted()) {
-            throw new ClimbingException(ErrorMessage.FILE_NOT_FOUND);
+            throw new ClimbingException(ErrorCode.FILE_NOT_FOUND);
         }
 
         file.changeDeleted(true);
@@ -70,7 +70,7 @@ public class FileService {
 
     private void checkOwner(Long loginId, Long ownerId) {
         if (!loginId.equals(ownerId)) {
-            throw new ClimbingException(ErrorMessage.ACCESS_DENIED);
+            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
         }
     }
 

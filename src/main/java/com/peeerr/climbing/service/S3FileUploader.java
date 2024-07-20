@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.dto.FileStoreDto;
 import com.peeerr.climbing.exception.ClimbingException;
 import jakarta.annotation.PostConstruct;
@@ -75,7 +75,7 @@ public class S3FileUploader {
             amazonS3.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new ClimbingException(ErrorMessage.FILE_STORE_FAILED);
+            throw new ClimbingException(ErrorCode.FILE_STORE_FAILED);
         }
 
         return FileStoreDto.of(file.getOriginalFilename(), filename, amazonS3.getUrl(bucket, filename).toString());
@@ -95,7 +95,7 @@ public class S3FileUploader {
             return fileType;
         }
 
-        throw new ClimbingException(ErrorMessage.INVALID_FILE_TYPE);
+        throw new ClimbingException(ErrorCode.INVALID_FILE_TYPE);
     }
 
 }
