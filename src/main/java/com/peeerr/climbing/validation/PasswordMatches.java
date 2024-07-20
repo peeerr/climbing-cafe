@@ -1,6 +1,5 @@
-package com.peeerr.climbing.validation.annotation;
+package com.peeerr.climbing.validation;
 
-import com.peeerr.climbing.validation.validator.PasswordMatchesValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 

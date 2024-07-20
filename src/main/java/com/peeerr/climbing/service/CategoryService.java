@@ -28,6 +28,8 @@ public class CategoryService {
     }
 
     public void addCategory(CategoryCreateRequest request) {
+        validateCategoryNameUnique(request.getCategoryName());
+
         Category category = Category.builder()
                 .categoryName(request.getCategoryName())
                 .build();
@@ -36,6 +38,8 @@ public class CategoryService {
     }
 
     public void editCategory(Long categoryId, CategoryEditRequest request) {
+        validateCategoryNameUnique(request.getCategoryName());
+
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
 
@@ -47,6 +51,12 @@ public class CategoryService {
                 .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(category);
+    }
+
+    private void validateCategoryNameUnique(String categoryName) {
+        if (categoryRepository.existsByCategoryName(categoryName)) {
+            throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_CATEGORY);
+        }
     }
 
 }

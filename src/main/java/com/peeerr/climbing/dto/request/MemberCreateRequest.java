@@ -1,8 +1,6 @@
 package com.peeerr.climbing.dto.request;
 
-import com.peeerr.climbing.validation.annotation.NotDuplicateEmail;
-import com.peeerr.climbing.validation.annotation.NotDuplicateUsername;
-import com.peeerr.climbing.validation.annotation.PasswordMatches;
+import com.peeerr.climbing.validation.PasswordMatches;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -19,7 +17,6 @@ public class MemberCreateRequest {
 
     @Pattern(regexp = "^(?=.*[a-zA-Z0-9가-힣])[a-zA-Z0-9가-힣]{2,16}$", message = INVALID_USERNAME_LENGTH)
     @NotBlank(message = USERNAME_NOT_BLANK)
-    @NotDuplicateUsername(message = USERNAME_NOT_DUPLICATE)
     private String username;
 
     @Size(min = 8, max = 20, message = INVALID_PASSWORD_LENGTH)
@@ -32,7 +29,6 @@ public class MemberCreateRequest {
 
     @Pattern(regexp = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])+[.][a-zA-Z]{2,3}$", message = INVALID_EMAIL_PATTERN)
     @NotBlank(message = EMAIL_NOT_BLANK)
-    @NotDuplicateEmail(message = EMAIL_NOT_DUPLICATE)
     private String email;
 
     public static MemberCreateRequest of(String username, String password, String checkPassword, String email) {

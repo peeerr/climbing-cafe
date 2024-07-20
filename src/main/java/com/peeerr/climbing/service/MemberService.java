@@ -20,6 +20,13 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public void addMember(MemberCreateRequest request) {
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_EMAIL);
+        }
+        if (memberRepository.existsByUsername(request.getUsername())) {
+            throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_USERNAME);
+        }
+
         Member member = Member.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
