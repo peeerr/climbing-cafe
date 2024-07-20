@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import static com.peeerr.climbing.exception.ErrorMessage.*;
+import static com.peeerr.climbing.exception.ValidationErrorMessage.*;
 
 @EqualsAndHashCode
 @NoArgsConstructor

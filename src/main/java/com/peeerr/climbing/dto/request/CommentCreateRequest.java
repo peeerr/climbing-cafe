@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.peeerr.climbing.exception.ErrorMessage.CONTENT_NOT_BLANK;
+import static com.peeerr.climbing.exception.ValidationErrorMessage.CONTENT_NOT_BLANK;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

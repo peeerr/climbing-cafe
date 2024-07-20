@@ -1,12 +1,13 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.exception.ErrorMessage;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.request.PostEditRequest;
+import com.peeerr.climbing.exception.ErrorMessage;
+import com.peeerr.climbing.exception.ValidationErrorMessage;
 import com.peeerr.climbing.repository.*;
 import com.peeerr.climbing.security.MemberPrincipal;
 import org.junit.jupiter.api.AfterEach;
@@ -267,7 +268,7 @@ public class PostDocTest {
         //then
         result
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(ErrorMessage.VALIDATION_ERROR));
+                .andExpect(jsonPath("$.message").value(ValidationErrorMessage.VALIDATION_ERROR));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시물 수정")

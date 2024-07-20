@@ -15,7 +15,7 @@ public class ExceptionControllerAdvice {
     public ResponseEntity<ErrorResponse> invalid(MethodArgumentNotValidException e) {
         ErrorResponse response = ErrorResponse.builder()
                 .code(400)
-                .message(ErrorMessage.VALIDATION_ERROR)
+                .message(ValidationErrorMessage.VALIDATION_ERROR)
                 .build();
 
         e.getFieldErrors().forEach(filedError ->

@@ -1,10 +1,10 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.exception.ErrorMessage;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
+import com.peeerr.climbing.exception.ValidationErrorMessage;
 import com.peeerr.climbing.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -159,7 +159,7 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("message").value(ErrorMessage.VALIDATION_ERROR));
+                .andExpect(jsonPath("message").value(ValidationErrorMessage.VALIDATION_ERROR));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시판 이름 변경")

@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.peeerr.climbing.exception.ErrorMessage.*;
+import static com.peeerr.climbing.exception.ValidationErrorMessage.*;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
