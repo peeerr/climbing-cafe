@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class FileService {
 
@@ -23,7 +24,7 @@ public class FileService {
     private final FileRepository fileRepository;
     private final PostRepository postRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<String> getFilesByPostId(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -35,7 +36,6 @@ public class FileService {
         return s3FileUploader.getFiles(filenames);
     }
 
-    @Transactional
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -56,7 +56,6 @@ public class FileService {
         fileRepository.saveAll(fileEntities);
     }
 
-    @Transactional
     public void updateDeleteFlag(Long loginId, Long fileId) {
         File file = fileRepository.findById(fileId)
                 .orElseThrow(FileNotFoundException::new);

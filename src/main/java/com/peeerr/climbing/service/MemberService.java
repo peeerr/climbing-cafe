@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Transactional
     public void addMember(MemberCreateRequest request) {
         Member member = Member.builder()
                 .username(request.getUsername())
@@ -31,7 +31,6 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    @Transactional
     public void editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(MemberNotFoundException::new);

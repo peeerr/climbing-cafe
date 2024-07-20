@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class LikeService {
 
@@ -30,7 +31,6 @@ public class LikeService {
         return likeRepository.countLikeByPost(post);
     }
 
-    @Transactional
     public void like(Long loginId, Long postId) {
         if (likeRepository.existsLikeByMemberIdAndPostId(loginId, postId)) {
             throw new AlreadyExistsLikeException();
@@ -49,7 +49,6 @@ public class LikeService {
         likeRepository.save(like);
     }
 
-    @Transactional
     public void unlike(Long loginId, Long postId) {
         Like like = likeRepository.findLikeByMemberIdAndPostId(loginId, postId)
                 .orElseThrow(LikeNotFoundException::new);

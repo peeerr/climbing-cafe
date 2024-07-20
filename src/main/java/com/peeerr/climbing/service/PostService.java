@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class PostService {
 
@@ -38,7 +39,6 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::new);
     }
 
-    @Transactional
     public void addPost(PostCreateRequest postCreateRequest, Member member) {
         Post post = Post.builder()
                 .title(postCreateRequest.getTitle())
@@ -50,7 +50,6 @@ public class PostService {
         postRepository.save(post);
     }
 
-    @Transactional
     public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -62,7 +61,6 @@ public class PostService {
         post.changeCategory(getCategory(postEditRequest.getCategoryId()));
     }
 
-    @Transactional
     public void removePost(Long postId, Long loginId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);

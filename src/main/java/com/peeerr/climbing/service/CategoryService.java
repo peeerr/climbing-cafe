@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class CategoryService {
 
@@ -25,7 +26,6 @@ public class CategoryService {
                 .toList();
     }
 
-    @Transactional
     public void addCategory(CategoryCreateRequest request) {
         Category category = Category.builder()
                 .categoryName(request.getCategoryName())
@@ -34,7 +34,6 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    @Transactional
     public void editCategory(Long categoryId, CategoryEditRequest request) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(CategoryNotFoundException::new);
@@ -42,7 +41,6 @@ public class CategoryService {
         category.changeCategoryName(request.getCategoryName());
     }
 
-    @Transactional
     public void removeCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(CategoryNotFoundException::new);

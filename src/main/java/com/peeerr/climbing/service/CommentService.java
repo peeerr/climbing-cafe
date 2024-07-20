@@ -17,13 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    @Transactional
     public void addComment(Long postId, CommentCreateRequest request, Member member) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::new);
@@ -37,7 +37,6 @@ public class CommentService {
                 );
     }
 
-    @Transactional
     public void editComment(Long commentId, CommentEditRequest request, Long loginId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
@@ -47,7 +46,6 @@ public class CommentService {
         comment.changeContent(request.getContent());
     }
 
-    @Transactional
     public void removeComment(Long commentId, Long loginId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(CommentNotFoundException::new);
