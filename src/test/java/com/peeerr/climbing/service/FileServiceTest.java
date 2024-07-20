@@ -3,6 +3,7 @@ package com.peeerr.climbing.service;
 import com.peeerr.climbing.domain.File;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -96,8 +97,8 @@ class FileServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(PostNotFoundException.class,
-                () -> fileService.uploadFiles(1L, postId, files));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.uploadFiles(1L, postId, files));
 
         then(postRepository).should().findById(postId);
     }
@@ -118,8 +119,8 @@ class FileServiceTest {
         Long loginId = 2L;
 
         //when & then
-        assertThrows(AccessDeniedException.class,
-                () -> fileService.uploadFiles(loginId, postId, files));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.uploadFiles(loginId, postId, files));
 
         then(postRepository).should().findById(postId);
     }
@@ -161,8 +162,8 @@ class FileServiceTest {
         given(fileRepository.findById(fileId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(FileNotFoundException.class,
-                () -> fileService.updateDeleteFlag(1L, fileId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.updateDeleteFlag(1L, fileId));
 
         then(fileRepository).should().findById(fileId);
     }
@@ -187,8 +188,8 @@ class FileServiceTest {
         given(fileRepository.findById(fileId)).willReturn(Optional.of(file));
 
         //when & then
-        assertThrows(AccessDeniedException.class,
-                () -> fileService.updateDeleteFlag(loginId, fileId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.updateDeleteFlag(loginId, fileId));
 
         then(fileRepository).should().findById(fileId);
     }

@@ -233,7 +233,7 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isUnsupportedMediaType())
-                .andExpect(jsonPath("message").value(ErrorCode.INVALID_FILE_TYPE));
+                .andExpect(jsonPath("message").value(ErrorCode.INVALID_FILE_TYPE.getMessage()));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 파일 삭제 (유저 권한)")

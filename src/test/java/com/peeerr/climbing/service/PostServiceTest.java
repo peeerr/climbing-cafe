@@ -8,6 +8,7 @@ import com.peeerr.climbing.dto.request.PostEditRequest;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,7 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -165,8 +166,9 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
         //when & then
-        assertThrows(
-                AccessDeniedException.class, () -> postService.editPost(postId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> postService.editPost(postId, request, loginId));
+
         then(postRepository).should().findById(postId);
     }
 
@@ -181,8 +183,8 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(PostNotFoundException.class,
-                () -> postService.editPost(postId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> postService.editPost(postId, request, loginId));
 
         then(postRepository).should().findById(postId);
     }
@@ -219,7 +221,9 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.of(post));
 
         //when & then
-        assertThrows(AccessDeniedException.class, () -> postService.removePost(postId, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> postService.removePost(postId, loginId));
+
         then(postRepository).should().findById(postId);
     }
 
@@ -233,8 +237,8 @@ class PostServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(PostNotFoundException.class,
-                () -> postService.removePost(postId, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> postService.removePost(postId, loginId));
 
         then(postRepository).should().findById(postId);
     }

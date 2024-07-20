@@ -5,6 +5,7 @@ import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.CommentCreateRequest;
 import com.peeerr.climbing.dto.request.CommentEditRequest;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -67,8 +68,8 @@ class CommentServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(PostNotFoundException.class,
-                () -> commentService.addComment(postId, request, member));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
     }
@@ -87,8 +88,8 @@ class CommentServiceTest {
         given(commentRepository.findById(parentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CommentNotFoundException.class,
-                () -> commentService.addComment(postId, request, member));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
         then(commentRepository).should().findById(parentId);
@@ -126,8 +127,8 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CommentNotFoundException.class,
-                () -> commentService.editComment(commentId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.editComment(commentId, request, loginId));
 
         //then
         then(commentRepository).should().findById(commentId);
@@ -148,8 +149,9 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
         //when & then
-        assertThrows(
-                AccessDeniedException.class, () -> commentService.editComment(commentId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.editComment(commentId, request, loginId));
+
         then(commentRepository).should().findById(commentId);
     }
 
@@ -185,8 +187,8 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CommentNotFoundException.class,
-                () -> commentService.removeComment(commentId, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.removeComment(commentId, loginId));
 
         //then
         then(commentRepository).should().findById(commentId);
@@ -206,8 +208,9 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
         //when & then
-        assertThrows(
-                AccessDeniedException.class, () -> commentService.removeComment(commentId, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.removeComment(commentId, loginId));
+
         then(commentRepository).should().findById(commentId);
     }
 

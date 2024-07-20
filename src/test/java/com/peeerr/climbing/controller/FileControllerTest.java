@@ -101,7 +101,7 @@ class FileControllerTest {
         result
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(ErrorCode.FILE_REQUIRED));
+                .andExpect(jsonPath("$.message").value(ErrorCode.FILE_REQUIRED.getMessage()));
     }
 
     @DisplayName("파일 id 를 받아 삭제 처리한다. (유저 권한 기준)")

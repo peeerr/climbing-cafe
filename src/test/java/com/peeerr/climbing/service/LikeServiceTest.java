@@ -3,6 +3,7 @@ package com.peeerr.climbing.service;
 import com.peeerr.climbing.domain.Like;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.LikeRepository;
 import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.repository.PostRepository;
@@ -16,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
 
@@ -88,7 +89,8 @@ class LikeServiceTest {
         given(likeRepository.existsLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(true);
 
         //when & then
-        assertThrows(AlreadyExistsLikeException.class, () -> likeService.like(1L, 1L));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> likeService.like(1L, 1L));
 
         then(likeRepository.existsLikeByMemberIdAndPostId(anyLong(), anyLong()));
     }
@@ -119,7 +121,8 @@ class LikeServiceTest {
         given(likeRepository.findLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(LikeNotFoundException.class, () -> likeService.unlike(1L, 1L));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> likeService.unlike(1L, 1L));
 
         then(likeRepository).should().findLikeByMemberIdAndPostId(anyLong(), anyLong());
     }

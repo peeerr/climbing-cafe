@@ -382,7 +382,7 @@ public class PostDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isForbidden())
-                .andExpect(jsonPath("$.message").value(ErrorCode.ACCESS_DENIED));
+                .andExpect(jsonPath("$.message").value(ErrorCode.ACCESS_DENIED.getMessage()));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시물 삭제")

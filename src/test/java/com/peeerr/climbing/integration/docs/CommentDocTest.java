@@ -231,7 +231,7 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(ErrorCode.COMMENT_NOT_FOUND));
+                .andExpect(jsonPath("$.message").value(ErrorCode.COMMENT_NOT_FOUND.getMessage()));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 댓글 삭제")

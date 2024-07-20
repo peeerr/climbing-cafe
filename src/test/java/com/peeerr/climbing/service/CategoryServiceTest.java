@@ -4,6 +4,7 @@ import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.response.CategoryResponse;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -88,8 +89,8 @@ class CategoryServiceTest {
         given(categoryRepository.findById(categoryId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
-                () -> categoryService.editCategory(categoryId, request));
+        assertThatExceptionOfType(ClimbingException.class)
+                        .isThrownBy(() -> categoryService.editCategory(categoryId, request));
 
         then(categoryRepository).should().findById(categoryId);
     }
@@ -121,8 +122,8 @@ class CategoryServiceTest {
         given(categoryRepository.findById(categoryId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(CategoryNotFoundException.class,
-                () -> categoryService.removeCategory(categoryId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> categoryService.removeCategory(categoryId));
 
         then(categoryRepository).should().findById(categoryId);
     }

@@ -3,6 +3,7 @@ package com.peeerr.climbing.service;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -89,8 +90,8 @@ class MemberServiceTest {
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
 
         //when & then
-        assertThrows(AccessDeniedException.class,
-                () -> memberService.editMember(memberId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
@@ -106,8 +107,8 @@ class MemberServiceTest {
         given(memberRepository.findById(memberId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(MemberNotFoundException.class,
-                () -> memberService.editMember(memberId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> memberService.editMember(memberId, request, loginId));
 
         then(memberRepository).should().findById(memberId);
     }
