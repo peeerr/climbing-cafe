@@ -1,6 +1,6 @@
 package com.peeerr.climbing.dto.request;
 
-import com.peeerr.climbing.validation.PasswordMatches;
+import com.peeerr.climbing.dto.request.validation.PasswordMatches;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;

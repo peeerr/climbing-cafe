@@ -1,7 +1,6 @@
-package com.peeerr.climbing.validation;
+package com.peeerr.climbing.dto.request.validation;
 
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
-import com.peeerr.climbing.validation.PasswordMatches;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
