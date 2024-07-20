@@ -30,7 +30,7 @@ public class Http401Handler implements AuthenticationEntryPoint {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(SC_UNAUTHORIZED)
-                .message(ErrorMessage.LOGIN_REQUIRED)
+                .message(ErrorMessage.LOGIN_REQUIRED.getMessage())
                 .build();
 
         mapper.writeValue(response.getWriter(), errorResponse);

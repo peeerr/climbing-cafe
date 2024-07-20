@@ -28,7 +28,7 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .code(SC_BAD_REQUEST)
-                .message(ErrorMessage.LOGIN_FAILED)
+                .message(ErrorMessage.LOGIN_FAILED.getMessage())
                 .build();
 
         mapper.writeValue(response.getWriter(), errorResponse);

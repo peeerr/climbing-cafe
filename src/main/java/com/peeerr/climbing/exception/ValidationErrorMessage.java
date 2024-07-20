@@ -22,6 +22,4 @@ public class ValidationErrorMessage {
     public static final String CATEGORY_NOT_NULL = "카테고리를 선택해 주세요.";
     public static final String TITLE_NOT_BLANK = "제목을 입력해 주세요.";
 
-    public static final String FILE_REQUIRED = "파일을 선택하지 않았습니다. 파일을 선택해주세요.";
-
 }

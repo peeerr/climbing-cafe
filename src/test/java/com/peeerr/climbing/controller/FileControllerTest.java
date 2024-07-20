@@ -1,7 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.domain.Member;
-import com.peeerr.climbing.exception.ValidationErrorMessage;
+import com.peeerr.climbing.exception.ErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
 import org.junit.jupiter.api.DisplayName;
@@ -101,7 +101,7 @@ class FileControllerTest {
         result
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(ValidationErrorMessage.FILE_REQUIRED));
+                .andExpect(jsonPath("$.message").value(ErrorMessage.FILE_REQUIRED));
     }
 
     @DisplayName("파일 id 를 받아 삭제 처리한다. (유저 권한 기준)")
