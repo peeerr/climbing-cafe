@@ -1,5 +1,7 @@
 package com.peeerr.climbing.domain;
 
+import com.peeerr.climbing.exception.ClimbingException;
+import com.peeerr.climbing.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -49,6 +51,12 @@ public class Member extends BaseEntity implements Serializable {
 
     public void changeEmail(String email) {
         this.email = email;
+    }
+
+    public void checkOwner(Long loginId) {
+        if (!loginId.equals(this.id)) {
+            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
+        }
     }
 
 }

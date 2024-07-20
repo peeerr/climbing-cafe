@@ -42,8 +42,7 @@ public class FileService {
 
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
         Post post = getPostById(postId);
-
-        checkOwner(loginId, post.getMember().getId());
+        post.getMember().checkOwner(loginId);
 
         List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
 
@@ -62,20 +61,13 @@ public class FileService {
     public void updateDeleteFlag(Long loginId, Long fileId) {
         File file = fileRepository.findById(fileId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.FILE_NOT_FOUND));
-
-        checkOwner(loginId, file.getPost().getMember().getId());
+        file.getPost().getMember().checkOwner(loginId);
 
         if (file.isDeleted()) {
             throw new ClimbingException(ErrorCode.FILE_NOT_FOUND);
         }
 
         file.changeDeleted(true);
-    }
-
-    private void checkOwner(Long loginId, Long ownerId) {
-        if (!loginId.equals(ownerId)) {
-            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
-        }
     }
 
 }

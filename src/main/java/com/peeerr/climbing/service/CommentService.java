@@ -44,24 +44,16 @@ public class CommentService {
 
     public void editComment(Long commentId, CommentEditRequest request, Long loginId) {
         Comment comment = getCommentById(commentId);
-
-        checkOwner(loginId, comment.getMember().getId());
+        comment.getMember().checkOwner(loginId);
 
         comment.changeContent(request.getContent());
     }
 
     public void removeComment(Long commentId, Long loginId) {
         Comment comment = getCommentById(commentId);
-
-        checkOwner(loginId, comment.getMember().getId());
+        comment.getMember().checkOwner(loginId);
 
         commentRepository.delete(comment);
-    }
-
-    private void checkOwner(Long loginId, Long ownerId) {
-        if (!loginId.equals(ownerId)) {
-            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
-        }
     }
 
 }

@@ -39,8 +39,7 @@ public class MemberService {
     public void editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.MEMBER_NOT_FOUND));
-
-        checkOwner(loginId, memberId);
+        member.checkOwner(loginId);
 
         updateUsernameIfNecessary(member, request.getUsername());
         updateEmailIfNecessary(member, request.getEmail());
@@ -72,12 +71,6 @@ public class MemberService {
                 .ifPresent(foundMember -> {
                     throw new ClimbingException(ErrorCode.ALREADY_EXISTS_EMAIL);
                 });
-    }
-
-    private void checkOwner(Long loginId, Long ownerId) {
-        if (!loginId.equals(ownerId)) {
-            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
-        }
     }
 
 }

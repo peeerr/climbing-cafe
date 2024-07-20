@@ -57,8 +57,7 @@ public class PostService {
 
     public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
         Post post = getPostById(postId);
-
-        checkOwner(loginId, post.getMember().getId());
+        post.getMember().checkOwner(loginId);
 
         post.changeTitle(postEditRequest.getTitle());
         post.changeContent(postEditRequest.getContent());
@@ -67,16 +66,9 @@ public class PostService {
 
     public void removePost(Long postId, Long loginId) {
         Post post = getPostById(postId);
-
-        checkOwner(loginId, post.getMember().getId());
+        post.getMember().checkOwner(loginId);
 
         postRepository.delete(post);
-    }
-
-    private void checkOwner(Long loginId, Long ownerId) {
-        if (!loginId.equals(ownerId)) {
-            throw new ClimbingException(ErrorCode.ACCESS_DENIED);
-        }
     }
 
     private Category getCategory(Long categoryId) {
