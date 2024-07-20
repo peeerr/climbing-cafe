@@ -6,7 +6,7 @@ import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.MemberRepository;
-import com.peeerr.climbing.validator.MemberValidator;
+import com.peeerr.climbing.service.validator.MemberValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

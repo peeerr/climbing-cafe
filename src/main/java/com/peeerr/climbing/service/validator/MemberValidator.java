@@ -1,4 +1,4 @@
-package com.peeerr.climbing.validator;
+package com.peeerr.climbing.service.validator;
 
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.exception.ClimbingException;

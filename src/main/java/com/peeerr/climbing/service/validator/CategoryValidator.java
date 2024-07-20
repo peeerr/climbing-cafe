@@ -1,4 +1,4 @@
-package com.peeerr.climbing.validator;
+package com.peeerr.climbing.service.validator;
 
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;

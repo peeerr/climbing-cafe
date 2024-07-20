@@ -7,7 +7,7 @@ import com.peeerr.climbing.dto.response.CategoryResponse;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.validator.CategoryValidator;
+import com.peeerr.climbing.service.validator.CategoryValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
