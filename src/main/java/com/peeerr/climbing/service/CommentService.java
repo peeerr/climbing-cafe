@@ -23,6 +23,12 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
+    @Transactional(readOnly = true)
+    public Comment getCommentById(Long commentId) {
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new ClimbingException(ErrorCode.COMMENT_NOT_FOUND));
+    }
+
     public void addComment(Long postId, CommentCreateRequest request, Member member) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
@@ -37,8 +43,7 @@ public class CommentService {
     }
 
     public void editComment(Long commentId, CommentEditRequest request, Long loginId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.COMMENT_NOT_FOUND));
+        Comment comment = getCommentById(commentId);
 
         checkOwner(loginId, comment.getMember().getId());
 
@@ -46,8 +51,7 @@ public class CommentService {
     }
 
     public void removeComment(Long commentId, Long loginId) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.COMMENT_NOT_FOUND));
+        Comment comment = getCommentById(commentId);
 
         checkOwner(loginId, comment.getMember().getId());
 

@@ -20,6 +20,12 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    @Transactional
+    public Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ClimbingException(ErrorCode.CATEGORY_NOT_FOUND));
+    }
+
     @Transactional(readOnly = true)
     public List<CategoryResponse> getCategories() {
         return categoryRepository.findAll().stream()
@@ -40,15 +46,13 @@ public class CategoryService {
     public void editCategory(Long categoryId, CategoryEditRequest request) {
         validateCategoryNameUnique(request.getCategoryName());
 
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.CATEGORY_NOT_FOUND));
+        Category category = getCategoryById(categoryId);
 
         category.changeCategoryName(request.getCategoryName());
     }
 
     public void removeCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.CATEGORY_NOT_FOUND));
+        Category category = getCategoryById(categoryId);
 
         categoryRepository.delete(category);
     }

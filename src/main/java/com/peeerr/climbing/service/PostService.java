@@ -27,6 +27,12 @@ public class PostService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
     public Page<PostResponse> getPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
         return postRepository.findPostsFilteredByCategoryIdAndSearchWord(categoryId, condition, pageable);
     }
@@ -50,8 +56,7 @@ public class PostService {
     }
 
     public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+        Post post = getPostById(postId);
 
         checkOwner(loginId, post.getMember().getId());
 
@@ -61,8 +66,7 @@ public class PostService {
     }
 
     public void removePost(Long postId, Long loginId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+        Post post = getPostById(postId);
 
         checkOwner(loginId, post.getMember().getId());
 

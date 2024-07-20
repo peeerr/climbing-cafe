@@ -1,10 +1,10 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.File;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.FileStoreDto;
 import com.peeerr.climbing.exception.ClimbingException;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +24,14 @@ public class FileService {
     private final PostRepository postRepository;
 
     @Transactional(readOnly = true)
-    public List<String> getFilesByPostId(Long postId) {
-        Post post = postRepository.findById(postId)
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getFilesByPostId(Long postId) {
+        Post post = getPostById(postId);
 
         List<String> filenames = post.getFiles().stream()
                 .map(File::getFilename)
@@ -36,8 +41,7 @@ public class FileService {
     }
 
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+        Post post = getPostById(postId);
 
         checkOwner(loginId, post.getMember().getId());
 

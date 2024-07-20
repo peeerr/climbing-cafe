@@ -22,9 +22,14 @@ public class LikeService {
     private final MemberRepository memberRepository;
 
     @Transactional(readOnly = true)
-    public Long getLikeCount(Long postId) {
-        Post post = postRepository.findById(postId)
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public Long getLikeCount(Long postId) {
+        Post post = getPostById(postId);
 
         return likeRepository.countLikeByPost(post);
     }
@@ -34,8 +39,7 @@ public class LikeService {
             throw new ClimbingException(ErrorCode.ALREADY_EXISTS_LIKE);
         }
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+        Post post = getPostById(postId);
         Member member = memberRepository.findById(loginId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.MEMBER_NOT_FOUND));
 
