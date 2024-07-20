@@ -8,8 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import static com.peeerr.climbing.constant.ErrorMessage.ALREADY_EXISTS_CATEGORY;
-import static com.peeerr.climbing.constant.ErrorMessage.CATEGORY_NAME_NOT_BLANK;
+import static com.peeerr.climbing.exception.ErrorMessage.ALREADY_EXISTS_CATEGORY;
+import static com.peeerr.climbing.exception.ErrorMessage.CATEGORY_NAME_NOT_BLANK;
 
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

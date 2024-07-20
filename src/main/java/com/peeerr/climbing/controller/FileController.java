@@ -1,6 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorMessage;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.security.MemberPrincipal;

@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorMessage;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;

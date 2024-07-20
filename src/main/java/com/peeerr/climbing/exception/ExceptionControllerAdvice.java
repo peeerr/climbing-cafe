@@ -1,8 +1,6 @@
-package com.peeerr.climbing.controller;
+package com.peeerr.climbing.exception;
 
-import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.dto.common.ErrorResponse;
-import com.peeerr.climbing.exception.ClimbingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
-public class ExceptionController {
+public class ExceptionControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> invalid(MethodArgumentNotValidException e) {

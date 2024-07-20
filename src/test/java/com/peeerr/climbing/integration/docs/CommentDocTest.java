@@ -1,7 +1,7 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
@@ -16,7 +16,6 @@ import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.dto.request.CommentCreateRequest;
 import com.peeerr.climbing.dto.request.CommentEditRequest;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,6 @@
 package com.peeerr.climbing.security;
 
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorMessage;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;

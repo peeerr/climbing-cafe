@@ -5,8 +5,8 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.peeerr.climbing.constant.ErrorMessage.EMAIL_NOT_BLANK;
-import static com.peeerr.climbing.constant.ErrorMessage.PASSWORD_NOT_BLANK;
+import static com.peeerr.climbing.exception.ErrorMessage.EMAIL_NOT_BLANK;
+import static com.peeerr.climbing.exception.ErrorMessage.PASSWORD_NOT_BLANK;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter

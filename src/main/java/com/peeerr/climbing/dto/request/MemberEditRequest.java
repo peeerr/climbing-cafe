@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
-import static com.peeerr.climbing.constant.ErrorMessage.*;
+import static com.peeerr.climbing.exception.ErrorMessage.*;
 
 @EqualsAndHashCode
 @NoArgsConstructor
