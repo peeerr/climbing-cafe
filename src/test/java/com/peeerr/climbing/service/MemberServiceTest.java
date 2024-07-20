@@ -3,8 +3,6 @@ package com.peeerr.climbing.service;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
-import com.peeerr.climbing.exception.AccessDeniedException;
-import com.peeerr.climbing.exception.notfound.MemberNotFoundException;
 import com.peeerr.climbing.repository.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

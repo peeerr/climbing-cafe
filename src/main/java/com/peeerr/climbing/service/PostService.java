@@ -1,16 +1,15 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.domain.Category;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.request.PostEditRequest;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
-import com.peeerr.climbing.domain.Category;
-import com.peeerr.climbing.domain.Member;
-import com.peeerr.climbing.domain.Post;
-import com.peeerr.climbing.exception.AccessDeniedException;
-import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
-import com.peeerr.climbing.exception.notfound.PostNotFoundException;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +35,7 @@ public class PostService {
     public PostDetailResponse getPostWithComments(Long postId) {
         return postRepository.findPostById(postId)
                 .map(PostDetailResponse::from)
-                .orElseThrow(PostNotFoundException::new);
+                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
     }
 
     public void addPost(PostCreateRequest postCreateRequest, Member member) {
@@ -52,7 +51,7 @@ public class PostService {
 
     public void editPost(Long postId, PostEditRequest postEditRequest, Long loginId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
+                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
 
         checkOwner(loginId, post.getMember().getId());
 
@@ -63,7 +62,7 @@ public class PostService {
 
     public void removePost(Long postId, Long loginId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::new);
+                .orElseThrow(() -> new ClimbingException(ErrorMessage.POST_NOT_FOUND));
 
         checkOwner(loginId, post.getMember().getId());
 
@@ -72,13 +71,13 @@ public class PostService {
 
     private void checkOwner(Long loginId, Long ownerId) {
         if (!loginId.equals(ownerId)) {
-            throw new AccessDeniedException();
+            throw new ClimbingException(ErrorMessage.ACCESS_DENIED);
         }
     }
 
     private Category getCategory(Long categoryId) {
         return categoryRepository.findById(categoryId)
-                .orElseThrow(CategoryNotFoundException::new);
+                .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
     }
 
 }

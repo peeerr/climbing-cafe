@@ -8,9 +8,9 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.dto.FileStoreDto;
-import com.peeerr.climbing.exception.FileStoreException;
-import com.peeerr.climbing.exception.InvalidFileTypeException;
+import com.peeerr.climbing.exception.ClimbingException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,7 +75,7 @@ public class S3FileUploader {
             amazonS3.putObject(new PutObjectRequest(bucket, filename, file.getInputStream(), objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new FileStoreException();
+            throw new ClimbingException(ErrorMessage.FILE_STORE_FAILED);
         }
 
         return FileStoreDto.of(file.getOriginalFilename(), filename, amazonS3.getUrl(bucket, filename).toString());
@@ -95,7 +95,7 @@ public class S3FileUploader {
             return fileType;
         }
 
-        throw new InvalidFileTypeException();
+        throw new ClimbingException(ErrorMessage.INVALID_FILE_TYPE);
     }
 
 }

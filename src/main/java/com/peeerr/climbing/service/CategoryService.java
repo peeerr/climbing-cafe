@@ -1,10 +1,11 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.dto.request.CategoryCreateRequest;
 import com.peeerr.climbing.dto.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.response.CategoryResponse;
-import com.peeerr.climbing.exception.notfound.CategoryNotFoundException;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,14 +37,14 @@ public class CategoryService {
 
     public void editCategory(Long categoryId, CategoryEditRequest request) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(CategoryNotFoundException::new);
+                .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         category.changeCategoryName(request.getCategoryName());
     }
 
     public void removeCategory(Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(CategoryNotFoundException::new);
+                .orElseThrow(() -> new ClimbingException(ErrorMessage.CATEGORY_NOT_FOUND));
 
         categoryRepository.delete(category);
     }

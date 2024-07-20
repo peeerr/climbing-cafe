@@ -1,12 +1,10 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.constant.ErrorMessage;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
-import com.peeerr.climbing.exception.AccessDeniedException;
-import com.peeerr.climbing.exception.already.AlreadyExistsEmailException;
-import com.peeerr.climbing.exception.already.AlreadyExistsUsernameException;
-import com.peeerr.climbing.exception.notfound.MemberNotFoundException;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +31,7 @@ public class MemberService {
 
     public void editMember(Long memberId, MemberEditRequest request, Long loginId) {
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(MemberNotFoundException::new);
+                .orElseThrow(() -> new ClimbingException(ErrorMessage.MEMBER_NOT_FOUND));
 
         checkOwner(loginId, memberId);
 
@@ -58,20 +56,20 @@ public class MemberService {
     private void validateDuplicateUsername(String username) {
         memberRepository.findMemberByUsername(username)
                 .ifPresent(foundMember -> {
-                    throw new AlreadyExistsUsernameException();
+                    throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_USERNAME);
                 });
     }
 
     private void validateDuplicateEmail(String email) {
         memberRepository.findMemberByEmail(email)
                 .ifPresent(foundMember -> {
-                    throw new AlreadyExistsEmailException();
+                    throw new ClimbingException(ErrorMessage.ALREADY_EXISTS_EMAIL);
                 });
     }
 
     private void checkOwner(Long loginId, Long ownerId) {
         if (!loginId.equals(ownerId)) {
-            throw new AccessDeniedException();
+            throw new ClimbingException(ErrorMessage.ACCESS_DENIED);
         }
     }
 

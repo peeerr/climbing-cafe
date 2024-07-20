@@ -8,8 +8,6 @@ import com.peeerr.climbing.dto.request.PostEditRequest;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
-import com.peeerr.climbing.exception.AccessDeniedException;
-import com.peeerr.climbing.exception.notfound.PostNotFoundException;
 import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;

@@ -29,15 +29,12 @@ public class ExceptionController {
 
     @ExceptionHandler(ClimbingException.class)
     public ResponseEntity<ErrorResponse> validation(ClimbingException e) {
-        int statusCode = e.getStatusCode();
-
         ErrorResponse response = ErrorResponse.builder()
-                .code(statusCode)
+                .code(500)
                 .message(e.getMessage())
-                .validation(e.getValidation())
                 .build();
 
-        return ResponseEntity.status(statusCode)
+        return ResponseEntity.status(500)
                 .body(response);
     }
 
@@ -49,17 +46,6 @@ public class ExceptionController {
                 .build();
 
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
-                .body(response);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exception(Exception e) {
-        ErrorResponse response = ErrorResponse.builder()
-                .code(500)
-                .message(e.getMessage())
-                .build();
-
-        return ResponseEntity.status(500)
                 .body(response);
     }
 
