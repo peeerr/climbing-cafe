@@ -45,10 +45,7 @@ public enum ErrorCode {
     FILE_SIZE_EXCEEDED("전체 파일 크기를 10MB 이하로 첨부해 주세요.", PAYLOAD_TOO_LARGE),
 
     /* Comment */
-    COMMENT_NOT_FOUND("존재하지 않는 댓글입니다.", NOT_FOUND),
-
-    /* FileController */
-    FILE_REQUIRED("파일을 선택하지 않았습니다. 파일을 선택해주세요.", BAD_REQUEST);
+    COMMENT_NOT_FOUND("존재하지 않는 댓글입니다.", NOT_FOUND);
 
     private final String message;
     private final HttpStatus status;

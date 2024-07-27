@@ -1,10 +1,10 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.dto.common.ApiResponse;
-import com.peeerr.climbing.exception.ClimbingException;
-import com.peeerr.climbing.exception.ErrorCode;
+import com.peeerr.climbing.exception.ValidationErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
+import com.peeerr.climbing.validation.FileNotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,12 +32,8 @@ public class FileController {
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> fileUpload(@PathVariable Long postId,
-                                           @RequestParam List<MultipartFile> files,
+                                           @RequestParam @FileNotEmpty(message = ValidationErrorMessage.FILE_REQUIRED) List<MultipartFile> files,
                                            @AuthenticationPrincipal MemberPrincipal userDetails) {
-        if (files == null || files.isEmpty() || files.stream().anyMatch(file -> file == null || file.isEmpty())) {
-            throw new ClimbingException(ErrorCode.FILE_REQUIRED);
-        }
-
         Long loginId = userDetails.getMember().getId();
         fileService.uploadFiles(loginId, postId, files);
 
