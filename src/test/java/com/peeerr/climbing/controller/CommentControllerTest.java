@@ -1,20 +1,9 @@
 package com.peeerr.climbing.controller;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.dto.comment.CommentCreateRequest;
-import com.peeerr.climbing.dto.comment.CommentEditRequest;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.CommentService;
 import org.junit.jupiter.api.DisplayName;
@@ -28,12 +17,20 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @AutoConfigureMockMvc
 @SpringBootTest
 class CommentControllerTest {
 
-    @Autowired private MockMvc mvc;
-    @Autowired private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mvc;
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private CommentService commentService;
@@ -57,8 +54,7 @@ class CommentControllerTest {
 
         //then
         result
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isCreated());
 
         then(commentService).should().addComment(anyLong(), any(CommentCreateRequest.class), any(Member.class));
     }
@@ -85,8 +81,7 @@ class CommentControllerTest {
 
         //then
         result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isOk());
 
         then(commentService).should().editComment(anyLong(), any(CommentEditRequest.class), anyLong());
     }
@@ -110,8 +105,7 @@ class CommentControllerTest {
 
         //then
         result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isOk());
 
         then(commentService).should().removeComment(anyLong(), anyLong());
     }

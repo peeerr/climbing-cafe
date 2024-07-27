@@ -1,27 +1,24 @@
 package com.peeerr.climbing.service;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-
-import com.peeerr.climbing.dto.comment.CommentCreateRequest;
-import com.peeerr.climbing.dto.comment.CommentEditRequest;
-import com.peeerr.climbing.entity.Comment;
-import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.entity.Post;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
+import com.peeerr.climbing.domain.Comment;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.PostRepository;
-import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CommentServiceTest {
@@ -71,8 +68,8 @@ class CommentServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-            () -> commentService.addComment(postId, request, member));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
     }
@@ -91,8 +88,8 @@ class CommentServiceTest {
         given(commentRepository.findById(parentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-            () -> commentService.addComment(postId, request, member));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.addComment(postId, request, member));
 
         then(postRepository).should().findById(postId);
         then(commentRepository).should().findById(parentId);
@@ -130,8 +127,8 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-            () -> commentService.editComment(commentId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.editComment(commentId, request, loginId));
 
         //then
         then(commentRepository).should().findById(commentId);
@@ -152,7 +149,9 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class, () -> commentService.editComment(commentId, request, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.editComment(commentId, request, loginId));
+
         then(commentRepository).should().findById(commentId);
     }
 
@@ -188,8 +187,8 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-            () -> commentService.removeComment(commentId, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.removeComment(commentId, loginId));
 
         //then
         then(commentRepository).should().findById(commentId);
@@ -209,7 +208,9 @@ class CommentServiceTest {
         given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class, () -> commentService.removeComment(commentId, loginId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> commentService.removeComment(commentId, loginId));
+
         then(commentRepository).should().findById(commentId);
     }
 

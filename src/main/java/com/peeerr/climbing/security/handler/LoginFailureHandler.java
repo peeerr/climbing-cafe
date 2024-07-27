@@ -1,18 +1,19 @@
 package com.peeerr.climbing.security.handler;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.exception.ErrorCode;
+import com.peeerr.climbing.dto.common.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+
+import java.io.IOException;
+
+import static jakarta.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RequiredArgsConstructor
 public class LoginFailureHandler implements AuthenticationFailureHandler {
@@ -25,7 +26,12 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
         response.setCharacterEncoding("UTF-8");
         response.setStatus(SC_BAD_REQUEST);
 
-        mapper.writeValue(response.getWriter(), ApiResponse.of(ErrorMessage.LOGIN_FAILED));
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .code(SC_BAD_REQUEST)
+                .message(ErrorCode.LOGIN_FAILED.getMessage())
+                .build();
+
+        mapper.writeValue(response.getWriter(), errorResponse);
     }
 
 }

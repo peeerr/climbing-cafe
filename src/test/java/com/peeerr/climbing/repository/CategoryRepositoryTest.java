@@ -1,6 +1,6 @@
 package com.peeerr.climbing.repository;
 
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DataJpaTest
 class CategoryRepositoryTest {
 
-    @Autowired private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @DisplayName("카테고리 하나를 저장한다.")
     @Test

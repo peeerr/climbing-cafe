@@ -1,12 +1,12 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
+import com.peeerr.climbing.dto.request.CategoryCreateRequest;
+import com.peeerr.climbing.dto.request.CategoryEditRequest;
+import com.peeerr.climbing.dto.response.CategoryResponse;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.dto.category.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.CategoryEditRequest;
-import com.peeerr.climbing.dto.category.CategoryResponse;
-import com.peeerr.climbing.exception.DuplicationException;
-import com.peeerr.climbing.exception.EntityNotFoundException;
+import com.peeerr.climbing.service.validator.CategoryValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,6 +26,9 @@ class CategoryServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private CategoryValidator categoryValidator;
 
     @InjectMocks
     private CategoryService categoryService;
@@ -52,29 +55,15 @@ class CategoryServiceTest {
         CategoryCreateRequest request = CategoryCreateRequest.of("자유 게시판");
         Category category = Category.builder().categoryName(request.getCategoryName()).build();
 
+        willDoNothing().given(categoryValidator).validateCategoryNameUnique(anyString());
         given(categoryRepository.save(any(Category.class))).willReturn(category);
 
         //when
         categoryService.addCategory(request);
 
         //then
+        then(categoryValidator).should().validateCategoryNameUnique(anyString());
         then(categoryRepository).should().save(any(Category.class));
-    }
-
-    @DisplayName("새로운 카테고리 하나를 추가하는데, 해당 카테고리 이름이 이미 존재하면 예외를 던진다.")
-    @Test
-    void addCategoryWithDuplicatedCategoryName() throws Exception {
-        //given
-        CategoryCreateRequest request = CategoryCreateRequest.of("자유 게시판");
-        Category category = Category.builder().categoryName(request.getCategoryName()).build();
-
-        given(categoryRepository.findCategoryByCategoryName(request.getCategoryName())).willReturn(Optional.of(category));
-
-        //when & then
-        assertThrows(DuplicationException.class,
-                () -> categoryService.addCategory(request));
-
-        then(categoryRepository).should().findCategoryByCategoryName(request.getCategoryName());
     }
 
     @DisplayName("수정 정보를 받아 카테고리를 수정한다.")
@@ -85,32 +74,17 @@ class CategoryServiceTest {
         Category category = Category.builder().categoryName("자유 게시판").build();
         CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
 
+        willDoNothing().given(categoryValidator).validateCategoryNameUnique(anyString());
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
         //when
         categoryService.editCategory(categoryId, request);
 
         //then
+        then(categoryValidator).should().validateCategoryNameUnique(anyString());
         assertThat(category.getCategoryName()).isEqualTo(request.getCategoryName());
 
         then(categoryRepository).should().findById(categoryId);
-    }
-
-    @DisplayName("수정 정보를 받아 카테고리를 수정하는데, 해당 카테고리 이름이 이미 존재하면 예외를 던진다.")
-    @Test
-    void editCategoryWithDuplicatedCategoryName() throws Exception {
-        //given
-        Long categoryId = 1L;
-        CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
-        Category category = Category.builder().categoryName(request.getCategoryName()).build();
-
-        given(categoryRepository.findCategoryByCategoryName(request.getCategoryName())).willReturn(Optional.of(category));
-
-        //when & then
-        assertThrows(DuplicationException.class,
-                () -> categoryService.editCategory(categoryId, request));
-
-        then(categoryRepository).should().findCategoryByCategoryName(request.getCategoryName());
     }
 
     @DisplayName("id를 받아 카테고리를 수정하는데, 해당하는 카테고리가 없으면 예외를 던진다.")
@@ -123,8 +97,8 @@ class CategoryServiceTest {
         given(categoryRepository.findById(categoryId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-                () -> categoryService.editCategory(categoryId, request));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> categoryService.editCategory(categoryId, request));
 
         then(categoryRepository).should().findById(categoryId);
     }
@@ -156,8 +130,8 @@ class CategoryServiceTest {
         given(categoryRepository.findById(categoryId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-                () -> categoryService.removeCategory(categoryId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> categoryService.removeCategory(categoryId));
 
         then(categoryRepository).should().findById(categoryId);
     }

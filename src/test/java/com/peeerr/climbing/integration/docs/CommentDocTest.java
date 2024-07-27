@@ -1,21 +1,21 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.entity.Comment;
+import com.peeerr.climbing.domain.Comment;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
-import com.peeerr.climbing.dto.comment.CommentCreateRequest;
-import com.peeerr.climbing.dto.comment.CommentEditRequest;
-import org.junit.jupiter.api.BeforeEach;
+import com.peeerr.climbing.dto.request.CommentCreateRequest;
+import com.peeerr.climbing.dto.request.CommentEditRequest;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,18 +49,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class CommentDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private ObjectMapper mapper;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();
@@ -109,7 +118,6 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("comment-create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -119,10 +127,6 @@ public class CommentDocTest {
                         requestFields(
                                 fieldWithPath("parentId").description("부모 댓글 ID"),
                                 fieldWithPath("content").description("댓글 내용")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -174,7 +178,6 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("comment-edit",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -184,10 +187,6 @@ public class CommentDocTest {
                         ),
                         requestFields(
                                 fieldWithPath("content").description("댓글 내용")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -197,24 +196,24 @@ public class CommentDocTest {
     void commentEditWithNonExistingComment() throws Exception {
         //given
         Member member = memberRepository.save(
-            Member.builder()
-                .username("test")
-                .password(passwordEncoder.encode("test1234"))
-                .email("test@example.com")
-                .build()
+                Member.builder()
+                        .username("test")
+                        .password(passwordEncoder.encode("test1234"))
+                        .email("test@example.com")
+                        .build()
         );
         Category category = categoryRepository.save(
-            Category.builder()
-                .categoryName("자유 게시판")
-                .build()
+                Category.builder()
+                        .categoryName("자유 게시판")
+                        .build()
         );
         Post post = postRepository.save(
-            Post.builder()
-                .category(category)
-                .member(member)
-                .title("제목 테스트")
-                .content("본문 테스트")
-                .build()
+                Post.builder()
+                        .category(category)
+                        .member(member)
+                        .title("제목 테스트")
+                        .content("본문 테스트")
+                        .build()
         );
 
         MemberPrincipal userDetails = new MemberPrincipal(member);
@@ -224,15 +223,15 @@ public class CommentDocTest {
 
         //when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.put("/api/posts/{postId}/comments/{commentId}", postId, commentId)
-            .with(user(userDetails))
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(mapper.writeValueAsString(request)));
+                .with(user(userDetails))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
 
         //then
         result
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.message").value(ErrorMessage.COMMENT_NOT_FOUND));
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(ErrorCode.COMMENT_NOT_FOUND.getMessage()));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 댓글 삭제")
@@ -280,17 +279,12 @@ public class CommentDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("comment-remove",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID"),
                                 parameterWithName("commentId").description("댓글 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }

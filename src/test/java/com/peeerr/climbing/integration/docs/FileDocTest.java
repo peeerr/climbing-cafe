@@ -1,18 +1,18 @@
 package com.peeerr.climbing.integration.docs;
 
-import com.peeerr.climbing.constant.ErrorMessage;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.repository.CommentRepository;
-import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.domain.File;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,17 +48,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class FileDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();
@@ -113,7 +121,6 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("file-urls-for-post",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -121,7 +128,6 @@ public class FileDocTest {
                                 parameterWithName("postId").description("게시물 ID")
                         ),
                         responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
                                 fieldWithPath("data").description("게시물 ID에 존재하는 모든 파일 URL")
                         )
                 ));
@@ -171,7 +177,6 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("file-upload",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -180,10 +185,6 @@ public class FileDocTest {
                         ),
                         requestParts(
                                 partWithName("files").description("이미지 파일")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -193,24 +194,24 @@ public class FileDocTest {
     void fileUploadWithInvalidFileType() throws Exception {
         //given
         Member member = memberRepository.save(
-            Member.builder()
-                .username("test")
-                .password(passwordEncoder.encode("test1234"))
-                .email("test@example.com")
-                .build()
+                Member.builder()
+                        .username("test")
+                        .password(passwordEncoder.encode("test1234"))
+                        .email("test@example.com")
+                        .build()
         );
         Category category = categoryRepository.save(
-            Category.builder()
-                .categoryName("자유 게시판")
-                .build()
+                Category.builder()
+                        .categoryName("자유 게시판")
+                        .build()
         );
         Post post = postRepository.save(
-            Post.builder()
-                .category(category)
-                .member(member)
-                .title("제목 테스트")
-                .content("본문 테스트")
-                .build()
+                Post.builder()
+                        .category(category)
+                        .member(member)
+                        .title("제목 테스트")
+                        .content("본문 테스트")
+                        .build()
         );
 
         MockMultipartFile file1 = new MockMultipartFile("files", "example1.mp4", "image/mp4", "image1".getBytes());
@@ -222,17 +223,17 @@ public class FileDocTest {
 
         //when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.multipart("/api/posts/{postId}/files", postId)
-            .file(file1)
-            .file(file2)
-            .file(file3)
-            .with(user(userDetails))
-            .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
+                .file(file1)
+                .file(file2)
+                .file(file3)
+                .with(user(userDetails))
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE));
 
         //then
         result
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("message").value(ErrorMessage.INVALID_FILE_TYPE));
+                .andDo(print())
+                .andExpect(status().isUnsupportedMediaType())
+                .andExpect(jsonPath("message").value(ErrorCode.INVALID_FILE_TYPE.getMessage()));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 파일 삭제 (유저 권한)")
@@ -282,17 +283,12 @@ public class FileDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("file-remove",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID"),
                                 parameterWithName("fileId").description("첨부파일 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
 

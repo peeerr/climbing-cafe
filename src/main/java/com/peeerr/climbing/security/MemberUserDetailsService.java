@@ -1,7 +1,7 @@
 package com.peeerr.climbing.security;
 
-import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.exception.ErrorCode;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +18,7 @@ public class MemberUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Member member = memberRepository.findMemberByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException(ErrorMessage.LOGIN_FAILED));
+                .orElseThrow(() -> new UsernameNotFoundException(ErrorCode.LOGIN_FAILED.getMessage()));
 
         return new MemberPrincipal(member);
     }

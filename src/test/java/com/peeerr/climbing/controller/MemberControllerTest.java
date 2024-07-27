@@ -1,19 +1,9 @@
 package com.peeerr.climbing.controller;
 
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.anyLong;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.dto.member.MemberCreateRequest;
-import com.peeerr.climbing.dto.member.MemberEditRequest;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.dto.request.MemberCreateRequest;
+import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
@@ -27,12 +17,20 @@ import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequ
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @AutoConfigureMockMvc
 @SpringBootTest
 class MemberControllerTest {
 
-    @Autowired private MockMvc mvc;
-    @Autowired private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mvc;
+    @Autowired
+    private ObjectMapper mapper;
 
     @MockBean
     private MemberService memberService;
@@ -53,8 +51,7 @@ class MemberControllerTest {
 
         //then
         result
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isCreated());
 
         then(memberService).should().addMember(request);
     }
@@ -83,8 +80,7 @@ class MemberControllerTest {
 
         //then
         result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isOk());
 
         then(memberService).should().editMember(anyLong(), any(MemberEditRequest.class), anyLong());
     }

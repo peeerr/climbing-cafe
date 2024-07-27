@@ -27,8 +27,8 @@ class MainControllerTest {
 
         //then
         result
-            .andExpect(status().isOk())
-            .andExpect(content().string("ok"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("ok"));
     }
 
 }

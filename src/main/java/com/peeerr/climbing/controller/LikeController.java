@@ -1,7 +1,7 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,29 +17,29 @@ public class LikeController {
     private final LikeService likeService;
 
     @GetMapping("/count")
-    public ResponseEntity<ApiResponse> likeCount(@PathVariable Long postId) {
+    public ResponseEntity<ApiResponse<Long>> likeCount(@PathVariable Long postId) {
         Long likeCount = likeService.getLikeCount(postId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(likeCount));
+                .body(ApiResponse.of(likeCount));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> likeAdd(@PathVariable Long postId,
-                                               @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> likeAdd(@PathVariable Long postId,
+                                        @AuthenticationPrincipal MemberPrincipal userDetails) {
         likeService.like(userDetails.getMember().getId(), postId);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success());
+                .build();
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse> likeRemove(@PathVariable Long postId,
-                                                  @AuthenticationPrincipal MemberPrincipal userDetails) {
+    public ResponseEntity<Void> likeRemove(@PathVariable Long postId,
+                                           @AuthenticationPrincipal MemberPrincipal userDetails) {
         likeService.unlike(userDetails.getMember().getId(), postId);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
 }

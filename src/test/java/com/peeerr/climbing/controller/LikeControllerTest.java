@@ -1,17 +1,6 @@
 package com.peeerr.climbing.controller;
 
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.LikeService;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import static org.mockito.BDDMockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -48,7 +44,6 @@ class LikeControllerTest {
         //then
         result
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andExpect(jsonPath("$.data").value(likeCount));
     }
 
@@ -70,8 +65,7 @@ class LikeControllerTest {
 
         //then
         result
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isCreated());
 
         then(likeService).should().like(memberId, postId);
     }
@@ -94,8 +88,7 @@ class LikeControllerTest {
 
         //then
         result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"));
+                .andExpect(status().isOk());
 
         then(likeService).should().unlike(memberId, postId);
     }

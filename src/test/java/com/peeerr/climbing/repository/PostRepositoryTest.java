@@ -1,9 +1,9 @@
 package com.peeerr.climbing.repository;
 
-import com.peeerr.climbing.entity.Category;
-import com.peeerr.climbing.entity.Post;
-import com.peeerr.climbing.entity.Member;
-import org.junit.jupiter.api.BeforeEach;
+import com.peeerr.climbing.domain.Category;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.domain.Post;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,15 @@ import static org.assertj.core.api.Assertions.tuple;
 @DataJpaTest
 class PostRepositoryTest {
 
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         postRepository.deleteAll();
         memberRepository.deleteAll();

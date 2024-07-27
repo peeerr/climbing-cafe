@@ -1,24 +1,21 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.domain.File;
+import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.dto.FileStoreDto;
+import com.peeerr.climbing.exception.ClimbingException;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.entity.Post;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.dto.file.FileStoreDto;
-import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.FileAlreadyDeletedException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
-import com.peeerr.climbing.util.S3FileUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 public class FileService {
 
@@ -26,59 +23,46 @@ public class FileService {
     private final FileRepository fileRepository;
     private final PostRepository postRepository;
 
-    @Transactional
-    public List<String> getFilesByPostId(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
+    @Transactional(readOnly = true)
+    public Post getPostById(Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+    }
 
-        List<String> filenames = new ArrayList<>();
-        for (File file : post.getFiles()) {
-            filenames.add(file.getFilename());
-        }
+    @Transactional(readOnly = true)
+    public List<String> getFilesByPostId(Long postId) {
+        Post post = getPostById(postId);
+
+        List<String> filenames = post.getFileNames();
 
         return s3FileUploader.getFiles(filenames);
     }
 
-    @Transactional
     public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.POST_NOT_FOUND));
-
-        if (!post.getMember().getId().equals(loginId)) {
-            throw new UnauthorizedAccessException(ErrorMessage.NO_ACCESS_PERMISSION);
-        }
+        Post post = getPostById(postId);
+        post.checkOwner(loginId);
 
         List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
 
-        List<File> fileEntities = new ArrayList<>();
-        for (FileStoreDto fileDto : storedFiles) {
-            File fileEntity = File.builder()
-                    .post(post)
-                    .originalFilename(fileDto.getOriginalFilename())
-                    .filename(fileDto.getFilename())
-                    .filePath(fileDto.getFilePath())
-                    .build();
-
-            fileEntities.add(fileEntity);
-        }
+        List<File> fileEntities = storedFiles.stream()
+                .map(fileDto -> File.builder()
+                        .post(post)
+                        .originalFilename(fileDto.getOriginalFilename())
+                        .filename(fileDto.getFilename())
+                        .filePath(fileDto.getFilePath())
+                        .build())
+                .toList();
 
         fileRepository.saveAll(fileEntities);
     }
 
-    @Transactional
     public void updateDeleteFlag(Long loginId, Long fileId) {
         File file = fileRepository.findById(fileId)
-                .orElseThrow(() -> new EntityNotFoundException(ErrorMessage.FILE_NOT_FOUND));
+                .orElseThrow(() -> new ClimbingException(ErrorCode.FILE_NOT_FOUND));
+        file.getPost().checkOwner(loginId);
 
-        if (!file.getPost().getMember().getId().equals(loginId)) {
-            throw new UnauthorizedAccessException(ErrorMessage.NO_ACCESS_PERMISSION);
-        }
-
-        if (file.isDeleted()) {
-            throw new FileAlreadyDeletedException(ErrorMessage.FILE_ALREADY_DELETED);
-        }
-
-        file.changeDeleted(true);
+        file.checkNotDeleted();
+        file.delete();
     }
 
 }

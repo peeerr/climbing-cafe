@@ -1,17 +1,12 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.peeerr.climbing.constant.ErrorMessage;
-import com.peeerr.climbing.entity.Category;
-import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.repository.CommentRepository;
-import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.repository.MemberRepository;
-import com.peeerr.climbing.dto.category.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.CategoryEditRequest;
-import org.junit.jupiter.api.BeforeEach;
+import com.peeerr.climbing.domain.Category;
+import com.peeerr.climbing.dto.request.CategoryCreateRequest;
+import com.peeerr.climbing.dto.request.CategoryEditRequest;
+import com.peeerr.climbing.exception.ErrorCode;
+import com.peeerr.climbing.repository.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,9 +19,9 @@ import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -46,17 +41,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class CategoryDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private ObjectMapper mapper;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();
@@ -77,14 +80,14 @@ public class CategoryDocTest {
         categoryRepository.saveAll(
                 List.of(
                         Category.builder()
-                            .categoryName(categoryName1)
-                            .build(),
+                                .categoryName(categoryName1)
+                                .build(),
                         Category.builder()
-                            .categoryName(categoryName2)
-                            .build(),
+                                .categoryName(categoryName2)
+                                .build(),
                         Category.builder()
-                            .categoryName(categoryName3)
-                            .build()
+                                .categoryName(categoryName3)
+                                .build()
                 )
         );
 
@@ -96,7 +99,6 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andExpect(jsonPath("data[0].categoryName").value(categoryName1))
                 .andExpect(jsonPath("data[1].categoryName").value(categoryName2))
                 .andExpect(jsonPath("data[2].categoryName").value(categoryName3))
@@ -104,7 +106,6 @@ public class CategoryDocTest {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
                                 fieldWithPath("data[*].categoryId").description("게시판 ID"),
                                 fieldWithPath("data[*].categoryName").description("게시판 이름")
                         )
@@ -126,16 +127,11 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("category-create",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
                                 fieldWithPath("categoryName").description("게시판 이름")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -147,23 +143,23 @@ public class CategoryDocTest {
         String duplicatedCategory = "자유 게시판";
 
         categoryRepository.save(
-            Category.builder()
-                .categoryName(duplicatedCategory)
-                .build()
+                Category.builder()
+                        .categoryName(duplicatedCategory)
+                        .build()
         );
 
         CategoryCreateRequest request = CategoryCreateRequest.of(duplicatedCategory);
 
         //when
         ResultActions result = mockMvc.perform(MockMvcRequestBuilders.post("/api/categories")
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .content(mapper.writeValueAsString(request)));
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(mapper.writeValueAsString(request)));
 
         //then
         result
-            .andDo(print())
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("message").value(ErrorMessage.CATEGORY_DUPLICATED));
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("message").value(ErrorCode.ALREADY_EXISTS_CATEGORY.getMessage()));
     }
 
     @DisplayName("[통합 테스트/API 문서화] - 게시판 이름 변경")
@@ -191,7 +187,6 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("category-edit",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -200,10 +195,6 @@ public class CategoryDocTest {
                         ),
                         requestFields(
                                 fieldWithPath("categoryName").description("게시판 이름")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
 
@@ -233,16 +224,11 @@ public class CategoryDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("message").value("success"))
                 .andDo(document("category-remove",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("categoryId").description("게시판 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }

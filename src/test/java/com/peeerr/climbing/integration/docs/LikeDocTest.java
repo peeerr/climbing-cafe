@@ -1,16 +1,17 @@
 package com.peeerr.climbing.integration.docs;
 
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.entity.Category;
+import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.entity.Like;
+import com.peeerr.climbing.domain.Like;
 import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.entity.Post;
+import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.entity.Member;
+import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.repository.MemberRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,17 +49,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(RestDocumentationExtension.class)
 public class LikeDocTest {
 
-    @Autowired private FileRepository fileRepository;
-    @Autowired private PostRepository postRepository;
-    @Autowired private CategoryRepository categoryRepository;
-    @Autowired private MemberRepository memberRepository;
-    @Autowired private CommentRepository commentRepository;
-    @Autowired private LikeRepository likeRepository;
+    @Autowired
+    private FileRepository fileRepository;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private LikeRepository likeRepository;
 
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private MockMvc mockMvc;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MockMvc mockMvc;
 
-    @BeforeEach
+    @AfterEach
     public void cleanup() {
         fileRepository.deleteAll();
         commentRepository.deleteAll();
@@ -67,7 +76,7 @@ public class LikeDocTest {
         memberRepository.deleteAll();
         categoryRepository.deleteAll();
     }
-    
+
     @DisplayName("[통합 테스트/API 문서화] - 게시물에 달린 좋아요 개수 조회")
     @Test
     void likeCount() throws Exception {
@@ -124,7 +133,6 @@ public class LikeDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andExpect(jsonPath("$.data").value("3"))
                 .andDo(document("like-count",
                         preprocessRequest(prettyPrint()),
@@ -133,7 +141,6 @@ public class LikeDocTest {
                                 parameterWithName("postId").description("게시물 ID")
                         ),
                         responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
                                 fieldWithPath("data").description("게시물에 달린 좋아요 개수")
                         )
                 ));
@@ -175,16 +182,11 @@ public class LikeDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("like",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
     }
@@ -233,16 +235,11 @@ public class LikeDocTest {
         result
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.message").value("success"))
                 .andDo(document("like-cancel",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
                                 parameterWithName("postId").description("게시물 ID")
-                        ),
-                        responseFields(
-                                fieldWithPath("message").description("결과 메시지"),
-                                fieldWithPath("data").description("")
                         )
                 ));
 

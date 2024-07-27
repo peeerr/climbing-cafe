@@ -1,15 +1,14 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.dto.category.CategoryCreateRequest;
-import com.peeerr.climbing.dto.category.CategoryEditRequest;
-import com.peeerr.climbing.dto.category.CategoryResponse;
-import com.peeerr.climbing.dto.ApiResponse;
+import com.peeerr.climbing.dto.common.ApiResponse;
+import com.peeerr.climbing.dto.request.CategoryCreateRequest;
+import com.peeerr.climbing.dto.request.CategoryEditRequest;
+import com.peeerr.climbing.dto.response.CategoryResponse;
 import com.peeerr.climbing.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,38 +21,36 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse> categoryList() {
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> categoryList() {
         List<CategoryResponse> categories = categoryService.getCategories();
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success(categories));
+                .body(ApiResponse.of(categories));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest,
-                                         BindingResult bindingResult) {
+    public ResponseEntity<Void> categoryAdd(@RequestBody @Valid CategoryCreateRequest categoryCreateRequest) {
         categoryService.addCategory(categoryCreateRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success());
+                .build();
     }
 
     @PutMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse> categoryEdit(@PathVariable Long categoryId,
-                                          @RequestBody @Valid CategoryEditRequest categoryEditRequest,
-                                          BindingResult bindingResult) {
+    public ResponseEntity<Void> categoryEdit(@PathVariable Long categoryId,
+                                             @RequestBody @Valid CategoryEditRequest categoryEditRequest) {
         categoryService.editCategory(categoryId, categoryEditRequest);
 
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
-    
+
     @DeleteMapping("/{categoryId}")
-    public ResponseEntity<ApiResponse> categoryRemove(@PathVariable Long categoryId) {
+    public ResponseEntity<Void> categoryRemove(@PathVariable Long categoryId) {
         categoryService.removeCategory(categoryId);
-        
+
         return ResponseEntity.ok()
-                .body(ApiResponse.success());
+                .build();
     }
 
 }

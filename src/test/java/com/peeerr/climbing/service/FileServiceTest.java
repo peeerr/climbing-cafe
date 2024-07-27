@@ -1,13 +1,11 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.entity.File;
+import com.peeerr.climbing.domain.File;
+import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.entity.Post;
 import com.peeerr.climbing.repository.PostRepository;
-import com.peeerr.climbing.entity.Member;
-import com.peeerr.climbing.exception.EntityNotFoundException;
-import com.peeerr.climbing.exception.UnauthorizedAccessException;
-import com.peeerr.climbing.util.S3FileUploader;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -99,8 +97,8 @@ class FileServiceTest {
         given(postRepository.findById(postId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-                () -> fileService.uploadFiles(1L, postId, files));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.uploadFiles(1L, postId, files));
 
         then(postRepository).should().findById(postId);
     }
@@ -121,8 +119,8 @@ class FileServiceTest {
         Long loginId = 2L;
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class,
-                () -> fileService.uploadFiles(loginId, postId, files));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.uploadFiles(loginId, postId, files));
 
         then(postRepository).should().findById(postId);
     }
@@ -164,8 +162,8 @@ class FileServiceTest {
         given(fileRepository.findById(fileId)).willReturn(Optional.empty());
 
         //when & then
-        assertThrows(EntityNotFoundException.class,
-                () -> fileService.updateDeleteFlag(1L, fileId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.updateDeleteFlag(1L, fileId));
 
         then(fileRepository).should().findById(fileId);
     }
@@ -190,8 +188,8 @@ class FileServiceTest {
         given(fileRepository.findById(fileId)).willReturn(Optional.of(file));
 
         //when & then
-        assertThrows(UnauthorizedAccessException.class,
-                () -> fileService.updateDeleteFlag(loginId, fileId));
+        assertThatExceptionOfType(ClimbingException.class)
+                .isThrownBy(() -> fileService.updateDeleteFlag(loginId, fileId));
 
         then(fileRepository).should().findById(fileId);
     }
