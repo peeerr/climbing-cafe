@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.request.validation;
+package com.peeerr.climbing.validation;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

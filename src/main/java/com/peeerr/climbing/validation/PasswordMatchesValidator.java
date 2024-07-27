@@ -1,4 +1,4 @@
-package com.peeerr.climbing.dto.request.validation;
+package com.peeerr.climbing.validation;
 
 import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import jakarta.validation.ConstraintValidator;
