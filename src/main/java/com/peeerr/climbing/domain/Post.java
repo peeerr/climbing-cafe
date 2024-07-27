@@ -52,7 +52,8 @@ public class Post extends BaseEntity {
     private List<Like> likes = new ArrayList<>();
 
     @Builder
-    private Post(String title, String content, Category category, Member member) {
+    private Post(Long id, String title, String content, Category category, Member member) {
+        this.id = id;
         this.title = title;
         this.content = content;
         this.category = category;

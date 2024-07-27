@@ -5,6 +5,7 @@ import com.peeerr.climbing.dto.request.MemberCreateRequest;
 import com.peeerr.climbing.dto.request.MemberEditRequest;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.MemberRepository;
+import com.peeerr.climbing.service.validator.MemberValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,6 +28,9 @@ class MemberServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private MemberValidator memberValidator;
+
     @InjectMocks
     private MemberService memberService;
 
@@ -37,12 +41,14 @@ class MemberServiceTest {
         MemberCreateRequest request = MemberCreateRequest.of("test", "test1234", "test1234", "test@example.com");
         Member member = Member.builder().build();
 
+        willDoNothing().given(memberValidator).validateNewMember(any(MemberCreateRequest.class));
         given(memberRepository.save(any(Member.class))).willReturn(member);
 
         //when
         memberService.addMember(request);
 
         //then
+        then(memberValidator).should().validateNewMember(any(MemberCreateRequest.class));
         then(memberRepository).should().save(any(Member.class));
     }
 
@@ -64,12 +70,16 @@ class MemberServiceTest {
                 .build();
 
         given(memberRepository.findById(memberId)).willReturn(Optional.of(member));
+        willDoNothing().given(memberValidator).validateDuplicateEmail(anyString());
+        willDoNothing().given(memberValidator).validateDuplicateUsername(anyString());
 
         //when
         memberService.editMember(memberId, request, loginId);
 
         //then
         then(memberRepository).should().findById(memberId);
+        then(memberValidator).should().validateDuplicateEmail(anyString());
+        then(memberValidator).should().validateDuplicateUsername(anyString());
     }
 
     @DisplayName("[접근 권한X] 회원 정보를 수정하는데, 로그인 사용자와 수정 대상자가 다르면 예외를 던진다.")

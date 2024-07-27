@@ -1,7 +1,6 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.domain.Member;
-import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +16,8 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static com.peeerr.climbing.exception.ValidationErrorMessage.FILE_REQUIRED;
+import static com.peeerr.climbing.exception.ValidationErrorMessage.VALIDATION_ERROR;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -101,7 +102,8 @@ class FileControllerTest {
         result
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(ErrorCode.FILE_REQUIRED.getMessage()));
+                .andExpect(jsonPath("$.message").value(VALIDATION_ERROR))
+                .andExpect(jsonPath("$.validation.files").value(FILE_REQUIRED));
     }
 
     @DisplayName("파일 id 를 받아 삭제 처리한다. (유저 권한 기준)")

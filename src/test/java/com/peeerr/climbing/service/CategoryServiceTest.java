@@ -6,6 +6,7 @@ import com.peeerr.climbing.dto.request.CategoryEditRequest;
 import com.peeerr.climbing.dto.response.CategoryResponse;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;
+import com.peeerr.climbing.service.validator.CategoryValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,9 @@ class CategoryServiceTest {
 
     @Mock
     private CategoryRepository categoryRepository;
+
+    @Mock
+    private CategoryValidator categoryValidator;
 
     @InjectMocks
     private CategoryService categoryService;
@@ -51,12 +55,14 @@ class CategoryServiceTest {
         CategoryCreateRequest request = CategoryCreateRequest.of("자유 게시판");
         Category category = Category.builder().categoryName(request.getCategoryName()).build();
 
+        willDoNothing().given(categoryValidator).validateCategoryNameUnique(anyString());
         given(categoryRepository.save(any(Category.class))).willReturn(category);
 
         //when
         categoryService.addCategory(request);
 
         //then
+        then(categoryValidator).should().validateCategoryNameUnique(anyString());
         then(categoryRepository).should().save(any(Category.class));
     }
 
@@ -68,12 +74,14 @@ class CategoryServiceTest {
         Category category = Category.builder().categoryName("자유 게시판").build();
         CategoryEditRequest request = CategoryEditRequest.of("후기 게시판");
 
+        willDoNothing().given(categoryValidator).validateCategoryNameUnique(anyString());
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
         //when
         categoryService.editCategory(categoryId, request);
 
         //then
+        then(categoryValidator).should().validateCategoryNameUnique(anyString());
         assertThat(category.getCategoryName()).isEqualTo(request.getCategoryName());
 
         then(categoryRepository).should().findById(categoryId);

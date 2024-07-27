@@ -7,6 +7,7 @@ import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.LikeRepository;
 import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.service.validator.LikeValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,10 +27,15 @@ class LikeServiceTest {
 
     @Mock
     private LikeRepository likeRepository;
+
     @Mock
     private PostRepository postRepository;
+
     @Mock
     private MemberRepository memberRepository;
+
+    @Mock
+    private LikeValidator likeValidator;
 
     @InjectMocks
     private LikeService likeService;
@@ -60,14 +66,14 @@ class LikeServiceTest {
         Long memberId = 1L;
         Long postId = 1L;
 
-        Post post = Post.builder().build();
-        Member member = Member.builder().build();
+        Post post = Post.builder().id(postId).build();
+        Member member = Member.builder().id(memberId).build();
         Like like = Like.builder()
                 .member(member)
                 .post(post)
                 .build();
 
-        given(likeRepository.existsLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(false);
+        willDoNothing().given(likeValidator).validateLikeNotExists(anyLong(), anyLong());
         given(likeRepository.save(any(Like.class))).willReturn(like);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
         given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
@@ -76,23 +82,10 @@ class LikeServiceTest {
         likeService.like(memberId, postId);
 
         //then
-        then(likeRepository).should().existsLikeByMemberIdAndPostId(anyLong(), anyLong());
+        then(likeValidator).should().validateLikeNotExists(memberId, postId);
+        then(postRepository).should().findById(postId);
+        then(memberRepository).should().findById(memberId);
         then(likeRepository).should().save(any(Like.class));
-        then(postRepository).should().findById(anyLong());
-        then(memberRepository).should().findById(anyLong());
-    }
-
-    @DisplayName("좋아요를 추가하는데, 해당 게시물에 좋아요가 이미 존재하면 예외를 던진다.")
-    @Test
-    void likeWithAlreadyExistingLike() throws Exception {
-        //given
-        given(likeRepository.existsLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(true);
-
-        //when & then
-        assertThatExceptionOfType(ClimbingException.class)
-                .isThrownBy(() -> likeService.like(1L, 1L));
-
-        then(likeRepository.existsLikeByMemberIdAndPostId(anyLong(), anyLong()));
     }
 
     @DisplayName("게시물 ID가 주어지면, 해당 게시물 좋아요를 삭제한다.")
