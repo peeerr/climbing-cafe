@@ -1,10 +1,12 @@
 package com.peeerr.climbing.repository;
 
-import com.peeerr.climbing.dto.request.PostSearchCondition;
-import com.peeerr.climbing.dto.response.PostResponse;
-import com.peeerr.climbing.dto.response.QPostResponse;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.domain.QPost;
+import com.peeerr.climbing.dto.request.PostSearchCondition;
+import com.peeerr.climbing.dto.response.PopularPostResponse;
+import com.peeerr.climbing.dto.response.PostResponse;
+import com.peeerr.climbing.dto.response.QPostResponse;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -19,11 +21,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.peeerr.climbing.domain.QCategory.category;
+import static com.peeerr.climbing.domain.QLike.like;
 import static com.peeerr.climbing.domain.QMember.member;
 import static com.peeerr.climbing.domain.QPost.post;
 
 public class CustomPostRepositoryImpl implements CustomPostRepository {
-
 
     private final JPAQueryFactory queryFactory;
 
@@ -67,6 +69,28 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
                 .fetchOne();
 
         return post != null ? Optional.of(post) : Optional.empty();
+    }
+
+    @Override
+    public List<PopularPostResponse> findPopularPosts() {
+        return queryFactory
+                .select(Projections.constructor(PopularPostResponse.class,
+                        post.id,
+                        post.title,
+                        category.categoryName,
+                        member.username,
+                        post.createDate,
+                        post.modifyDate,
+                        like.id.count().as("likeCount")
+                ))
+                .from(post)
+                .join(post.category, category)
+                .join(post.member, member)
+                .leftJoin(like).on(post.id.eq(like.post.id))
+                .groupBy(post.id)
+                .orderBy(like.id.count().desc())
+                .limit(20)
+                .fetch();
     }
 
     public BooleanExpression categoryEq(Long categoryId) {
