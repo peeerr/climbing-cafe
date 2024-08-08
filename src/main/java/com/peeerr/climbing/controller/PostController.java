@@ -4,6 +4,7 @@ import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.request.PostEditRequest;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
+import com.peeerr.climbing.dto.response.PopularPostResponse;
 import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.security.MemberPrincipal;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/posts")
@@ -40,6 +43,14 @@ public class PostController {
 
         return ResponseEntity.ok()
                 .body(ApiResponse.of(post));
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<ApiResponse<List<PopularPostResponse>>> popularPostList() {
+        List<PopularPostResponse> posts = postService.getPopularPosts();
+
+        return ResponseEntity.ok()
+                .body(ApiResponse.of(posts));
     }
 
     @PostMapping

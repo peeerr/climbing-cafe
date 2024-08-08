@@ -1,5 +1,6 @@
 package com.peeerr.climbing.service;
 
+import com.peeerr.climbing.dto.response.PopularPostResponse;
 import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.domain.Member;
@@ -17,6 +18,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -42,6 +45,11 @@ public class PostService {
         return postRepository.findPostById(postId)
                 .map(PostDetailResponse::from)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
+    public List<PopularPostResponse> getPopularPosts() {
+        return postRepository.findPopularPosts();
     }
 
     public void addPost(PostCreateRequest postCreateRequest, Member member) {
