@@ -12,6 +12,7 @@ import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.repository.CategoryRepository;
+import com.peeerr.climbing.repository.LikeRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,10 +29,11 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional(readOnly = true)
     public Post getPostById(Long postId) {
-        return postRepository.findById(postId)
+        return postRepository.findPostById(postId)
                 .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
     }
 
@@ -41,10 +43,11 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostDetailResponse getPostWithComments(Long postId) {
-        return postRepository.findPostById(postId)
-                .map(PostDetailResponse::from)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+    public PostDetailResponse getPost(Long postId) {
+        Post post = getPostById(postId);
+        Long likeCount = likeRepository.countLikeByPost(post);
+
+        return PostDetailResponse.of(post, likeCount);
     }
 
     @Transactional(readOnly = true)

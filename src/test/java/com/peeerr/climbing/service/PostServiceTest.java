@@ -84,7 +84,7 @@ class PostServiceTest {
         given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
 
         //when
-        PostDetailResponse response = postService.getPostWithComments(postId);
+        PostDetailResponse response = postService.getPost(postId);
 
         //then
         assertThat(response.getTitle()).isEqualTo("제목 테스트");
