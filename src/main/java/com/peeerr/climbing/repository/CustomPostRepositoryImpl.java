@@ -1,17 +1,16 @@
 package com.peeerr.climbing.repository;
 
 import com.peeerr.climbing.domain.Post;
-import com.peeerr.climbing.domain.QPost;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.response.PopularPostResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.dto.response.QPostResponse;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.util.StringUtils;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -21,13 +20,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.peeerr.climbing.domain.QCategory.category;
-import static com.peeerr.climbing.domain.QLike.like;
 import static com.peeerr.climbing.domain.QMember.member;
 import static com.peeerr.climbing.domain.QPost.post;
 
 public class CustomPostRepositoryImpl implements CustomPostRepository {
 
     private final JPAQueryFactory queryFactory;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public CustomPostRepositoryImpl(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
@@ -61,36 +62,27 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
 
     @Override
     public Optional<Post> findPostById(Long postId) {
-        Post post = queryFactory
-                .selectFrom(QPost.post)
-                .join(QPost.post.category, category).fetchJoin()
-                .join(QPost.post.member, member).fetchJoin()
-                .where(QPost.post.id.eq(postId))
+        Post foundPost = queryFactory
+                .selectFrom(post)
+                .join(post.category, category).fetchJoin()
+                .join(post.member, member).fetchJoin()
+                .where(post.id.eq(postId))
                 .fetchOne();
 
-        return post != null ? Optional.of(post) : Optional.empty();
+        return post != null ? Optional.of(foundPost) : Optional.empty();
     }
 
     @Override
     public List<PopularPostResponse> findPopularPosts() {
-        return queryFactory
-                .select(Projections.constructor(PopularPostResponse.class,
-                        post.id,
-                        post.title,
-                        category.categoryName,
-                        member.username,
-                        post.createDate,
-                        post.modifyDate,
-                        like.id.count().as("likeCount")
-                ))
-                .from(post)
-                .join(post.category, category)
-                .join(post.member, member)
-                .leftJoin(like).on(post.id.eq(like.post.id))
-                .groupBy(post.id)
-                .orderBy(like.id.count().desc())
-                .limit(20)
-                .fetch();
+        String jpql = "SELECT new com.peeerr.climbing.dto.response.PopularPostResponse(p.id, p.title, c.categoryName, m.username, p.createDate, p.modifyDate, l.likeCount) " +
+                "FROM Post p " +
+                "JOIN p.category c " +
+                "JOIN p.member m " +
+                "JOIN (SELECT l.post.id AS postId, COUNT(l.id) AS likeCount FROM Like l GROUP BY l.post.id ORDER BY likeCount DESC LIMIT 20) l " +
+                "ON l.postId = p.id";
+
+        return entityManager.createQuery(jpql, PopularPostResponse.class)
+                .getResultList();
     }
 
     public BooleanExpression categoryEq(Long categoryId) {

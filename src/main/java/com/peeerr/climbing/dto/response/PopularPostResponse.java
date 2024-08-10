@@ -12,7 +12,7 @@ public class PopularPostResponse {
     private Long postId;
     private String title;
     private String categoryName;
-    private String writer;
+    private String username;
 
     private LocalDateTime createDate;
     private LocalDateTime modifyDate;
