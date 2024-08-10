@@ -4,9 +4,10 @@ import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.response.PopularPostResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
-import com.peeerr.climbing.dto.response.QPostResponse;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.StringUtils;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -20,8 +21,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.peeerr.climbing.domain.QCategory.category;
+import static com.peeerr.climbing.domain.QLike.like;
 import static com.peeerr.climbing.domain.QMember.member;
 import static com.peeerr.climbing.domain.QPost.post;
+import static com.querydsl.core.types.Projections.constructor;
 
 public class CustomPostRepositoryImpl implements CustomPostRepository {
 
@@ -37,12 +40,19 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
     @Override
     public Page<PostResponse> findPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
         List<PostResponse> posts = queryFactory
-                .select(new QPostResponse(
+                .select(constructor(PostResponse.class,
                         post.id,
+                        post.title,
                         post.category.categoryName,
                         post.member.username,
                         post.createDate,
-                        post.modifyDate))
+                        post.modifyDate,
+                        Expressions.asNumber(
+                                JPAExpressions.select(like.count())
+                                        .from(like)
+                                        .where(like.post.eq(post))
+                        ).longValue().as("likeCount")
+                ))
                 .from(post)
                 .join(post.category, category)
                 .join(post.member, member)
