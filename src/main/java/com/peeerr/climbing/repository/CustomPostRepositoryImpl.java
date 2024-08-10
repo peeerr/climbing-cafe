@@ -4,6 +4,7 @@ import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
 import com.peeerr.climbing.dto.response.PopularPostResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.StringUtils;
@@ -84,15 +85,22 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
 
     @Override
     public List<PopularPostResponse> findPopularPosts() {
-        String jpql = "SELECT new com.peeerr.climbing.dto.response.PopularPostResponse(p.id, p.title, c.categoryName, m.username, p.createDate, p.modifyDate, l.likeCount) " +
-                "FROM Post p " +
-                "JOIN p.category c " +
-                "JOIN p.member m " +
-                "JOIN (SELECT l.post.id AS postId, COUNT(l.id) AS likeCount FROM Like l GROUP BY l.post.id ORDER BY likeCount DESC LIMIT 20) l " +
-                "ON l.postId = p.id";
-
-        return entityManager.createQuery(jpql, PopularPostResponse.class)
-                .getResultList();
+        return queryFactory
+                .select(Projections.constructor(PopularPostResponse.class,
+                        post.id,
+                        post.title,
+                        category.categoryName,
+                        member.username,
+                        post.createDate,
+                        post.modifyDate,
+                        post.likeCount
+                ))
+                .from(post)
+                .join(post.category, category)
+                .join(post.member, member)
+                .orderBy(post.likeCount.desc())
+                .limit(20)
+                .fetch();
     }
 
     public BooleanExpression categoryEq(Long categoryId) {

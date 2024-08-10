@@ -39,6 +39,8 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    private Long likeCount = 0L;
+
     @JsonIgnoreProperties("post")
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
