@@ -48,6 +48,7 @@ public class LikeService {
                 .build();
 
         likeRepository.save(like);
+        post.increaseLikeCount();
     }
 
     public void unlike(Long memberId, Long postId) {
@@ -55,6 +56,9 @@ public class LikeService {
                 .orElseThrow(() -> new ClimbingException(ErrorCode.LIKE_NOT_FOUND));
 
         likeRepository.delete(like);
+
+        Post post = getPostById(postId);
+        post.decreaseLikeCount();
     }
 
 }
