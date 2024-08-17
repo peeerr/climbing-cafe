@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles("test")
+@ActiveProfiles("dev")
 @SpringBootTest
 public class LikeConcurrencyTest {
 
@@ -71,7 +71,7 @@ public class LikeConcurrencyTest {
 
         // then
         Post updatedPost = postRepository.findById(postId).get();
-        Long actualLikeCount = likeRepository.countLikeByPost(updatedPost);
+        Long actualLikeCount = likeRepository.countLikeByPostId(updatedPost.getId());
 
         // likes 테이블에 저장된 좋아요 수와 Post 테이블의 해당 게시물의 likeCount
         System.out.println("actualLikeCount = " + actualLikeCount);
@@ -85,8 +85,8 @@ public class LikeConcurrencyTest {
 
         for (int i = 1; i <= count; i++) {
             Member member = Member.builder()
-                    .username("username" + i)
-                    .email("test" + i + "@example.com")
+                    .username("username__test" + i)
+                    .email("test__" + i + "@example.com")
                     .password("password")
                     .build();
             memberRepository.save(member);
@@ -97,8 +97,8 @@ public class LikeConcurrencyTest {
     }
 
     private Post createPost() {
-        Category category = categoryRepository.save(Category.builder().categoryName("test category_name").build());
-        Member member = memberRepository.save(Member.builder().email("test@example.com").password("password").username("test").build());
+        Category category = categoryRepository.save(Category.builder().categoryName("test__category__name").build());
+        Member member = memberRepository.save(Member.builder().email("test__concurrency@example.com").password("password").username("test__concurrency").build());
         Post post = Post.builder().category(category).member(member).title("test title").content("test content").build();
 
         return postRepository.save(post);
