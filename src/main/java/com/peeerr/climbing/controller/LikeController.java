@@ -16,14 +16,6 @@ public class LikeController {
 
     private final LikeService likeService;
 
-    @GetMapping("/count")
-    public ResponseEntity<ApiResponse<Long>> likeCount(@PathVariable Long postId) {
-        Long likeCount = likeService.getLikeCount(postId);
-
-        return ResponseEntity.ok()
-                .body(ApiResponse.of(likeCount));
-    }
-
     @PostMapping
     public ResponseEntity<Void> likeAdd(@PathVariable Long postId,
                                         @AuthenticationPrincipal MemberPrincipal userDetails) {

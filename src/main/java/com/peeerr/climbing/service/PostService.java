@@ -45,9 +45,8 @@ public class PostService {
     @Transactional(readOnly = true)
     public PostDetailResponse getPost(Long postId) {
         Post post = getPostById(postId);
-        Long likeCount = likeRepository.countLikeByPost(post);
 
-        return PostDetailResponse.of(post, likeCount);
+        return PostDetailResponse.from(post);
     }
 
     @Transactional(readOnly = true)

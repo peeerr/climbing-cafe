@@ -25,7 +25,7 @@ public class PostDetailResponse {
 
     private Long likeCount;
 
-    public static PostDetailResponse of(Post post, Long likeCount) {
+    public static PostDetailResponse from(Post post) {
         return new PostDetailResponse(post.getId(),
                 post.getTitle(),
                 post.getContent(),
@@ -36,7 +36,7 @@ public class PostDetailResponse {
                         .toList(),
                 post.getCreateDate(),
                 post.getModifyDate(),
-                likeCount);
+                post.getLikeCount());
     }
 
 }

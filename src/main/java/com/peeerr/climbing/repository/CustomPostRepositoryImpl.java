@@ -48,11 +48,7 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
                         post.member.username,
                         post.createDate,
                         post.modifyDate,
-                        Expressions.asNumber(
-                                JPAExpressions.select(like.count())
-                                        .from(like)
-                                        .where(like.post.eq(post))
-                        ).longValue().as("likeCount")
+                        post.likeCount
                 ))
                 .from(post)
                 .join(post.category, category)

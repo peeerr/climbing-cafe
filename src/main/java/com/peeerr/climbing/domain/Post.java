@@ -49,10 +49,6 @@ public class Post extends BaseEntity {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
 
-    @JsonIgnoreProperties("post")
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
-
     @Builder
     private Post(Long id, String title, String content, Category category, Member member) {
         this.id = id;

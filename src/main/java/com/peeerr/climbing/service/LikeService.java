@@ -1,7 +1,6 @@
 package com.peeerr.climbing.service;
 
 import com.peeerr.climbing.domain.Like;
-import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.exception.ErrorCode;
@@ -20,7 +19,6 @@ public class LikeService {
 
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
-    private final MemberRepository memberRepository;
     private final LikeValidator likeValidator;
 
     @Transactional(readOnly = true)
@@ -29,22 +27,15 @@ public class LikeService {
                 .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
     }
 
-    @Transactional(readOnly = true)
-    public Long getLikeCount(Long postId) {
-        Post post = getPostById(postId);
-        return likeRepository.countLikeByPost(post);
-    }
-
     public void like(Long memberId, Long postId) {
         likeValidator.validateLikeNotExists(memberId, postId);
 
-        Post post = getPostById(postId);
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.MEMBER_NOT_FOUND));
+        Post post = postRepository.findPostByIdWithPessimisticLock(postId)
+                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
 
         Like like = Like.builder()
-                .member(member)
-                .post(post)
+                .memberId(memberId)
+                .postId(postId)
                 .build();
 
         likeRepository.save(like);
