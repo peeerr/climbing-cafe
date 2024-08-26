@@ -5,11 +5,11 @@ import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.service.validator.LikeValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -27,11 +27,11 @@ public class LikeService {
                 .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
     }
 
-    public void like(Long memberId, Long postId) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void likeWithNamedLock(Long memberId, Long postId) {
         likeValidator.validateLikeNotExists(memberId, postId);
 
-        Post post = postRepository.findPostByIdWithPessimisticLock(postId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.POST_NOT_FOUND));
+        Post post = getPostById(postId);
 
         Like like = Like.builder()
                 .memberId(memberId)

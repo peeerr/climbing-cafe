@@ -7,6 +7,7 @@ import com.peeerr.climbing.repository.CategoryRepository;
 import com.peeerr.climbing.repository.LikeRepository;
 import com.peeerr.climbing.repository.MemberRepository;
 import com.peeerr.climbing.repository.PostRepository;
+import com.peeerr.climbing.service.LikeManager;
 import com.peeerr.climbing.service.LikeService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ public class LikeConcurrencyTest {
     private LikeService likeService;
 
     @Autowired
+    private LikeManager likeManager;
+
+    @Autowired
     private LikeRepository likeRepository;
 
     @Autowired
@@ -45,7 +49,7 @@ public class LikeConcurrencyTest {
     @Test
     public void concurrentLikeWithDifferentMembers() throws InterruptedException {
         // given
-        int threadCount = 10;
+        int threadCount = 100;
 
         List<Member> members = createMembers(threadCount);
         Long postId = createPost().getId();
@@ -57,7 +61,7 @@ public class LikeConcurrencyTest {
         for (Member member : members) {
             executorService.submit(() -> {
                 try {
-                    likeService.like(member.getId(), postId);
+                    likeManager.like(member.getId(), postId);
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 } finally {
