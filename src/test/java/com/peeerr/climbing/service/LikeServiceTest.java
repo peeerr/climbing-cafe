@@ -14,10 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.*;
@@ -37,27 +38,11 @@ class LikeServiceTest {
     @Mock
     private LikeValidator likeValidator;
 
+    @Mock
+    private RedisTemplate redisTemplate;
+
     @InjectMocks
     private LikeService likeService;
-
-    @DisplayName("해당 게시물에 있는 좋아요 수를 반환한다.")
-    @Test
-    void getLikeCount() throws Exception {
-        //given
-        Long postId = 1L;
-        Post post = Post.builder().build();
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
-        given(likeRepository.countLikeByPost(post)).willReturn(5L);
-
-        //when
-        Long likeCount = likeService.getLikeCount(postId);
-
-        //then
-        assertThat(likeCount).isEqualTo(5L);
-
-        then(postRepository).should().findById(postId);
-        then(likeRepository).should().countLikeByPost(post);
-    }
 
     @DisplayName("게시물 ID가 주어지면, 해당 게시물에 좋아요를 추가한다.")
     @Test
@@ -69,23 +54,26 @@ class LikeServiceTest {
         Post post = Post.builder().id(postId).build();
         Member member = Member.builder().id(memberId).build();
         Like like = Like.builder()
-                .member(member)
-                .post(post)
+                .memberId(member.getId())
+                .postId(post.getId())
                 .build();
 
         willDoNothing().given(likeValidator).validateLikeNotExists(anyLong(), anyLong());
         given(likeRepository.save(any(Like.class))).willReturn(like);
-        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(memberRepository.findById(anyLong())).willReturn(Optional.of(member));
+
+        ValueOperations<String, Long> valueOperations = mock(ValueOperations.class);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(valueOperations.increment(anyString(), anyLong())).willReturn(1L);
 
         //when
         likeService.like(memberId, postId);
 
         //then
         then(likeValidator).should().validateLikeNotExists(memberId, postId);
-        then(postRepository).should().findById(postId);
-        then(memberRepository).should().findById(memberId);
         then(likeRepository).should().save(any(Like.class));
+
+        then(redisTemplate).should().opsForValue();
+        then(valueOperations).should().increment(anyString(), anyLong());
     }
 
     @DisplayName("게시물 ID가 주어지면, 해당 게시물 좋아요를 삭제한다.")
@@ -99,12 +87,19 @@ class LikeServiceTest {
         given(likeRepository.findLikeByMemberIdAndPostId(anyLong(), anyLong())).willReturn(Optional.of(like));
         willDoNothing().given(likeRepository).delete(any(Like.class));
 
+        ValueOperations<String, Long> valueOperations = mock(ValueOperations.class);
+        given(redisTemplate.opsForValue()).willReturn(valueOperations);
+        given(valueOperations.decrement(anyString(), anyLong())).willReturn(1L);
+
         //when
         likeService.unlike(memberId, postId);
 
         //then
         then(likeRepository).should().findLikeByMemberIdAndPostId(anyLong(), anyLong());
         then(likeRepository).should().delete(any(Like.class));
+
+        then(redisTemplate).should().opsForValue();
+        then(valueOperations).should().decrement(anyString(), anyLong());
     }
 
     @DisplayName("해당 게시물 좋아요를 삭제하는데, 좋아요가 존재하지 않으면 예외를 던진다.")

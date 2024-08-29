@@ -1,7 +1,6 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
