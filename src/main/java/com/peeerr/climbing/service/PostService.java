@@ -1,18 +1,17 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.dto.response.PopularPostResponse;
-import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.domain.Category;
 import com.peeerr.climbing.domain.Member;
 import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.dto.request.PostCreateRequest;
 import com.peeerr.climbing.dto.request.PostEditRequest;
 import com.peeerr.climbing.dto.request.PostSearchCondition;
+import com.peeerr.climbing.dto.response.PopularPostResponse;
 import com.peeerr.climbing.dto.response.PostDetailResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
 import com.peeerr.climbing.exception.ClimbingException;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.repository.LikeRepository;
 import com.peeerr.climbing.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +28,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CategoryRepository categoryRepository;
-    private final LikeRepository likeRepository;
 
     @Transactional(readOnly = true)
     public Post getPostById(Long postId) {

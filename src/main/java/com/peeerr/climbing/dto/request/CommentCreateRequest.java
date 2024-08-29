@@ -1,8 +1,8 @@
 package com.peeerr.climbing.dto.request;
 
 import com.peeerr.climbing.domain.Comment;
-import com.peeerr.climbing.domain.Post;
 import com.peeerr.climbing.domain.Member;
+import com.peeerr.climbing.domain.Post;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;

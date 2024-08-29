@@ -6,9 +6,7 @@ import com.peeerr.climbing.dto.response.PopularPostResponse;
 import com.peeerr.climbing.dto.response.PostResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.util.StringUtils;
-import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -22,7 +20,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.peeerr.climbing.domain.QCategory.category;
-import static com.peeerr.climbing.domain.QLike.like;
 import static com.peeerr.climbing.domain.QMember.member;
 import static com.peeerr.climbing.domain.QPost.post;
 import static com.querydsl.core.types.Projections.constructor;
@@ -76,7 +73,7 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
                 .where(post.id.eq(postId))
                 .fetchOne();
 
-        return post != null ? Optional.of(foundPost) : Optional.empty();
+        return Optional.ofNullable(foundPost);
     }
 
     @Override

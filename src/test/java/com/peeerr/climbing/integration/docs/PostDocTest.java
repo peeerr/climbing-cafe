@@ -124,7 +124,9 @@ public class PostDocTest {
                         ),
                         responseFields(
                                 fieldWithPath("data.content[*].postId").description("게시물 ID"),
+                                fieldWithPath("data.content[*].title").description("게시물 제목"),
                                 fieldWithPath("data.content[*].categoryName").description("게시물이 속한 게시판 이름"),
+                                fieldWithPath("data.content[*].likeCount").description("게시물에 달린 좋아요 개수"),
                                 fieldWithPath("data.content[*].writer").description("작성자"),
                                 fieldWithPath("data.content[*].createDate").description("생성일시"),
                                 fieldWithPath("data.content[*].modifyDate").description("수정일시"),
@@ -181,10 +183,10 @@ public class PostDocTest {
                                 fieldWithPath("data.postId").description("게시물 ID"),
                                 fieldWithPath("data.title").description("제목"),
                                 fieldWithPath("data.content").description("본문 글"),
+                                fieldWithPath("data.likeCount").description("게시물에 달린 좋아요 개수"),
                                 fieldWithPath("data.categoryName").description("게시물이 속한 게시판 이름"),
                                 fieldWithPath("data.writer").description("작성자"),
                                 fieldWithPath("data.filePaths").description("게시물에 첨부된 모든 파일 경로"),
-                                fieldWithPath("data.comments").description("게시물에 달린 모든 댓글 정보"),
                                 fieldWithPath("data.createDate").description("생성일시"),
                                 fieldWithPath("data.modifyDate").description("수정일시")
                         )
