@@ -39,7 +39,7 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<ApiResponse<PostDetailResponse>> postDetail(@PathVariable Long postId) {
-        PostDetailResponse post = postService.getPostWithComments(postId);
+        PostDetailResponse post = postService.getPost(postId);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.of(post));

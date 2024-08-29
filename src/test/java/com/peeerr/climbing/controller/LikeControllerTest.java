@@ -12,11 +12,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
@@ -28,24 +29,6 @@ class LikeControllerTest {
 
     @MockBean
     private LikeService likeService;
-
-    @DisplayName("게시물 ID를 받아 해당 게시물에 달린 좋아요 수를 반환한다.")
-    @Test
-    void likeCount() throws Exception {
-        //given
-        Long postId = 1L;
-        Long likeCount = 5L;
-
-        given(likeService.getLikeCount(postId)).willReturn(likeCount);
-
-        //when
-        ResultActions result = mvc.perform(get("/api/posts/{postId}/likes/count", postId));
-
-        //then
-        result
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value(likeCount));
-    }
 
     @DisplayName("게시물 ID를 받아 해당 게시물에 좋아요를 추가한다.")
     @Test

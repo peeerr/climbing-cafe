@@ -1,10 +1,10 @@
 package com.peeerr.climbing.dto.common;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import lombok.Builder;
 import lombok.Getter;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 public class ErrorResponse {

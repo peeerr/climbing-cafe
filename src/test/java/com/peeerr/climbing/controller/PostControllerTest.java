@@ -72,7 +72,7 @@ class PostControllerTest {
     void postDetail() throws Exception {
         //given
         Long categoryId = 1L;
-        given(postService.getPostWithComments(anyLong())).willReturn(any(PostDetailResponse.class));
+        given(postService.getPost(anyLong())).willReturn(any(PostDetailResponse.class));
 
         //when
         ResultActions result = mvc.perform(get("/api/posts/{postId}", categoryId));
@@ -82,7 +82,7 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
 
-        then(postService).should().getPostWithComments(anyLong());
+        then(postService).should().getPost(anyLong());
     }
 
     @DisplayName("새로운 게시물을 작성한다.")

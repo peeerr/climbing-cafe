@@ -1,7 +1,6 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.security.MemberPrincipal;
-import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.service.LikeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,14 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class LikeController {
 
     private final LikeService likeService;
-
-    @GetMapping("/count")
-    public ResponseEntity<ApiResponse<Long>> likeCount(@PathVariable Long postId) {
-        Long likeCount = likeService.getLikeCount(postId);
-
-        return ResponseEntity.ok()
-                .body(ApiResponse.of(likeCount));
-    }
 
     @PostMapping
     public ResponseEntity<Void> likeAdd(@PathVariable Long postId,

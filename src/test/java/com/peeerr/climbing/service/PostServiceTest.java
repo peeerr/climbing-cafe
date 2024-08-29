@@ -84,7 +84,7 @@ class PostServiceTest {
         given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
 
         //when
-        PostDetailResponse response = postService.getPostWithComments(postId);
+        PostDetailResponse response = postService.getPost(postId);
 
         //then
         assertThat(response.getTitle()).isEqualTo("제목 테스트");
@@ -136,7 +136,7 @@ class PostServiceTest {
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
         Category category = Category.builder().id(categoryId).categoryName("후기 게시판").build();
 
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
         given(categoryRepository.findById(categoryId)).willReturn(Optional.of(category));
 
         //when
@@ -147,7 +147,7 @@ class PostServiceTest {
         assertThat(post.getContent()).isEqualTo(request.getContent());
         assertThat(post.getCategory().getId()).isEqualTo(request.getCategoryId());
 
-        then(postRepository).should().findById(postId);
+        then(postRepository).should().findPostById(postId);
         then(categoryRepository).should().findById(categoryId);
     }
 
@@ -163,13 +163,13 @@ class PostServiceTest {
 
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", categoryId);
 
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
 
         //when & then
         assertThatExceptionOfType(ClimbingException.class)
                 .isThrownBy(() -> postService.editPost(postId, request, loginId));
 
-        then(postRepository).should().findById(postId);
+        then(postRepository).should().findPostById(postId);
     }
 
     @DisplayName("id를 받아 게시물을 수정하는데, 해당하는 게시물이 없으면 예외를 던진다.")
@@ -180,13 +180,13 @@ class PostServiceTest {
         Long loginId = 1L;
         PostEditRequest request = PostEditRequest.of("제목 수정 테스트", "본문 수정 테스트", 2L);
 
-        given(postRepository.findById(postId)).willReturn(Optional.empty());
+        given(postRepository.findPostById(postId)).willReturn(Optional.empty());
 
         //when & then
         assertThatExceptionOfType(ClimbingException.class)
                 .isThrownBy(() -> postService.editPost(postId, request, loginId));
 
-        then(postRepository).should().findById(postId);
+        then(postRepository).should().findPostById(postId);
     }
 
     @DisplayName("게시물 id가 주어지면, 해당 게시물을 삭제한다.")
@@ -198,14 +198,14 @@ class PostServiceTest {
 
         Post post = createPost(loginId);
 
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
         willDoNothing().given(postRepository).delete(post);
 
         //when
         postService.removePost(postId, loginId);
 
         //then
-        then(postRepository).should().findById(postId);
+        then(postRepository).should().findPostById(postId);
         then(postRepository).should().delete(post);
     }
 
@@ -218,13 +218,13 @@ class PostServiceTest {
 
         Post post = createPost(2L);
 
-        given(postRepository.findById(postId)).willReturn(Optional.of(post));
+        given(postRepository.findPostById(postId)).willReturn(Optional.of(post));
 
         //when & then
         assertThatExceptionOfType(ClimbingException.class)
                 .isThrownBy(() -> postService.removePost(postId, loginId));
 
-        then(postRepository).should().findById(postId);
+        then(postRepository).should().findPostById(postId);
     }
 
     @DisplayName("id를 받아 게시물을 삭제하는데 해당하는 게시물이 없으면 예외를 던진다.")
@@ -234,13 +234,13 @@ class PostServiceTest {
         Long postId = 1L;
         Long loginId = 1L;
 
-        given(postRepository.findById(postId)).willReturn(Optional.empty());
+        given(postRepository.findPostById(postId)).willReturn(Optional.empty());
 
         //when & then
         assertThatExceptionOfType(ClimbingException.class)
                 .isThrownBy(() -> postService.removePost(postId, loginId));
 
-        then(postRepository).should().findById(postId);
+        then(postRepository).should().findPostById(postId);
     }
 
     private Post createPost(Long loginId) {

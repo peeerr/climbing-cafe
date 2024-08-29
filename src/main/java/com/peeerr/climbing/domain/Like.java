@@ -21,18 +21,13 @@ public class Like extends BaseEntity {
     @Id
     private Long id;
 
-    @JoinColumn(name = "member_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
-
-    @JoinColumn(name = "post_id")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Post post;
+    private Long memberId;
+    private Long postId;
 
     @Builder
-    public Like(Member member, Post post) {
-        this.member = member;
-        this.post = post;
+    public Like(Long memberId, Long postId) {
+        this.memberId = memberId;
+        this.postId = postId;
     }
 
 }

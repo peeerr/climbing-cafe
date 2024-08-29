@@ -39,6 +39,8 @@ public class Post extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
+    private Long likeCount = 0L;
+
     @JsonIgnoreProperties("post")
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -46,10 +48,6 @@ public class Post extends BaseEntity {
     @JsonIgnoreProperties("post")
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
-
-    @JsonIgnoreProperties("post")
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Like> likes = new ArrayList<>();
 
     @Builder
     private Post(Long id, String title, String content, Category category, Member member) {
@@ -82,6 +80,10 @@ public class Post extends BaseEntity {
         if (!this.member.getId().equals(loginId)) {
             throw new ClimbingException(ACCESS_DENIED);
         }
+    }
+
+    public void addLikeCount(Integer likeCount) {
+        this.likeCount += likeCount;
     }
 
 }

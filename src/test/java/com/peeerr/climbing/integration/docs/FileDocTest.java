@@ -1,17 +1,12 @@
 package com.peeerr.climbing.integration.docs;
 
-import com.peeerr.climbing.exception.ErrorCode;
-import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.domain.Category;
-import com.peeerr.climbing.repository.CategoryRepository;
-import com.peeerr.climbing.repository.CommentRepository;
 import com.peeerr.climbing.domain.File;
-import com.peeerr.climbing.repository.FileRepository;
-import com.peeerr.climbing.repository.LikeRepository;
-import com.peeerr.climbing.domain.Post;
-import com.peeerr.climbing.repository.PostRepository;
 import com.peeerr.climbing.domain.Member;
-import com.peeerr.climbing.repository.MemberRepository;
+import com.peeerr.climbing.domain.Post;
+import com.peeerr.climbing.exception.ErrorCode;
+import com.peeerr.climbing.repository.*;
+import com.peeerr.climbing.security.MemberPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
