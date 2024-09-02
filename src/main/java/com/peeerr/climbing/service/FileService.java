@@ -61,7 +61,6 @@ public class FileService {
                 .orElseThrow(() -> new ClimbingException(ErrorCode.FILE_NOT_FOUND));
         file.getPost().checkOwner(loginId);
 
-        file.checkNotDeleted();
         file.delete();
     }
 

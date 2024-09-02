@@ -40,13 +40,11 @@ public class File extends BaseEntity {
         this.deleted = false;
     }
 
-    public void checkNotDeleted() {
+    public void delete() {
         if (this.isDeleted()) {
             throw new ClimbingException(FILE_NOT_FOUND);
         }
-    }
 
-    public void delete() {
         this.deleted = true;
     }
 
