@@ -37,6 +37,14 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
 
     @Override
     public Page<PostResponse> findPostsFilteredByCategoryIdAndSearchWord(Long categoryId, PostSearchCondition condition, Pageable pageable) {
+        List<Long> ids = queryFactory
+                .select(post.id)
+                .from(post)
+                .orderBy(post.createDate.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
         List<PostResponse> posts = queryFactory
                 .select(constructor(PostResponse.class,
                         post.id,
@@ -50,10 +58,11 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
                 .from(post)
                 .join(post.category, category)
                 .join(post.member, member)
-                .where(categoryEq(categoryId), titleContains(condition.getTitle()), contentContains(condition.getContent()))
-                .orderBy(post.createDate.desc())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
+                .where(
+                        post.id.in(ids),
+                        categoryEq(categoryId),
+                        titleContains(condition.getTitle()),
+                        contentContains(condition.getContent()))
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
