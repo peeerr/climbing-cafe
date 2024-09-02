@@ -40,6 +40,11 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
         List<Long> ids = queryFactory
                 .select(post.id)
                 .from(post)
+                .where(
+                        categoryEq(categoryId),
+                        titleContains(condition.getTitle()),
+                        contentContains(condition.getContent())
+                )
                 .orderBy(post.createDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -58,11 +63,7 @@ public class CustomPostRepositoryImpl implements CustomPostRepository {
                 .from(post)
                 .join(post.category, category)
                 .join(post.member, member)
-                .where(
-                        post.id.in(ids),
-                        categoryEq(categoryId),
-                        titleContains(condition.getTitle()),
-                        contentContains(condition.getContent()))
+                .where(post.id.in(ids))
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
