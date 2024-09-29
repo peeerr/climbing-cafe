@@ -41,6 +41,8 @@ dependencies {
     implementation 'org.apache.tika:tika-core:2.9.1'
     implementation 'com.h2database:h2'
 
+    implementation 'org.springframework.kafka:spring-kafka:3.2.4'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
