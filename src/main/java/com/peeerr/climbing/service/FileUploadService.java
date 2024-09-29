@@ -1,13 +1,13 @@
 package com.peeerr.climbing.service;
 
 import static com.peeerr.climbing.constant.Topic.FILE_CHUNK;
+import static com.peeerr.climbing.constant.Topic.FILE_STATUS;
 
-import com.peeerr.climbing.domain.FileUploadState;
-import com.peeerr.climbing.domain.FileUploadStatus;
+import com.peeerr.climbing.constant.FileUploadState;
 import com.peeerr.climbing.dto.FileChunkMessage;
+import com.peeerr.climbing.dto.FileStatusMessage;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.exception.ErrorCode;
-import com.peeerr.climbing.repository.FileUploadStatusRepository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -26,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileUploadService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final FileUploadStatusRepository fileUploadStatusRepository;
-    private final TransactionTemplate transactionTemplate;
 
     private static final int CHUNK_SIZE = 750 * 1024;  // 750KB
 
@@ -39,7 +36,7 @@ public class FileUploadService {
             String fileId = UUID.randomUUID().toString();
             fileIds.add(fileId);
 
-            fileUploadStatusRepository.save(new FileUploadStatus(fileId, FileUploadState.INITIATED));
+            sendFileStatus(fileId, FileUploadState.INITIATED);
             sendFileChunks(loginId, postId, fileId, file);
         }
 
@@ -69,25 +66,16 @@ public class FileUploadService {
 
                     kafkaTemplate.send(FILE_CHUNK, fileId, message);
                 }
-                updateFileStatus(fileId, FileUploadState.CHUNKS_SENT);
+                sendFileStatus(fileId, FileUploadState.CHUNKS_SENT);
             } catch (IOException e) {
-                updateFileStatus(fileId, FileUploadState.FAILED);
+                sendFileStatus(fileId, FileUploadState.FAILED);
                 throw new ClimbingException(ErrorCode.FILE_CHUNK_UPLOAD_FAILED);
             }
         });
     }
 
-    public void updateFileStatus(String fileId, FileUploadState state) {
-        transactionTemplate.execute(status -> {
-            fileUploadStatusRepository.updateStatus(fileId, state);
-            return null;
-        });
-    }
-
-    @Transactional(readOnly = true)
-    public FileUploadStatus getFileUploadStatus(String fileId) {
-        return fileUploadStatusRepository.findById(fileId)
-                .orElseThrow(() -> new ClimbingException(ErrorCode.FILE_STATUS_NOT_FOUND));
+    public void sendFileStatus(String fileId, FileUploadState state) {
+        kafkaTemplate.send(FILE_STATUS, fileId, new FileStatusMessage(fileId, state));
     }
 
 }

@@ -1,6 +1,5 @@
 package com.peeerr.climbing.controller;
 
-import com.peeerr.climbing.domain.FileUploadStatus;
 import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.exception.ValidationErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
@@ -47,14 +46,6 @@ public class FileController {
 
         return ResponseEntity.accepted()
                 .body(ApiResponse.of(fileIds));
-    }
-
-    @GetMapping("/files/{fileId}/status")
-    public ResponseEntity<ApiResponse<FileUploadStatus>> getFileUploadStatus(@PathVariable String fileId) {
-        FileUploadStatus status = fileUploadService.getFileUploadStatus(fileId);
-
-        return ResponseEntity.ok()
-                .body(ApiResponse.of(status));
     }
 
     @DeleteMapping("/posts/{postId}/files/{fileId}")

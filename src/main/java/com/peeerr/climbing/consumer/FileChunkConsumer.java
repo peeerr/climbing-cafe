@@ -14,7 +14,7 @@ public class FileChunkConsumer {
 
     private final FileChunkAssembler fileChunkAssembler;
 
-    @KafkaListener(topics = FILE_CHUNK, groupId = "file-upload")
+    @KafkaListener(topics = FILE_CHUNK, groupId = "file-upload", concurrency = "3")
     public void consume(FileChunkMessage message) {
         fileChunkAssembler.assembleChunk(message);
     }

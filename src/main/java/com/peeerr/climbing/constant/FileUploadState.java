@@ -1,4 +1,4 @@
-package com.peeerr.climbing.domain;
+package com.peeerr.climbing.constant;
 
 public enum FileUploadState {
     INITIATED,

@@ -1,6 +1,6 @@
 package com.peeerr.climbing.service;
 
-import com.peeerr.climbing.domain.FileUploadState;
+import com.peeerr.climbing.constant.FileUploadState;
 import com.peeerr.climbing.dto.FileChunkMessage;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -33,9 +33,9 @@ public class FileChunkAssembler {
                     byte[] completeFile = assembleFile(fileId);
                     fileService.uploadFile(message.getLoginId(), message.getPostId(), message.getFileName(),
                             completeFile);
-                    fileUploadService.updateFileStatus(fileId, FileUploadState.UPLOADED);
+                    fileUploadService.sendFileStatus(fileId, FileUploadState.UPLOADED);
                 } catch (Exception e) {
-                    fileUploadService.updateFileStatus(fileId, FileUploadState.FAILED);
+                    fileUploadService.sendFileStatus(fileId, FileUploadState.FAILED);
                 } finally {
                     chunkMap.remove(fileId);
                 }
