@@ -12,7 +12,9 @@ import com.peeerr.climbing.dto.FileStoreDto;
 import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.exception.ErrorCode;
 import jakarta.annotation.PostConstruct;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -65,8 +67,6 @@ public class S3FileUploader {
         String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
 
         try {
-//            String fileType = checkFileType(file);
-
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(file.getContentType());
             objectMetadata.setContentLength(file.getSize());
@@ -80,21 +80,26 @@ public class S3FileUploader {
         return FileStoreDto.of(file.getOriginalFilename(), filename, amazonS3.getUrl(bucket, filename).toString());
     }
 
-//    public void deleteFile(String fileName) {
-//        amazonS3.deleteObject(bucket, fileName);
-//    }
-//
+    public FileStoreDto uploadFile(String originalFilename, byte[] fileData) {
+        String filename = UUID.randomUUID() + "_" + originalFilename;
 
-//    private String checkFileType(MultipartFile file) throws IOException {
-//        String fileType = file.getContentType();
-//
-//        if (fileType != null && (fileType.equals(MediaType.IMAGE_JPEG_VALUE)
-//                || fileType.equals(MediaType.IMAGE_PNG_VALUE)
-//                || fileType.equals(MediaType.IMAGE_GIF_VALUE))) {
-//            return fileType;
-//        }
-//
-//        throw new ClimbingException(ErrorCode.INVALID_FILE_TYPE);
-//    }
+        try {
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(fileData.length);
+
+            String contentType = URLConnection.guessContentTypeFromName(originalFilename);
+            if (contentType != null) {
+                objectMetadata.setContentType(contentType);
+            }
+
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(fileData);
+            amazonS3.putObject(new PutObjectRequest(bucket, filename, inputStream, objectMetadata)
+                    .withCannedAcl(CannedAccessControlList.PublicRead));
+        } catch (Exception e) {
+            throw new ClimbingException(ErrorCode.FILE_STORE_FAILED);
+        }
+
+        return FileStoreDto.of(originalFilename, filename, amazonS3.getUrl(bucket, filename).toString());
+    }
 
 }

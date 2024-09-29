@@ -7,12 +7,10 @@ import com.peeerr.climbing.exception.ClimbingException;
 import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.repository.FileRepository;
 import com.peeerr.climbing.repository.PostRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Transactional
@@ -38,22 +36,20 @@ public class FileService {
         return s3FileUploader.getFiles(filenames);
     }
 
-    public void uploadFiles(Long loginId, Long postId, List<MultipartFile> files) {
+    public void uploadFile(Long loginId, Long postId, String fileName, byte[] fileData) {
         Post post = getPostById(postId);
         post.checkOwner(loginId);
 
-        List<FileStoreDto> storedFiles = s3FileUploader.uploadFiles(files);
+        FileStoreDto storedFile = s3FileUploader.uploadFile(fileName, fileData);
 
-        List<File> fileEntities = storedFiles.stream()
-                .map(fileDto -> File.builder()
-                        .post(post)
-                        .originalFilename(fileDto.getOriginalFilename())
-                        .filename(fileDto.getFilename())
-                        .filePath(fileDto.getFilePath())
-                        .build())
-                .toList();
+        File fileEntity = File.builder()
+                .post(post)
+                .originalFilename(fileName)
+                .filename(storedFile.getFilename())
+                .filePath(storedFile.getFilePath())
+                .build();
 
-        fileRepository.saveAll(fileEntities);
+        fileRepository.save(fileEntity);
     }
 
     public void updateDeleteFlag(Long loginId, Long fileId) {
