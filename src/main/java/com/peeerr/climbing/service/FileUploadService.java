@@ -1,7 +1,6 @@
 package com.peeerr.climbing.service;
 
 import static com.peeerr.climbing.constant.Topic.FILE_CHUNK;
-import static com.peeerr.climbing.constant.Topic.FILE_STATUS;
 
 import com.peeerr.climbing.constant.FileUploadState;
 import com.peeerr.climbing.dto.FileChunkMessage;
@@ -16,6 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileUploadService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     private static final int CHUNK_SIZE = 750 * 1024;  // 750KB
 
@@ -75,7 +76,8 @@ public class FileUploadService {
     }
 
     public void sendFileStatus(String fileId, FileUploadState state) {
-        kafkaTemplate.send(FILE_STATUS, fileId, new FileStatusMessage(fileId, state));
+        String destination = "/topic/file-status/" + fileId;
+        messagingTemplate.convertAndSend(destination, new FileStatusMessage(fileId, state));
     }
 
 }
