@@ -4,25 +4,31 @@ import com.peeerr.climbing.dto.common.ApiResponse;
 import com.peeerr.climbing.exception.ValidationErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
+import com.peeerr.climbing.service.FileUploadService;
 import com.peeerr.climbing.validation.FileNotEmpty;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RequiredArgsConstructor
-@RequestMapping("/api/posts/{postId}/files")
+@RequestMapping("/api")
 @RestController
 public class FileController {
 
     private final FileService fileService;
+    private final FileUploadService fileUploadService;
 
-    @GetMapping
+    @GetMapping("/posts/{postId}/files")
     public ResponseEntity<ApiResponse<List<String>>> fileUrlListByPost(@PathVariable Long postId) {
         List<String> fileUrls = fileService.getFilesByPostId(postId);
 
@@ -30,18 +36,19 @@ public class FileController {
                 .body(ApiResponse.of(fileUrls));
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> fileUpload(@PathVariable Long postId,
-                                           @RequestParam @FileNotEmpty(message = ValidationErrorMessage.FILE_REQUIRED) List<MultipartFile> files,
-                                           @AuthenticationPrincipal MemberPrincipal userDetails) {
+    @PostMapping(value = "/posts/{postId}/files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResponse<List<String>>> fileUpload(@PathVariable Long postId,
+                                                                @RequestParam @FileNotEmpty(message = ValidationErrorMessage.FILE_REQUIRED) List<MultipartFile> files,
+                                                                @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
-        fileService.uploadFiles(loginId, postId, files);
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .build();
+        List<String> fileIds = fileUploadService.initiateFileUpload(loginId, postId, files);
+
+        return ResponseEntity.accepted()
+                .body(ApiResponse.of(fileIds));
     }
 
-    @DeleteMapping("/{fileId}")
+    @DeleteMapping("/posts/{postId}/files/{fileId}")
     public ResponseEntity<Void> fileUpdateDeleteFlag(@PathVariable String postId,
                                                      @PathVariable Long fileId,
                                                      @AuthenticationPrincipal MemberPrincipal userDetails) {

@@ -1,9 +1,16 @@
 package com.peeerr.climbing.exception;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.PAYLOAD_TOO_LARGE;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
+
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
-import static org.springframework.http.HttpStatus.*;
 
 @Getter
 public enum ErrorCode {
@@ -45,7 +52,11 @@ public enum ErrorCode {
     FILE_SIZE_EXCEEDED("전체 파일 크기를 10MB 이하로 첨부해 주세요.", PAYLOAD_TOO_LARGE),
 
     /* Comment */
-    COMMENT_NOT_FOUND("존재하지 않는 댓글입니다.", NOT_FOUND);
+    COMMENT_NOT_FOUND("존재하지 않는 댓글입니다.", NOT_FOUND),
+
+    /* FileUploadService */
+    FILE_CHUNK_UPLOAD_FAILED("파일 청크 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR),
+    FILE_STATUS_NOT_FOUND("존재하지 않는 파일 업로드 상태입니다.", NOT_FOUND);
 
     private final String message;
     private final HttpStatus status;
