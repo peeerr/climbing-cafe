@@ -1,6 +1,8 @@
 package com.peeerr.climbing.controller;
 
 import com.peeerr.climbing.dto.common.ApiResponse;
+import com.peeerr.climbing.exception.ClimbingException;
+import com.peeerr.climbing.exception.ErrorCode;
 import com.peeerr.climbing.exception.ValidationErrorMessage;
 import com.peeerr.climbing.security.MemberPrincipal;
 import com.peeerr.climbing.service.FileService;
@@ -42,7 +44,11 @@ public class FileController {
                                                                 @AuthenticationPrincipal MemberPrincipal userDetails) {
         Long loginId = userDetails.getMember().getId();
 
-        List<String> fileIds = fileUploadService.initiateFileUpload(loginId, postId, files);
+        List<String> fileIds = fileUploadService.uploadFiles(loginId, postId, files);
+
+        if (fileIds.isEmpty()) {
+            throw new ClimbingException(ErrorCode.FILE_UPLOAD_FAILED);
+        }
 
         return ResponseEntity.accepted()
                 .body(ApiResponse.of(fileIds));
