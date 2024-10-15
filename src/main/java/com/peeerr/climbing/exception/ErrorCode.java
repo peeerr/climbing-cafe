@@ -56,7 +56,9 @@ public enum ErrorCode {
 
     /* FileUploadService */
     FILE_CHUNK_UPLOAD_FAILED("파일 청크 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR),
-    FILE_STATUS_NOT_FOUND("존재하지 않는 파일 업로드 상태입니다.", NOT_FOUND);
+    FILE_STATUS_NOT_FOUND("존재하지 않는 파일 업로드 상태입니다.", NOT_FOUND),
+
+    FILE_UPLOAD_FAILED("파일 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR);
 
     private final String message;
     private final HttpStatus status;
