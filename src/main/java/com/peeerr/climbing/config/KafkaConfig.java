@@ -2,6 +2,8 @@ package com.peeerr.climbing.config;
 
 import java.util.HashMap;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -17,17 +19,45 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.CommonErrorHandler;
+import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.util.backoff.BackOff;
+import org.springframework.util.backoff.ExponentialBackOff;
 
+@Slf4j
+@RequiredArgsConstructor
 @Configuration
 public class KafkaConfig {
+
+    private static final long INITIAL_INTERVAL = 1000L;  // 1초
+    private static final long MAX_ELAPSED_TIME = 10000L; // 10초
+    private static final double MULTIPLIER = 2.0;
 
     @ConfigurationProperties("spring.kafka")
     @Primary
     @Bean
     public KafkaProperties kafkaProperties() {
         return new KafkaProperties();
+    }
+
+    @Bean
+    public ProducerFactory<String, Object> producerFactory(KafkaProperties kafkaProperties) {
+        Map<String, Object> props = new HashMap<>();
+
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
+        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 7000000);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(ProducerConfig.ACKS_CONFIG, "1");
+
+        return new DefaultKafkaProducerFactory<>(props);
+    }
+
+    @Bean
+    public KafkaTemplate<String, ?> kafkaTemplate(KafkaProperties kafkaProperties) {
+        return new KafkaTemplate<>(producerFactory(kafkaProperties));
     }
 
     @Bean
@@ -47,29 +77,30 @@ public class KafkaConfig {
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory(
-            ConsumerFactory<String, Object> consumerFactory) {
+            ConsumerFactory<String, Object> consumerFactory,
+            CommonErrorHandler errorHandler
+    ) {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
+
         factory.setConsumerFactory(consumerFactory);
+        factory.setCommonErrorHandler(errorHandler);
 
         return factory;
     }
 
     @Bean
-    public ProducerFactory<String, Object> producerFactory(KafkaProperties kafkaProperties) {
-        Map<String, Object> props = new HashMap<>();
-
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
-        props.put(ProducerConfig.MAX_REQUEST_SIZE_CONFIG, 7000000);
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(ProducerConfig.ACKS_CONFIG, "1");
-
-        return new DefaultKafkaProducerFactory<>(props);
+    @Primary
+    public CommonErrorHandler errorHandler(FileUploadErrorHandler fileUploadErrorHandler) {
+        return new DefaultErrorHandler(
+                fileUploadErrorHandler::handleError,
+                createExponentialBackOff()
+        );
     }
 
-    @Bean
-    public KafkaTemplate<String, ?> kafkaTemplate(KafkaProperties kafkaProperties) {
-        return new KafkaTemplate<>(producerFactory(kafkaProperties));
+    private BackOff createExponentialBackOff() {
+        ExponentialBackOff backOff = new ExponentialBackOff(INITIAL_INTERVAL, MULTIPLIER);
+        backOff.setMaxElapsedTime(MAX_ELAPSED_TIME);
+        return backOff;
     }
 
 }
