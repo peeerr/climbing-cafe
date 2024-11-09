@@ -56,7 +56,7 @@ public class FileUploadErrorHandler {
         messagingService.getUploadIdFromRedis(message.getFileId())
                 .ifPresent(uploadId -> {
                     try {
-                        s3FileUploadService.abortMultipartUpload(message, uploadId);
+                        s3FileUploadService.abortMultipartUpload(message.getS3FileName(), uploadId);
                         log.info("Successfully aborted multipart upload. FileId: {}, UploadId: {}",
                                 message.getFileId(), uploadId);
                     } catch (Exception e) {
