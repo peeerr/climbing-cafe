@@ -58,7 +58,16 @@ public enum ErrorCode {
     FILE_CHUNK_UPLOAD_FAILED("파일 청크 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR),
     FILE_STATUS_NOT_FOUND("존재하지 않는 파일 업로드 상태입니다.", NOT_FOUND),
 
-    FILE_UPLOAD_FAILED("파일 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR);
+    FILE_UPLOAD_FAILED("파일 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR),
+
+    /* S3FileUploadService */
+    S3_CONNECTION_ERROR("S3 연결에 실패했습니다.", INTERNAL_SERVER_ERROR),
+    S3_UPLOAD_FAILED("S3 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR),
+    S3_PERMISSION_DENIED("S3 접근 권한이 없습니다.", FORBIDDEN),
+    S3_INVALID_REQUEST("잘못된 S3 요청입니다.", BAD_REQUEST),
+    S3_RESOURCE_NOT_FOUND("S3 리소스를 찾을 수 없습니다.", NOT_FOUND),
+    MULTIPART_UPLOAD_FAILED("멀티파트 업로드에 실패했습니다.", INTERNAL_SERVER_ERROR),
+    INVALID_PART_STATE("잘못된 파트 상태입니다.", BAD_REQUEST);
 
     private final String message;
     private final HttpStatus status;
