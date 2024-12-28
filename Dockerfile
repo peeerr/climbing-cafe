@@ -1,4 +1,4 @@
-FROM amazoncorretto:17-alpine
+FROM amazoncorretto:21-alpine
 
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
