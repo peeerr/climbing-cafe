@@ -10,5 +10,4 @@
 
 ## API Document
 
-Spring REST Docs로 API 문서화 (비용 문제로 중단) <br>
-http://climbing-api-env.eba-pmskmvpv.ap-northeast-2.elasticbeanstalk.com/docs/index.html
+Spring REST Docs로 API 문서화 (비용 문제로 중단)
