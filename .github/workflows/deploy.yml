@@ -64,12 +64,19 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
+      - name: Get current time
+        uses: 1466587594/get-current-time@v2
+        id: current-time
+        with:
+          format: YYYYMMDDHHmmss  # 시간 정보 가져오기
+          utfOffset: "+09:00"
+
       - name: Build, tag, and push image to Amazon ECR
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: climbing
-          IMAGE_TAG: latest
+          IMAGE_TAG: climbing_${{ steps.current-time.outputs.formattedTime }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
@@ -80,13 +87,6 @@ jobs:
           cp Dockerrun.aws.json deploy/Dockerrun.aws.json
           cd deploy && zip -r deploy.zip .
 
-      - name: Get current time
-        uses: 1466587594/get-current-time@v2
-        id: current-time  # 현재 시간이 id에 담김
-        with:
-          format: YYYY-MM-DDTHH-mm-ss
-          utfOffset: "+09:00"
-
       # EB에 배포
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v21
@@ -95,6 +95,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_KEY }}
           application_name: climbing-api
           environment_name: Climbing-api-env
-          version_label: climbing-${{steps.current-time.outputs.formattedTime}}
+          version_label: climbing_${{ steps.current-time.outputs.formattedTime }}
           region: ap-northeast-2
           deployment_package: deploy/deploy.zip
