@@ -81,6 +81,22 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
+      - name: Generate Dockerrun.aws.json
+        run: |
+          echo '{
+            "AWSEBDockerrunVersion": "1",
+            "Image": {
+              "Name": "533266961412.dkr.ecr.ap-northeast-2.amazonaws.com/climbing:climbing_${{ steps.current-time.outputs.formattedTime }}",
+              "Update": "true"
+            },
+            "Ports": [
+              {
+                "ContainerPort": "5000",
+                "HostPort": "5000"
+              }
+            ]
+          }' > Dockerrun.aws.json
+
       - name: Generate deployment package
         run: |
           mkdir -p deploy
